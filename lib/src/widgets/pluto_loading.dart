@@ -9,6 +9,8 @@ class PlutoLoading extends StatelessWidget {
   final Color? indicatorColor;
   final String? text;
   final TextStyle? textStyle;
+  final Widget? customLoading;
+  final bool showLoadingText;
 
   const PlutoLoading({
     this.level = PlutoGridLoadingLevel.grid,
@@ -16,6 +18,8 @@ class PlutoLoading extends StatelessWidget {
     this.indicatorColor,
     this.text,
     this.textStyle,
+    this.customLoading,
+    this.showLoadingText = true,
     super.key,
   });
 
@@ -28,17 +32,21 @@ class PlutoLoading extends StatelessWidget {
           indicatorColor: indicatorColor,
           text: text,
           textStyle: textStyle,
+          customLoading: customLoading,
+          showText: showLoadingText,
         );
       case PlutoGridLoadingLevel.rows:
-        return LinearProgressIndicator(
-          backgroundColor: Colors.transparent,
-          color: indicatorColor,
-        );
+        return customLoading ??
+            LinearProgressIndicator(
+              backgroundColor: Colors.transparent,
+              color: indicatorColor,
+            );
       case PlutoGridLoadingLevel.rowsBottomCircular:
-        return CircularProgressIndicator(
-          backgroundColor: Colors.transparent,
-          color: indicatorColor,
-        );
+        return customLoading ??
+            CircularProgressIndicator(
+              backgroundColor: Colors.transparent,
+              color: indicatorColor,
+            );
     }
   }
 }
@@ -49,12 +57,16 @@ class _GridLoading extends StatelessWidget {
     this.indicatorColor,
     this.text,
     this.textStyle,
+    this.customLoading,
+    this.showText = true,
   });
 
   final Color? backgroundColor;
   final Color? indicatorColor;
   final String? text;
   final TextStyle? textStyle;
+  final Widget? customLoading;
+  final bool showText;
 
   @override
   Widget build(BuildContext context) {
@@ -73,20 +85,22 @@ class _GridLoading extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(
-                backgroundColor: backgroundColor ?? Colors.white,
-                color: indicatorColor ?? Colors.lightBlue,
-                strokeWidth: 2,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                text ?? 'Loading',
-                style: textStyle ??
-                    const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                    ),
-              )
+              customLoading ??
+                  CircularProgressIndicator(
+                    backgroundColor: backgroundColor ?? Colors.white,
+                    color: indicatorColor ?? Colors.lightBlue,
+                    strokeWidth: 2,
+                  ),
+              if (showText) const SizedBox(height: 10),
+              if (showText)
+                Text(
+                  text ?? 'Loading',
+                  style: textStyle ??
+                      const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                )
             ],
           ),
         ),

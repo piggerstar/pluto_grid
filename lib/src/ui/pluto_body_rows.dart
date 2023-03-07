@@ -6,9 +6,13 @@ import 'ui.dart';
 
 class PlutoBodyRows extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
+  final Widget? customLoading;
+  final Color? loaderOverlayColor;
 
   const PlutoBodyRows(
     this.stateManager, {
+    this.customLoading,
+    this.loaderOverlayColor,
     super.key,
   });
 
@@ -62,9 +66,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
   }
 
   List<PlutoColumn> _getColumns() {
-    return stateManager.showFrozenColumn == true
-        ? stateManager.bodyColumns
-        : stateManager.columns;
+    return stateManager.showFrozenColumn == true ? stateManager.bodyColumns : stateManager.columns;
   }
 
   @override
@@ -72,10 +74,8 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
     final scrollbarConfig = stateManager.configuration.scrollbar;
 
     return PlutoScrollbar(
-      verticalController:
-          scrollbarConfig.draggableScrollbar ? _verticalScroll : null,
-      horizontalController:
-          scrollbarConfig.draggableScrollbar ? _horizontalScroll : null,
+      verticalController: scrollbarConfig.draggableScrollbar ? _verticalScroll : null,
+      horizontalController: scrollbarConfig.draggableScrollbar ? _horizontalScroll : null,
       isAlwaysShown: scrollbarConfig.isAlwaysShown,
       onlyDraggingThumb: scrollbarConfig.onlyDraggingThumb,
       enableHover: PlatformHelper.isDesktop,
@@ -104,6 +104,36 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
             itemExtent: stateManager.rowTotalHeight,
             addRepaintBoundaries: false,
             itemBuilder: (ctx, i) {
+              if (_rows[i].isLoading) {
+                return Stack(
+                  children: [
+                    PlutoBaseRow(
+                      key: ValueKey('body_row_${_rows[i].key}'),
+                      rowIdx: i,
+                      row: _rows[i],
+                      columns: _columns,
+                      stateManager: stateManager,
+                      visibilityLayout: true,
+                    ),
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.7,
+                        child: ColoredBox(color: widget.loaderOverlayColor ?? Colors.white),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [widget.customLoading ?? const CircularProgressIndicator()],
+                      ),
+                    ),
+                  ],
+                );
+              }
+
               return PlutoBaseRow(
                 key: ValueKey('body_row_${_rows[i].key}'),
                 rowIdx: i,
@@ -125,8 +155,7 @@ class ListResizeDelegate extends SingleChildLayoutDelegate {
 
   List<PlutoColumn> columns;
 
-  ListResizeDelegate(this.stateManager, this.columns)
-      : super(relayout: stateManager.resizingChangeNotifier);
+  ListResizeDelegate(this.stateManager, this.columns) : super(relayout: stateManager.resizingChangeNotifier);
 
   @override
   bool shouldRelayout(covariant SingleChildLayoutDelegate oldDelegate) {

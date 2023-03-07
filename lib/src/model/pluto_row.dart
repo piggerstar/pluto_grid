@@ -25,6 +25,8 @@ class PlutoRow {
 
   bool? _checked;
 
+  bool isLoading = false;
+
   PlutoRow? _parent;
 
   PlutoRowState _state;
@@ -175,12 +177,9 @@ class PlutoRow {
   }) {
     final Map<String, PlutoCell> cells = {};
 
-    final bool hasChildren =
-        childrenField != null && json.containsKey(childrenField);
+    final bool hasChildren = childrenField != null && json.containsKey(childrenField);
 
-    final entries = hasChildren
-        ? json.entries.where((e) => e.key != childrenField)
-        : json.entries;
+    final entries = hasChildren ? json.entries.where((e) => e.key != childrenField) : json.entries;
 
     assert(!hasChildren || json.length - 1 == entries.length);
 

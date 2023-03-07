@@ -109,18 +109,15 @@ mixin RowState implements IPlutoGridState {
       );
 
   @override
-  List<PlutoRow> get unCheckedRows =>
-      refRows.where((row) => !row.checked!).toList(
-            growable: false,
-          );
+  List<PlutoRow> get unCheckedRows => refRows.where((row) => !row.checked!).toList(
+        growable: false,
+      );
 
   @override
-  bool get hasCheckedRow =>
-      refRows.firstWhereOrNull((element) => element.checked!) != null;
+  bool get hasCheckedRow => refRows.firstWhereOrNull((element) => element.checked!) != null;
 
   @override
-  bool get hasUnCheckedRow =>
-      refRows.firstWhereOrNull((element) => !element.checked!) != null;
+  bool get hasUnCheckedRow => refRows.firstWhereOrNull((element) => !element.checked!) != null;
 
   @override
   bool? get tristateCheckedRow {
@@ -220,9 +217,7 @@ mixin RowState implements IPlutoGridState {
     bool flag, {
     bool notify = true,
   }) {
-    final findRow = refRows.firstWhereOrNull(
-      (element) => element.key == row.key,
-    );
+    final findRow = refRows.firstWhereOrNull((element) => element.key == row.key);
 
     if (findRow == null) {
       return;
@@ -249,8 +244,7 @@ mixin RowState implements IPlutoGridState {
     }
 
     /// Update currentSelectingPosition
-    if (currentSelectingPosition != null &&
-        rowIdx <= currentSelectingPosition!.rowIdx!) {
+    if (currentSelectingPosition != null && rowIdx <= currentSelectingPosition!.rowIdx!) {
       setCurrentSelectingPosition(
         cellPosition: PlutoGridCellPosition(
           columnIdx: currentSelectingPosition!.columnIdx,
@@ -345,20 +339,14 @@ mixin RowState implements IPlutoGridState {
 
     final Set<Key> removeKeys = Set.from(rows.map((e) => e.key));
 
-    if (currentRowIdx != null &&
-        refRows.length > currentRowIdx! &&
-        removeKeys.contains(refRows[currentRowIdx!].key)) {
+    if (currentRowIdx != null && refRows.length > currentRowIdx! && removeKeys.contains(refRows[currentRowIdx!].key)) {
       resetCurrentState(notify: false);
     }
 
     Key? selectingCellKey;
 
     if (hasCurrentSelectingPosition) {
-      selectingCellKey = refRows
-          .originalList[currentSelectingPosition!.rowIdx!].cells.entries
-          .elementAt(currentSelectingPosition!.columnIdx!)
-          .value
-          .key;
+      selectingCellKey = refRows.originalList[currentSelectingPosition!.rowIdx!].cells.entries.elementAt(currentSelectingPosition!.columnIdx!).value.key;
     }
 
     if (enabledRowGroups) {
@@ -414,9 +402,7 @@ mixin RowState implements IPlutoGridState {
       indexToMove = refRows.length - rows.length;
     }
 
-    if (isPaginated &&
-        page > 1 &&
-        indexToMove + pageRangeFrom > refRows.originalLength - 1) {
+    if (isPaginated && page > 1 && indexToMove + pageRangeFrom > refRows.originalLength - 1) {
       indexToMove = refRows.originalLength - 1;
     }
 
@@ -504,6 +490,18 @@ mixin RowState implements IPlutoGridState {
     if (isPaginated) {
       resetPage(notify: false);
     }
+  }
+
+  void showRowLoadingByIdx(int idx, bool show, {bool notify = true}) {
+    if (refRows.isEmpty) {
+      return;
+    }
+    final row = getRowByIdx(idx);
+    if (row != null) {
+      row.isLoading = show;
+    }
+
+    notifyListeners(notify, showRowLoadingByIdx.hashCode);
   }
 
   int _getSafetyIndexForInsert(int index) {
