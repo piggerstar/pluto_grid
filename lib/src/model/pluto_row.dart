@@ -7,6 +7,7 @@ class PlutoRow {
     PlutoRowType? type,
     this.sortIdx = 0,
     bool checked = false,
+    this.isLoading = false,
     Key? key,
   })  : type = type ?? PlutoRowTypeNormal.instance,
         _checked = checked,
@@ -25,7 +26,7 @@ class PlutoRow {
 
   bool? _checked;
 
-  bool isLoading = false;
+  bool isLoading;
 
   PlutoRow? _parent;
 
