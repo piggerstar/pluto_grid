@@ -46,6 +46,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Age',
       field: 'age',
       type: PlutoColumnType.number(),
+      maxLength: 3,
     ),
     PlutoColumn(
       title: 'Role',
