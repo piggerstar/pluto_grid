@@ -46,7 +46,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   List<TextInputFormatter>? get inputFormatters => [];
 
   /// override default column configuration if the row has its own column configuration
-  PlutoColumn get column => widget.row.columns?[widget.column.field] != null ? widget.row.columns![widget.column.field]! : widget.column;
+  PlutoColumn get column => widget.column;
 
   String get formattedValue => column.formattedValueForDisplayInEditing(widget.cell.value);
 

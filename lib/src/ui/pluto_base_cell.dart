@@ -330,6 +330,9 @@ class _CellState extends PlutoStateWithChange<_Cell> {
   @override
   PlutoGridStateManager get stateManager => widget.stateManager;
 
+  /// override default column configuration if the row has its own column configuration
+  PlutoColumn get column => widget.row.columns?[widget.column.field] != null ? widget.row.columns![widget.column.field]! : widget.column;
+
   @override
   void initState() {
     super.initState();
@@ -347,47 +350,47 @@ class _CellState extends PlutoStateWithChange<_Cell> {
 
   @override
   Widget build(BuildContext context) {
-    if (_showTypedCell && widget.column.enableEditingMode == true) {
-      if (widget.column.type.isSelect) {
+    if (_showTypedCell && column.enableEditingMode == true) {
+      if (column.type.isSelect) {
         return PlutoSelectCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
-      } else if (widget.column.type.isNumber) {
+      } else if (column.type.isNumber) {
         return PlutoNumberCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
-      } else if (widget.column.type.isDate) {
+      } else if (column.type.isDate) {
         return PlutoDateCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
-      } else if (widget.column.type.isTime) {
+      } else if (column.type.isTime) {
         return PlutoTimeCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
-      } else if (widget.column.type.isText) {
+      } else if (column.type.isText) {
         return PlutoTextCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
-      } else if (widget.column.type.isCurrency) {
+      } else if (column.type.isCurrency) {
         return PlutoCurrencyCell(
           stateManager: stateManager,
           cell: widget.cell,
-          column: widget.column,
+          column: column,
           row: widget.row,
         );
       }
@@ -395,7 +398,7 @@ class _CellState extends PlutoStateWithChange<_Cell> {
 
     return PlutoDefaultCell(
       cell: widget.cell,
-      column: widget.column,
+      column: column,
       rowIdx: widget.rowIdx,
       row: widget.row,
       stateManager: stateManager,
