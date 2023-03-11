@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import '../../ui/cells/text_cell.dart';
@@ -13,6 +14,8 @@ abstract class IEditingState {
   bool get autoEditing;
 
   TextEditingController? get textEditingController;
+
+  List<TextInputFormatter>? get inputFormatters;
 
   bool isEditableCell(PlutoCell cell);
 
@@ -28,6 +31,8 @@ abstract class IEditingState {
   });
 
   void setTextEditingController(TextEditingController? textEditingController);
+
+  void setInputFormatters(List<TextInputFormatter>? inputFormatters);
 
   /// Toggle the editing status of the current cell.
   void toggleEditing({bool notify = true});
@@ -65,6 +70,8 @@ class _State {
   bool _autoEditing = false;
 
   TextEditingController? _textEditingController;
+
+  List<TextInputFormatter>? _inputFormatters;
 }
 
 mixin EditingState implements IPlutoGridState {
@@ -78,6 +85,9 @@ mixin EditingState implements IPlutoGridState {
 
   @override
   TextEditingController? get textEditingController => _state._textEditingController;
+
+  @override
+  List<TextInputFormatter>? get inputFormatters => _state._inputFormatters;
 
   @override
   bool isEditableCell(PlutoCell cell) {
@@ -144,6 +154,11 @@ mixin EditingState implements IPlutoGridState {
   @override
   void setTextEditingController(TextEditingController? textEditingController) {
     _state._textEditingController = textEditingController;
+  }
+
+  @override
+  void setInputFormatters(List<TextInputFormatter>? inputFormatters) {
+    _state._inputFormatters = inputFormatters;
   }
 
   @override

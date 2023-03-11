@@ -30,8 +30,7 @@ class PlutoCurrencyCell extends StatefulWidget implements TextCell {
   PlutoCurrencyCellState createState() => PlutoCurrencyCellState();
 }
 
-class PlutoCurrencyCellState extends State<PlutoCurrencyCell>
-    with TextCellState<PlutoCurrencyCell> {
+class PlutoCurrencyCellState extends State<PlutoCurrencyCell> with TextCellState<PlutoCurrencyCell> {
   late final int decimalRange;
 
   late final bool activatedNegative;
@@ -73,5 +72,7 @@ class PlutoCurrencyCellState extends State<PlutoCurrencyCell>
       decimal: decimalRange > 0,
       signed: activatedNegative,
     );
+    widget.stateManager.setInputFormatters(inputFormatters);
+    widget.stateManager.setTextEditingController(textController);
   }
 }

@@ -73,5 +73,11 @@ class PlutoNumberCellState extends State<PlutoNumberCell> with TextCellState<Plu
       decimal: decimalRange > 0,
       signed: activatedNegative,
     );
+
+    widget.stateManager.setInputFormatters(inputFormatters);
+    widget.stateManager.setTextEditingController(textController);
+    textController.addListener(() {
+      handleOnChanged(textController.text.toString());
+    });
   }
 }

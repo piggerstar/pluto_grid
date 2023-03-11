@@ -31,7 +31,7 @@ abstract class TextFieldProps {
 mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   dynamic _initialCellValue;
 
-  final _textController = TextEditingController();
+  final textController = TextEditingController();
 
   final PlutoDebounceByHashCode _debounce = PlutoDebounceByHashCode();
 
@@ -50,21 +50,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   void initState() {
     super.initState();
-
     cellFocus = FocusNode(onKey: _handleOnKey);
-
-    _textController.text = formattedValue;
-
-    _initialCellValue = _textController.text;
-
+    _initialCellValue = textController.text;
+    textController.text = formattedValue;
     _cellEditingStatus = CellEditingStatus.init;
-
-    _textController.addListener(() {
-      _handleOnChanged(_textController.text.toString());
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.stateManager.setTextEditingController(_textController);
-    });
   }
 
   @override
@@ -88,7 +77,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     _debounce.dispose();
 
-    _textController.dispose();
+    textController.dispose();
 
     cellFocus.dispose();
 
@@ -102,7 +91,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return;
     }
 
-    _textController.text = _initialCellValue.toString();
+    textController.text = _initialCellValue.toString();
 
     widget.stateManager.changeCellValue(
       widget.stateManager.currentCell!,
@@ -121,7 +110,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return true;
     }
 
-    final selection = _textController.selection;
+    final selection = textController.selection;
 
     if (selection.baseOffset != selection.extentOffset) {
       return false;
@@ -131,7 +120,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return true;
     }
 
-    final textLength = _textController.text.length;
+    final textLength = textController.text.length;
 
     if (selection.baseOffset == textLength && keyManager.isRight) {
       return true;
@@ -141,28 +130,28 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _triggerCellChanged() {
-    widget.stateManager.notifyOnCellChange(widget.cell, _textController.text, status: _cellEditingStatus);
+    widget.stateManager.notifyOnCellChange(widget.cell, textController.text, status: _cellEditingStatus);
   }
 
   void _changeValue() {
-    if (formattedValue == _textController.text) {
+    if (formattedValue == textController.text) {
       return;
     }
 
-    widget.stateManager.changeCellValue(widget.cell, _textController.text, status: _cellEditingStatus);
+    widget.stateManager.changeCellValue(widget.cell, textController.text, status: _cellEditingStatus);
 
-    _textController.text = formattedValue;
+    textController.text = formattedValue;
 
-    _initialCellValue = _textController.text;
+    _initialCellValue = textController.text;
 
-    _textController.selection = TextSelection.fromPosition(
-      TextPosition(offset: _textController.text.length),
+    textController.selection = TextSelection.fromPosition(
+      TextPosition(offset: textController.text.length),
     );
 
     _cellEditingStatus = CellEditingStatus.updated;
   }
 
-  void _handleOnChanged(String value) {
+  void handleOnChanged(String value) {
     _cellEditingStatus = formattedValue != value.toString()
         ? CellEditingStatus.changed
         : _initialCellValue.toString() == value.toString()
@@ -171,13 +160,13 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _handleOnComplete() {
-    final old = _textController.text;
+    final old = textController.text;
 
     _triggerCellChanged();
 
     _changeValue();
 
-    _handleOnChanged(old);
+    handleOnChanged(old);
 
     PlatformHelper.onMobile(() {
       widget.stateManager.setKeepFocus(false);
@@ -205,7 +194,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     }
 
     if (_debounce.isDebounced(
-      hashCode: _textController.text.hashCode,
+      hashCode: textController.text.hashCode,
       ignore: !kIsWeb,
     )) {
       return KeyEventResult.handled;
@@ -241,9 +230,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     return TextField(
       focusNode: cellFocus,
-      controller: _textController,
+      controller: textController,
       readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
-      onChanged: _handleOnChanged,
+      onChanged: handleOnChanged,
       onEditingComplete: _handleOnComplete,
       onSubmitted: (_) => _handleOnComplete(),
       onTap: _handleOnTap,

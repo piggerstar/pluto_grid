@@ -28,5 +28,12 @@ class PlutoTextCell extends StatefulWidget implements TextCell {
   PlutoTextCellState createState() => PlutoTextCellState();
 }
 
-class PlutoTextCellState extends State<PlutoTextCell>
-    with TextCellState<PlutoTextCell> {}
+class PlutoTextCellState extends State<PlutoTextCell> with TextCellState<PlutoTextCell> {
+  @override
+  void initState() {
+    super.initState();
+
+    widget.stateManager.setInputFormatters(inputFormatters);
+    widget.stateManager.setTextEditingController(textController);
+  }
+}

@@ -102,7 +102,22 @@ class PlutoGridKeyManager {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (stateManager.textEditingController != null) {
-          stateManager.textEditingController!.text = keyEvent.event.character!;
+          TextEditingValue value = TextEditingValue(text: keyEvent.event.character!);
+          try {
+            value = stateManager.inputFormatters?.fold<TextEditingValue>(
+                  value,
+                  (TextEditingValue newValue, TextInputFormatter formatter) => formatter.formatEditUpdate(stateManager.textEditingController!.value, newValue),
+                ) ??
+                value;
+          } catch (exception, stack) {
+            FlutterError.reportError(FlutterErrorDetails(
+              exception: exception,
+              stack: stack,
+              library: 'widgets',
+              context: ErrorDescription('while applying input formatters'),
+            ));
+          }
+          stateManager.textEditingController!.text = value.text;
         }
       });
     }
