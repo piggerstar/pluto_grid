@@ -491,9 +491,11 @@ mixin RowState implements IPlutoGridState {
     }
     final row = getRowByIdx(idx);
     if (row != null) {
-      row.column = column;
+      row.columns = {
+        ...row.columns ?? {},
+        column.field: column,
+      };
     }
-
     notifyListeners(notify, setRowColumnTypeByIdx.hashCode);
   }
 
