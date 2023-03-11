@@ -53,8 +53,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     cellFocus = FocusNode(onKey: _handleOnKey);
 
-    widget.stateManager.setTextEditingController(_textController);
-
     _textController.text = formattedValue;
 
     _initialCellValue = _textController.text;
@@ -63,6 +61,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     _textController.addListener(() {
       _handleOnChanged(_textController.text.toString());
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.stateManager.setTextEditingController(_textController);
     });
   }
 
@@ -252,6 +253,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
           borderSide: BorderSide.none,
         ),
         contentPadding: EdgeInsets.zero,
+        counter: SizedBox.shrink(),
       ),
       maxLines: 1,
       keyboardType: keyboardType,
