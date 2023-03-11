@@ -37,7 +37,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   late final FocusNode cellFocus;
 
-  late _CellEditingStatus _cellEditingStatus;
+  late CellEditingStatus _cellEditingStatus;
 
   @override
   TextInputType get keyboardType => TextInputType.text;
@@ -59,7 +59,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     _initialCellValue = _textController.text;
 
-    _cellEditingStatus = _CellEditingStatus.init;
+    _cellEditingStatus = CellEditingStatus.init;
 
     _textController.addListener(() {
       _handleOnChanged(_textController.text.toString());
@@ -68,6 +68,11 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   @override
   void dispose() {
+    /**
+     * Always trigger cell changed when the cell is disposed
+     */
+    _triggerCellChanged();
+
     /**
      * Saves the changed value when moving a cell while text is being input.
      * if user do not press enter key, onEditingComplete is not called and the value is not saved.
@@ -90,6 +95,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _restoreText() {
+    widget.stateManager.notifyOnCellChange(widget.stateManager.currentCell!, _initialCellValue, status: _cellEditingStatus);
+
     if (_cellEditingStatus.isNotChanged) {
       return;
     }
@@ -100,6 +107,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       widget.stateManager.currentCell!,
       _initialCellValue,
       notify: false,
+      status: _cellEditingStatus,
     );
   }
 
@@ -131,12 +139,16 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     return false;
   }
 
+  void _triggerCellChanged() {
+    widget.stateManager.notifyOnCellChange(widget.cell, _textController.text, status: _cellEditingStatus);
+  }
+
   void _changeValue() {
     if (formattedValue == _textController.text) {
       return;
     }
 
-    widget.stateManager.changeCellValue(widget.cell, _textController.text);
+    widget.stateManager.changeCellValue(widget.cell, _textController.text, status: _cellEditingStatus);
 
     _textController.text = formattedValue;
 
@@ -146,19 +158,21 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       TextPosition(offset: _textController.text.length),
     );
 
-    _cellEditingStatus = _CellEditingStatus.updated;
+    _cellEditingStatus = CellEditingStatus.updated;
   }
 
   void _handleOnChanged(String value) {
     _cellEditingStatus = formattedValue != value.toString()
-        ? _CellEditingStatus.changed
+        ? CellEditingStatus.changed
         : _initialCellValue.toString() == value.toString()
-            ? _CellEditingStatus.init
-            : _CellEditingStatus.updated;
+            ? CellEditingStatus.init
+            : CellEditingStatus.updated;
   }
 
   void _handleOnComplete() {
     final old = _textController.text;
+
+    _triggerCellChanged();
 
     _changeValue();
 
@@ -250,20 +264,20 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 }
 
-enum _CellEditingStatus {
+enum CellEditingStatus {
   init,
   changed,
   updated;
 
   bool get isNotChanged {
-    return _CellEditingStatus.changed != this;
+    return CellEditingStatus.changed != this;
   }
 
   bool get isChanged {
-    return _CellEditingStatus.changed == this;
+    return CellEditingStatus.changed == this;
   }
 
   bool get isUpdated {
-    return _CellEditingStatus.updated == this;
+    return CellEditingStatus.updated == this;
   }
 }

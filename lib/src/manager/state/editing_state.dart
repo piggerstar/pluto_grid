@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
+import '../../ui/cells/text_cell.dart';
+
 abstract class IEditingState {
   /// Editing status of the current.
   bool get isEditing;
@@ -45,6 +47,16 @@ abstract class IEditingState {
     bool force = false,
     bool notify = true,
   });
+
+  /// trigger on cell change event
+  /// [callOnChangedEvent] triggers a [PlutoOnCellChangedEventCallback] callback.
+  void notifyOnCellChange(
+    PlutoCell cell,
+    dynamic value, {
+    bool callOnChangedEvent = true,
+    bool force = false,
+    bool notify = true,
+  });
 }
 
 class _State {
@@ -62,12 +74,10 @@ mixin EditingState implements IPlutoGridState {
   bool get isEditing => _state._isEditing;
 
   @override
-  bool get autoEditing =>
-      _state._autoEditing || currentColumn?.enableAutoEditing == true;
+  bool get autoEditing => _state._autoEditing || currentColumn?.enableAutoEditing == true;
 
   @override
-  TextEditingController? get textEditingController =>
-      _state._textEditingController;
+  TextEditingController? get textEditingController => _state._textEditingController;
 
   @override
   bool isEditableCell(PlutoCell cell) {
@@ -163,25 +173,20 @@ mixin EditingState implements IPlutoGridState {
         // No cell selection : Paste in order based on the current cell
         columnStartIdx = currentCellPosition!.columnIdx;
 
-        columnEndIdx =
-            currentCellPosition!.columnIdx! + textList.first.length - 1;
+        columnEndIdx = currentCellPosition!.columnIdx! + textList.first.length - 1;
 
         rowStartIdx = currentCellPosition!.rowIdx;
 
         rowEndIdx = currentCellPosition!.rowIdx! + textList.length - 1;
       } else {
         // If there are selected cells : Paste in order from selected cell range
-        columnStartIdx = min(currentCellPosition!.columnIdx!,
-            currentSelectingPosition!.columnIdx!);
+        columnStartIdx = min(currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
 
-        columnEndIdx = max(currentCellPosition!.columnIdx!,
-            currentSelectingPosition!.columnIdx!);
+        columnEndIdx = max(currentCellPosition!.columnIdx!, currentSelectingPosition!.columnIdx!);
 
-        rowStartIdx = min(
-            currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+        rowStartIdx = min(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
 
-        rowEndIdx = max(
-            currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
+        rowEndIdx = max(currentCellPosition!.rowIdx!, currentSelectingPosition!.rowIdx!);
       }
 
       _pasteCellValueInOrder(
@@ -198,8 +203,7 @@ mixin EditingState implements IPlutoGridState {
   @override
   dynamic castValueByColumnType(dynamic value, PlutoColumn column) {
     if (column.type is PlutoColumnTypeWithNumberFormat) {
-      return (column.type as PlutoColumnTypeWithNumberFormat)
-          .toNumber(column.type.applyFormat(value));
+      return (column.type as PlutoColumnTypeWithNumberFormat).toNumber(column.type.applyFormat(value));
     }
 
     return value;
@@ -212,6 +216,7 @@ mixin EditingState implements IPlutoGridState {
     bool callOnChangedEvent = true,
     bool force = false,
     bool notify = true,
+    CellEditingStatus? status,
   }) {
     final currentColumn = cell.column;
 
@@ -248,10 +253,62 @@ mixin EditingState implements IPlutoGridState {
         row: currentRow,
         value: value,
         oldValue: oldValue,
+        cellStatus: status,
       ));
     }
 
     notifyListeners(notify, changeCellValue.hashCode);
+  }
+
+  @override
+  void notifyOnCellChange(
+    PlutoCell cell,
+    dynamic value, {
+    bool callOnChangedEvent = true,
+    bool force = false,
+    bool notify = true,
+    CellEditingStatus? status,
+  }) {
+    final currentColumn = cell.column;
+
+    final currentRow = cell.row;
+
+    final dynamic oldValue = cell.value;
+
+    value = filteredCellValue(
+      column: currentColumn,
+      newValue: value,
+      oldValue: oldValue,
+    );
+
+    value = castValueByColumnType(value, currentColumn);
+
+    if (force == false &&
+        canNotChangeCellValue(
+          cell: cell,
+          newValue: value,
+          oldValue: oldValue,
+        )) {
+      return;
+    }
+
+    currentRow.setState(PlutoRowState.updated);
+
+    cell.value = value;
+
+    if (callOnChangedEvent == true && onCellChanged != null) {
+      onCellChanged!(PlutoGridOnChangedEvent(
+        columnIdx: columnIndex(currentColumn)!,
+        column: currentColumn,
+        rowIdx: refRows.indexOf(currentRow),
+        row: currentRow,
+        value: value,
+        oldValue: oldValue,
+        cellStatus: status,
+      ));
+    }
+
+    notifyListeners(notify, notifyOnCellChange.hashCode);
   }
 
   void _pasteCellValueIntoSelectingRows({List<List<String>>? textList}) {
@@ -259,8 +316,7 @@ mixin EditingState implements IPlutoGridState {
 
     int columnEndIdx = refColumns.length - 1;
 
-    final Set<Key> selectingRowKeys =
-        Set.from(currentSelectingRows.map((e) => e.key));
+    final Set<Key> selectingRowKeys = Set.from(currentSelectingRows.map((e) => e.key));
 
     List<int> rowIdxList = [];
 
@@ -308,9 +364,7 @@ mixin EditingState implements IPlutoGridState {
         textRowIdx = 0;
       }
 
-      for (int columnIdx = columnStartIdx!;
-          columnIdx <= columnEndIdx!;
-          columnIdx += 1) {
+      for (int columnIdx = columnStartIdx!; columnIdx <= columnEndIdx!; columnIdx += 1) {
         if (columnIdx > columnIndexes.length - 1) {
           break;
         }

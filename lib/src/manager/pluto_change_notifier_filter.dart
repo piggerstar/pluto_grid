@@ -4,8 +4,7 @@ import 'package:pluto_grid/pluto_grid.dart';
 import '../ui/ui.dart';
 
 class PlutoChangeNotifierFilter<T> {
-  PlutoChangeNotifierFilter(this._filter, [this._debugNotifierNames])
-      : _type = T;
+  PlutoChangeNotifierFilter(this._filter, [this._debugNotifierNames]) : _type = T;
 
   static bool enabled = true;
 
@@ -47,9 +46,7 @@ class PlutoChangeNotifierFilter<T> {
   }
 
   bool _ignoreDebugPrint() {
-    return !enabled ||
-        !debug ||
-        (debugWidgets.isNotEmpty && !debugWidgets.contains(_type.toString()));
+    return !enabled || !debug || (debugWidgets.isNotEmpty && !debugWidgets.contains(_type.toString()));
   }
 }
 
@@ -62,20 +59,17 @@ abstract class PlutoChangeNotifierFilterResolver {
     return {
       /// pluto_change_notifier
       stateManager.notifyListeners.hashCode: 'notifyListeners',
-      stateManager.notifyListenersOnPostFrame.hashCode:
-          'notifyListenersOnPostFrame',
+      stateManager.notifyListenersOnPostFrame.hashCode: 'notifyListenersOnPostFrame',
 
       /// cell_state
       stateManager.setCurrentCellPosition.hashCode: 'setCurrentCellPosition',
-      stateManager.updateCurrentCellPosition.hashCode:
-          'updateCurrentCellPosition',
+      stateManager.updateCurrentCellPosition.hashCode: 'updateCurrentCellPosition',
       stateManager.clearCurrentCell.hashCode: 'clearCurrentCell',
       stateManager.setCurrentCell.hashCode: 'setCurrentCell',
 
       /// column_group_state
       stateManager.setShowColumnGroups.hashCode: 'setShowColumnGroups',
-      stateManager.removeColumnsInColumnGroup.hashCode:
-          'removeColumnsInColumnGroup',
+      stateManager.removeColumnsInColumnGroup.hashCode: 'removeColumnsInColumnGroup',
 
       /// column_state
       stateManager.toggleFrozenColumn.hashCode: 'toggleFrozenColumn',
@@ -98,6 +92,7 @@ abstract class PlutoChangeNotifierFilterResolver {
       stateManager.setAutoEditing.hashCode: 'setAutoEditing',
       stateManager.pasteCellValue.hashCode: 'pasteCellValue',
       stateManager.changeCellValue.hashCode: 'changeCellValue',
+      stateManager.notifyOnCellChange.hashCode: 'notifyOnCellChange',
 
       /// filtering_row_state
       stateManager.setFilter.hashCode: 'setFilter',
@@ -113,8 +108,7 @@ abstract class PlutoChangeNotifierFilterResolver {
       stateManager.setShowColumnFooter.hashCode: 'setShowColumnFooter',
       stateManager.setShowColumnFilter.hashCode: 'setShowColumnFilter',
       stateManager.setShowLoading.hashCode: 'setShowLoading',
-      stateManager.notifyChangedShowFrozenColumn.hashCode:
-          'notifyChangedShowFrozenColumn',
+      stateManager.notifyChangedShowFrozenColumn.hashCode: 'notifyChangedShowFrozenColumn',
 
       /// pagination_state
       stateManager.setPageSize.hashCode: 'setPageSize',
@@ -138,10 +132,8 @@ abstract class PlutoChangeNotifierFilterResolver {
       /// selecting_state
       stateManager.setSelecting.hashCode: 'setSelecting',
       stateManager.setSelectingMode.hashCode: 'setSelectingMode',
-      stateManager.setCurrentSelectingPosition.hashCode:
-          'setCurrentSelectingPosition',
-      stateManager.setCurrentSelectingRowsByRange.hashCode:
-          'setCurrentSelectingRowsByRange',
+      stateManager.setCurrentSelectingPosition.hashCode: 'setCurrentSelectingPosition',
+      stateManager.setCurrentSelectingRowsByRange.hashCode: 'setCurrentSelectingRowsByRange',
       stateManager.clearCurrentSelecting.hashCode: 'clearCurrentSelecting',
       stateManager.toggleSelectingRow.hashCode: 'toggleSelectingRow',
       stateManager.handleAfterSelectingRow.hashCode: 'handleAfterSelectingRow',
@@ -149,8 +141,7 @@ abstract class PlutoChangeNotifierFilterResolver {
   }
 }
 
-class PlutoNotifierFilterResolverDefault
-    implements PlutoChangeNotifierFilterResolver {
+class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterResolver {
   const PlutoNotifierFilterResolverDefault();
 
   @override
@@ -243,8 +234,7 @@ class PlutoNotifierFilterResolverDefault
     };
   }
 
-  static Set<int> defaultAggregateColumnFooterFilter(
-      PlutoGridStateManager stateManager) {
+  static Set<int> defaultAggregateColumnFooterFilter(PlutoGridStateManager stateManager) {
     return {
       stateManager.toggleAllRowChecked.hashCode,
       stateManager.setRowChecked.hashCode,
@@ -264,6 +254,7 @@ class PlutoNotifierFilterResolverDefault
       stateManager.setRowGroup.hashCode,
       stateManager.toggleExpandedRowGroup.hashCode,
       stateManager.changeCellValue.hashCode,
+      stateManager.notifyOnCellChange.hashCode,
       stateManager.pasteCellValue.hashCode,
     };
   }

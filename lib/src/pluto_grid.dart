@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:pluto_grid/pluto_grid.dart';
+import 'package:pluto_grid/src/ui/cells/text_cell.dart';
 
 import 'helper/platform_helper.dart';
 import 'ui/ui.dart';
@@ -153,10 +154,10 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// {@template pluto_grid_property_onCellChanged}
   /// [onCellChanged] is called when the cell value changes.
   ///
-  /// When changing the cell value directly programmatically
-  /// with the [PlutoGridStateManager.changeCellValue] method
-  /// When changing the value by calling [callOnChangedEvent]
-  /// as false as the parameter of [PlutoGridStateManager.changeCellValue]
+  /// When changing the cell directly programmatically
+  /// with the [PlutoGridStateManager.notifyOnCellChange] method
+  /// When changing the value by calling [callOnCellChangedEvent]
+  /// as false as the parameter of [PlutoGridStateManager.notifyOnCellChange]
   /// The [onCellChanged] callback is not called.
   /// {@endtemplate}
   final PlutoOnCellChangedEventCallback? onCellChanged;
@@ -1265,6 +1266,7 @@ class PlutoGridOnChangedEvent {
   final PlutoRow row;
   final dynamic value;
   final dynamic oldValue;
+  final CellEditingStatus? cellStatus;
 
   const PlutoGridOnChangedEvent({
     required this.columnIdx,
@@ -1273,6 +1275,7 @@ class PlutoGridOnChangedEvent {
     required this.row,
     this.value,
     this.oldValue,
+    this.cellStatus,
   });
 
   @override
