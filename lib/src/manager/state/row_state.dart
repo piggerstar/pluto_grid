@@ -47,31 +47,17 @@ abstract class IRowState {
 
   PlutoRow getNewRow();
 
-  List<PlutoRow> getNewRows({
-    int count = 1,
-  });
+  List<PlutoRow> getNewRows({int count = 1});
 
-  void setRowChecked(
-    PlutoRow row,
-    bool flag, {
-    bool notify = true,
-  });
+  void setRowChecked(PlutoRow row, bool flag, {bool notify = true});
 
-  void insertRows(
-    int rowIdx,
-    List<PlutoRow> rows, {
-    bool notify = true,
-  });
+  void insertRows(int rowIdx, List<PlutoRow> rows, {bool notify = true});
 
-  void prependNewRows({
-    int count = 1,
-  });
+  void prependNewRows({int count = 1});
 
   void prependRows(List<PlutoRow> rows);
 
-  void appendNewRows({
-    int count = 1,
-  });
+  void appendNewRows({int count = 1});
 
   void appendRows(List<PlutoRow> rows);
 
@@ -81,22 +67,15 @@ abstract class IRowState {
 
   void removeAllRows({bool notify = true});
 
-  void moveRowsByOffset(
-    List<PlutoRow> rows,
-    double offset, {
-    bool notify = true,
-  });
+  void moveRowsByOffset(List<PlutoRow> rows, double offset, {bool notify = true});
 
-  void moveRowsByIndex(
-    List<PlutoRow> rows,
-    int index, {
-    bool notify = true,
-  });
+  void moveRowsByIndex(List<PlutoRow> rows, int index, {bool notify = true});
 
-  void toggleAllRowChecked(
-    bool flag, {
-    bool notify = true,
-  });
+  void toggleAllRowChecked(bool flag, {bool notify = true});
+
+  void showRowLoadingByIdx(int idx, bool show, {bool notify = true});
+
+  void setRowColumnTypeByIdx(int idx, PlutoColumn column, {bool notify = true});
 }
 
 mixin RowState implements IPlutoGridState {
@@ -492,6 +471,7 @@ mixin RowState implements IPlutoGridState {
     }
   }
 
+  @override
   void showRowLoadingByIdx(int idx, bool show, {bool notify = true}) {
     if (refRows.isEmpty) {
       return;
@@ -502,6 +482,19 @@ mixin RowState implements IPlutoGridState {
     }
 
     notifyListeners(notify, showRowLoadingByIdx.hashCode);
+  }
+
+  @override
+  void setRowColumnTypeByIdx(int idx, PlutoColumn column, {bool notify = true}) {
+    if (refRows.isEmpty) {
+      return;
+    }
+    final row = getRowByIdx(idx);
+    if (row != null) {
+      row.column = column;
+    }
+
+    notifyListeners(notify, setRowColumnTypeByIdx.hashCode);
   }
 
   int _getSafetyIndexForInsert(int index) {

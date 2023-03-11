@@ -9,6 +9,7 @@ class PlutoRow {
     bool checked = false,
     this.isLoading = false,
     Key? key,
+    this.column,
   })  : type = type ?? PlutoRowTypeNormal.instance,
         _checked = checked,
         _state = PlutoRowState.none,
@@ -31,6 +32,8 @@ class PlutoRow {
   PlutoRow? _parent;
 
   PlutoRowState _state;
+
+  PlutoColumn? column;
 
   Key get key => _key;
 

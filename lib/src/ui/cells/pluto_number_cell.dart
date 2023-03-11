@@ -49,7 +49,8 @@ class PlutoNumberCellState extends State<PlutoNumberCell> with TextCellState<Plu
   void initState() {
     super.initState();
 
-    final numberColumn = widget.column.type.number;
+    PlutoColumn column = widget.row.column != null ? widget.row.column! : widget.column;
+    final numberColumn = column.type.number;
 
     decimalRange = numberColumn.decimalPoint;
 

@@ -128,6 +128,8 @@ abstract class PlutoChangeNotifierFilterResolver {
       stateManager.removeAllRows.hashCode: 'removeAllRows',
       stateManager.moveRowsByIndex.hashCode: 'moveRowsByIndex',
       stateManager.toggleAllRowChecked.hashCode: 'toggleAllRowChecked',
+      stateManager.showRowLoadingByIdx.hashCode: 'showRowLoadingByIdx',
+      stateManager.setRowColumnTypeByIdx.hashCode: 'setRowColumnTypeByIdx',
 
       /// selecting_state
       stateManager.setSelecting.hashCode: 'setSelecting',
@@ -231,6 +233,8 @@ class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterRes
       stateManager.notifyChangedShowFrozenColumn.hashCode,
       stateManager.setPage.hashCode,
       stateManager.setPageSize.hashCode,
+      stateManager.showRowLoadingByIdx.hashCode,
+      stateManager.setRowColumnTypeByIdx.hashCode,
     };
   }
 
