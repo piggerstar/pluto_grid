@@ -71,6 +71,7 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
     required this.scroll,
     List<PlutoColumnGroup>? columnGroups,
     this.onChanged,
+    this.onCellChanged,
     this.onSelected,
     this.onSorted,
     this.onRowChecked,
@@ -90,10 +91,8 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
         refColumnGroups = FilteredList<PlutoColumnGroup>(
           initialList: columnGroups,
         ),
-        columnMenuDelegate =
-            columnMenuDelegate ?? const PlutoColumnMenuDelegateDefault(),
-        notifierFilterResolver = notifierFilterResolver ??
-            const PlutoNotifierFilterResolverDefault(),
+        columnMenuDelegate = columnMenuDelegate ?? const PlutoColumnMenuDelegateDefault(),
+        notifierFilterResolver = notifierFilterResolver ?? const PlutoNotifierFilterResolverDefault(),
         gridKey = GlobalKey() {
     setConfiguration(configuration);
     setGridMode(mode ?? PlutoGridMode.normal);
@@ -117,6 +116,9 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
 
   @override
   final PlutoOnChangedEventCallback? onChanged;
+
+  @override
+  final PlutoOnCellChangedEventCallback? onCellChanged;
 
   @override
   final PlutoOnSelectedEventCallback? onSelected;
@@ -215,6 +217,7 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
     required super.scroll,
     super.columnGroups,
     super.onChanged,
+    super.onCellChanged,
     super.onSelected,
     super.onSorted,
     super.onRowChecked,
@@ -234,9 +237,7 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
   PlutoChangeNotifierFilter<T> resolveNotifierFilter<T>() {
     return PlutoChangeNotifierFilter<T>(
       notifierFilterResolver.resolve(this, T),
-      PlutoChangeNotifierFilter.debug
-          ? PlutoChangeNotifierFilterResolver.notifierNames(this)
-          : null,
+      PlutoChangeNotifierFilter.debug ? PlutoChangeNotifierFilterResolver.notifierNames(this) : null,
     );
   }
 
@@ -437,11 +438,7 @@ class PlutoGridCellPosition {
 
   @override
   bool operator ==(covariant Object other) {
-    return identical(this, other) ||
-        other is PlutoGridCellPosition &&
-            runtimeType == other.runtimeType &&
-            columnIdx == other.columnIdx &&
-            rowIdx == other.rowIdx;
+    return identical(this, other) || other is PlutoGridCellPosition && runtimeType == other.runtimeType && columnIdx == other.columnIdx && rowIdx == other.rowIdx;
   }
 
   @override
@@ -459,11 +456,7 @@ class PlutoGridSelectingCellPosition {
 
   @override
   bool operator ==(covariant Object other) {
-    return identical(this, other) ||
-        other is PlutoGridSelectingCellPosition &&
-            runtimeType == other.runtimeType &&
-            field == other.field &&
-            rowIdx == other.rowIdx;
+    return identical(this, other) || other is PlutoGridSelectingCellPosition && runtimeType == other.runtimeType && field == other.field && rowIdx == other.rowIdx;
   }
 
   @override
@@ -474,15 +467,19 @@ class PlutoGridKeyPressed {
   bool get shift {
     final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;
 
-    return !(!keysPressed.contains(LogicalKeyboardKey.shiftLeft) &&
-        !keysPressed.contains(LogicalKeyboardKey.shiftRight));
+    return !(!keysPressed.contains(LogicalKeyboardKey.shiftLeft) && !keysPressed.contains(LogicalKeyboardKey.shiftRight));
   }
 
   bool get ctrl {
     final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;
 
-    return !(!keysPressed.contains(LogicalKeyboardKey.controlLeft) &&
-        !keysPressed.contains(LogicalKeyboardKey.controlRight));
+    return !(!keysPressed.contains(LogicalKeyboardKey.controlLeft) && !keysPressed.contains(LogicalKeyboardKey.controlRight));
+  }
+
+  bool get enter {
+    final keysPressed = HardwareKeyboard.instance.logicalKeysPressed;
+
+    return !(!keysPressed.contains(LogicalKeyboardKey.enter) && !keysPressed.contains(LogicalKeyboardKey.numpadEnter));
   }
 }
 

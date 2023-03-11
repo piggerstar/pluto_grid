@@ -45,8 +45,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   List<TextInputFormatter>? get inputFormatters => [];
 
-  String get formattedValue =>
-      widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+  String get formattedValue => widget.column.formattedValueForDisplayInEditing(widget.cell.value);
 
   @override
   void initState() {
@@ -77,8 +76,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       _changeValue();
     }
 
-    if (!widget.stateManager.isEditing ||
-        widget.stateManager.currentColumn?.enableEditingMode != true) {
+    if (!widget.stateManager.isEditing || widget.stateManager.currentColumn?.enableEditingMode != true) {
       widget.stateManager.setTextEditingController(null);
     }
 
@@ -182,12 +180,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return KeyEventResult.handled;
     }
 
-    final skip = !(keyManager.isVertical ||
-        _moveHorizontal(keyManager) ||
-        keyManager.isEsc ||
-        keyManager.isTab ||
-        keyManager.isF3 ||
-        keyManager.isEnter);
+    final skip = !(keyManager.isVertical || _moveHorizontal(keyManager) || keyManager.isEsc || keyManager.isTab || keyManager.isF3 || keyManager.isEnter);
 
     // 이동 및 엔터키, 수정불가 셀의 좌우 이동을 제외한 문자열 입력 등의 키 입력은 텍스트 필드로 전파 한다.
     if (skip) {
@@ -249,6 +242,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       maxLines: 1,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
+      maxLength: widget.column.maxLength,
+      maxLengthEnforcement: widget.column.maxLengthEnforcement,
       textAlignVertical: TextAlignVertical.center,
       textAlign: widget.column.textAlign.value,
     );

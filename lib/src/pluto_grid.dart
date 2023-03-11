@@ -13,6 +13,10 @@ typedef PlutoOnLoadedEventCallback = void Function(PlutoGridOnLoadedEvent event)
 
 typedef PlutoOnChangedEventCallback = void Function(PlutoGridOnChangedEvent event);
 
+typedef PlutoOnCellChangedEventCallback = void Function(PlutoGridOnChangedEvent event);
+
+typedef PlutoOnEventCallback = void Function(PlutoGridOnChangedEvent event);
+
 typedef PlutoOnSelectedEventCallback = void Function(PlutoGridOnSelectedEvent event);
 
 typedef PlutoOnSortedEventCallback = void Function(PlutoGridOnSortedEvent event);
@@ -49,6 +53,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.columnGroups,
     this.onLoaded,
     this.onChanged,
+    this.onCellChanged,
     this.onSelected,
     this.onSorted,
     this.onRowChecked,
@@ -144,6 +149,17 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// The [onChanged] callback is not called.
   /// {@endtemplate}
   final PlutoOnChangedEventCallback? onChanged;
+
+  /// {@template pluto_grid_property_onCellChanged}
+  /// [onCellChanged] is called when the cell value changes.
+  ///
+  /// When changing the cell value directly programmatically
+  /// with the [PlutoGridStateManager.changeCellValue] method
+  /// When changing the value by calling [callOnChangedEvent]
+  /// as false as the parameter of [PlutoGridStateManager.changeCellValue]
+  /// The [onCellChanged] callback is not called.
+  /// {@endtemplate}
+  final PlutoOnCellChangedEventCallback? onCellChanged;
 
   /// {@template pluto_grid_property_onSelected}
   /// [onSelected] can receive a response only if [PlutoGrid.mode] is set to [PlutoGridMode.select] .
@@ -508,6 +524,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       ),
       columnGroups: widget.columnGroups,
       onChanged: widget.onChanged,
+      onCellChanged: widget.onCellChanged,
       onSelected: widget.onSelected,
       onSorted: widget.onSorted,
       onRowChecked: widget.onRowChecked,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 
 abstract class PlutoColumnType {
@@ -224,11 +225,9 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
 
   bool get hasFormat => this is PlutoColumnTypeHasFormat;
 
-  bool get applyFormatOnInit =>
-      hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormatOnInit : false;
+  bool get applyFormatOnInit => hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormatOnInit : false;
 
-  dynamic applyFormat(dynamic value) =>
-      hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormat(value) : value;
+  dynamic applyFormat(dynamic value) => hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormat(value) : value;
 }
 
 class PlutoColumnTypeText implements PlutoColumnType {
@@ -255,9 +254,7 @@ class PlutoColumnTypeText implements PlutoColumnType {
   }
 }
 
-class PlutoColumnTypeNumber
-    with PlutoColumnTypeWithNumberFormat
-    implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
+class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements PlutoColumnType, PlutoColumnTypeHasFormat<String> {
   @override
   final dynamic defaultValue;
 
@@ -276,6 +273,9 @@ class PlutoColumnTypeNumber
   @override
   final String? locale;
 
+  @override
+  final List<TextInputFormatter> inputFormatters;
+
   PlutoColumnTypeNumber({
     this.defaultValue,
     required this.negative,
@@ -283,8 +283,10 @@ class PlutoColumnTypeNumber
     required this.applyFormatOnInit,
     required this.allowFirstDot,
     required this.locale,
+    inputFormatters,
   })  : numberFormat = intl.NumberFormat(format, locale),
-        decimalPoint = _getDecimalPoint(format);
+        decimalPoint = _getDecimalPoint(format),
+        inputFormatters = [];
 
   @override
   final intl.NumberFormat numberFormat;
@@ -299,9 +301,7 @@ class PlutoColumnTypeNumber
   }
 }
 
-class PlutoColumnTypeCurrency
-    with PlutoColumnTypeWithNumberFormat
-    implements PlutoColumnType, PlutoColumnTypeHasFormat<String?> {
+class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements PlutoColumnType, PlutoColumnTypeHasFormat<String?> {
   @override
   final dynamic defaultValue;
 
@@ -351,8 +351,7 @@ class PlutoColumnTypeCurrency
   late final int decimalPoint;
 }
 
-class PlutoColumnTypeSelect
-    implements PlutoColumnType, PlutoColumnTypeHasPopupIcon {
+class PlutoColumnTypeSelect implements PlutoColumnType, PlutoColumnTypeHasPopupIcon {
   @override
   final dynamic defaultValue;
 
@@ -386,12 +385,7 @@ class PlutoColumnTypeSelect
   }
 }
 
-class PlutoColumnTypeDate
-    implements
-        PlutoColumnType,
-        PlutoColumnTypeHasFormat<String>,
-        PlutoColumnTypeHasDateFormat,
-        PlutoColumnTypeHasPopupIcon {
+class PlutoColumnTypeDate implements PlutoColumnType, PlutoColumnTypeHasFormat<String>, PlutoColumnTypeHasDateFormat, PlutoColumnTypeHasPopupIcon {
   @override
   final dynamic defaultValue;
 
@@ -477,8 +471,7 @@ class PlutoColumnTypeDate
   }
 }
 
-class PlutoColumnTypeTime
-    implements PlutoColumnType, PlutoColumnTypeHasPopupIcon {
+class PlutoColumnTypeTime implements PlutoColumnType, PlutoColumnTypeHasPopupIcon {
   @override
   final dynamic defaultValue;
 
@@ -595,9 +588,7 @@ mixin PlutoColumnTypeWithNumberFormat {
       match += numberFormat.symbols.MINUS_SIGN;
     }
 
-    formatted = formatted
-        .replaceAll(RegExp('[^$match]'), '')
-        .replaceFirst(numberFormat.symbols.DECIMAL_SEP, '.');
+    formatted = formatted.replaceAll(RegExp('[^$match]'), '').replaceFirst(numberFormat.symbols.DECIMAL_SEP, '.');
 
     final num formattedNumber = num.tryParse(formatted) ?? 0;
 
