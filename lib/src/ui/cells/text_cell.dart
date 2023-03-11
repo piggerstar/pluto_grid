@@ -45,7 +45,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   List<TextInputFormatter>? get inputFormatters => [];
 
-  String get formattedValue => widget.column.formattedValueForDisplayInEditing(widget.cell.value);
+  /// override default column configuration if the row has its own column configuration
+  PlutoColumn get column => widget.row.columns?[widget.column.field] != null ? widget.row.columns![widget.column.field]! : widget.column;
+
+  String get formattedValue => column.formattedValueForDisplayInEditing(widget.cell.value);
 
   @override
   void initState() {
@@ -247,10 +250,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
-      maxLength: widget.column.maxLength,
-      maxLengthEnforcement: widget.column.maxLengthEnforcement,
+      maxLength: column.maxLength,
+      maxLengthEnforcement: column.maxLengthEnforcement,
       textAlignVertical: TextAlignVertical.center,
-      textAlign: widget.column.textAlign.value,
+      textAlign: column.textAlign.value,
     );
   }
 }

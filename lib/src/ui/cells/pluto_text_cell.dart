@@ -36,7 +36,6 @@ class PlutoTextCellState extends State<PlutoTextCell> with TextCellState<PlutoTe
   @override
   void initState() {
     super.initState();
-    PlutoColumn column = widget.row.column != null ? widget.row.column! : widget.column;
     final textColumn = column.type.text;
     inputFormatters = textColumn.inputFormatters;
 

@@ -9,7 +9,7 @@ class PlutoRow {
     bool checked = false,
     this.isLoading = false,
     Key? key,
-    this.column,
+    this.columns,
   })  : type = type ?? PlutoRowTypeNormal.instance,
         _checked = checked,
         _state = PlutoRowState.none,
@@ -33,7 +33,7 @@ class PlutoRow {
 
   PlutoRowState _state;
 
-  PlutoColumn? column;
+  Map<String, PlutoColumn>? columns;
 
   Key get key => _key;
 

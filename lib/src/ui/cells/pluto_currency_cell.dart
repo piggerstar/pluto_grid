@@ -48,7 +48,6 @@ class PlutoCurrencyCellState extends State<PlutoCurrencyCell> with TextCellState
   @override
   void initState() {
     super.initState();
-    PlutoColumn column = widget.row.column != null ? widget.row.column! : widget.column;
     final currencyColumn = column.type.currency;
 
     decimalRange = currencyColumn.decimalPoint;
