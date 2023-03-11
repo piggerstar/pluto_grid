@@ -265,7 +265,7 @@ mixin EditingState implements IPlutoGridState {
     PlutoCell cell,
     dynamic value, {
     bool callOnChangedEvent = true,
-    bool force = false,
+    bool force = true,
     bool notify = true,
     CellEditingStatus? status,
   }) {
