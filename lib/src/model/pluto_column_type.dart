@@ -8,9 +8,11 @@ abstract class PlutoColumnType {
   /// Set as a string column.
   factory PlutoColumnType.text({
     dynamic defaultValue = '',
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return PlutoColumnTypeText(
       defaultValue: defaultValue,
+      inputFormatters: inputFormatters ?? [],
     );
   }
 
@@ -36,6 +38,7 @@ abstract class PlutoColumnType {
     bool applyFormatOnInit = true,
     bool allowFirstDot = false,
     String? locale,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return PlutoColumnTypeNumber(
       defaultValue: defaultValue,
@@ -44,6 +47,7 @@ abstract class PlutoColumnType {
       applyFormatOnInit: applyFormatOnInit,
       allowFirstDot: allowFirstDot,
       locale: locale,
+      inputFormatters: inputFormatters ?? [],
     );
   }
 
@@ -72,6 +76,7 @@ abstract class PlutoColumnType {
     String? name,
     String? symbol,
     int? decimalDigits,
+    List<TextInputFormatter>? inputFormatters,
   }) {
     return PlutoColumnTypeCurrency(
       defaultValue: defaultValue,
@@ -83,6 +88,7 @@ abstract class PlutoColumnType {
       name: name,
       symbol: symbol,
       decimalDigits: decimalDigits,
+      inputFormatters: inputFormatters ?? [],
     );
   }
 
@@ -234,8 +240,11 @@ class PlutoColumnTypeText implements PlutoColumnType {
   @override
   final dynamic defaultValue;
 
+  final List<TextInputFormatter> inputFormatters;
+
   const PlutoColumnTypeText({
     this.defaultValue,
+    this.inputFormatters = const [],
   });
 
   @override
@@ -283,10 +292,9 @@ class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements Plut
     required this.applyFormatOnInit,
     required this.allowFirstDot,
     required this.locale,
-    inputFormatters,
+    this.inputFormatters = const [],
   })  : numberFormat = intl.NumberFormat(format, locale),
-        decimalPoint = _getDecimalPoint(format),
-        inputFormatters = [];
+        decimalPoint = _getDecimalPoint(format);
 
   @override
   final intl.NumberFormat numberFormat;
@@ -324,6 +332,9 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
 
   final String? symbol;
 
+  @override
+  final List<TextInputFormatter> inputFormatters;
+
   PlutoColumnTypeCurrency({
     this.defaultValue,
     required this.negative,
@@ -334,6 +345,7 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
     this.name,
     this.symbol,
     int? decimalDigits,
+    this.inputFormatters = const [],
   }) : numberFormat = intl.NumberFormat.currency(
           locale: locale,
           name: name,
@@ -542,6 +554,8 @@ mixin PlutoColumnTypeWithNumberFormat {
   bool get allowFirstDot;
 
   String? get locale;
+
+  List<TextInputFormatter> get inputFormatters;
 
   bool isValid(dynamic value) {
     if (!isNumeric(value)) {

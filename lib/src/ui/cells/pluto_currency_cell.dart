@@ -66,6 +66,7 @@ class PlutoCurrencyCellState extends State<PlutoCurrencyCell> with TextCellState
         allowFirstDot: allowFirstDot,
         decimalSeparator: decimalSeparator,
       ),
+      ...currencyColumn.inputFormatters
     ];
 
     keyboardType = TextInputType.numberWithOptions(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/services/text_formatter.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import 'text_cell.dart';
@@ -30,8 +31,13 @@ class PlutoTextCell extends StatefulWidget implements TextCell {
 
 class PlutoTextCellState extends State<PlutoTextCell> with TextCellState<PlutoTextCell> {
   @override
+  late final List<TextInputFormatter>? inputFormatters;
+
+  @override
   void initState() {
     super.initState();
+    final textColumn = widget.column.type.text;
+    inputFormatters = textColumn.inputFormatters;
 
     widget.stateManager.setInputFormatters(inputFormatters);
     widget.stateManager.setTextEditingController(textController);
