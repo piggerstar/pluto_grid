@@ -157,7 +157,10 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             stateManager.setShowColumnFilter(true);
           },
           onChanged: (PlutoGridOnChangedEvent event) {
-            print(event);
+            print('onChanged $event');
+          },
+          onCellChanged: (PlutoGridOnChangedEvent event) {
+            print('onCellChanged $event');
           },
           configuration: const PlutoGridConfiguration(),
         ),

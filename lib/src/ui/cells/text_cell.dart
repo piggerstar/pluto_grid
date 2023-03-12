@@ -54,8 +54,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   void initState() {
     super.initState();
     cellFocus = FocusNode(onKey: _handleOnKey);
-    _initialCellValue = textController.text;
     textController.text = formattedValue;
+    _initialCellValue = textController.text;
     _cellEditingStatus = CellEditingStatus.init;
   }
 
@@ -88,8 +88,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _restoreText() {
-    widget.stateManager.notifyOnCellChange(widget.stateManager.currentCell!, _initialCellValue, status: _cellEditingStatus);
-
     if (_cellEditingStatus.isNotChanged) {
       return;
     }
@@ -164,8 +162,6 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   void _handleOnComplete() {
     final old = textController.text;
-
-    _triggerCellChanged();
 
     _changeValue();
 
