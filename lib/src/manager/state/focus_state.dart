@@ -60,9 +60,7 @@ mixin FocusState implements IPlutoGridState {
       return;
     }
 
-    final columnIndexes = reversed
-        ? columnIndexesByShowFrozen.reversed.toList(growable: false)
-        : columnIndexesByShowFrozen.toList(growable: false);
+    final columnIndexes = reversed ? columnIndexesByShowFrozen.reversed.toList(growable: false) : columnIndexesByShowFrozen.toList(growable: false);
 
     final length = columnIndexes.length;
 
