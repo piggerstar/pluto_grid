@@ -197,6 +197,9 @@ class PlutoColumn {
   /// The behavior when the maximum number of characters is exceeded.
   MaxLengthEnforcement? maxLengthEnforcement;
 
+  /// The behavior when the cell is un-focus
+  bool keepFocusOnChange;
+
   PlutoColumn({
     required this.title,
     required this.field,
@@ -233,6 +236,7 @@ class PlutoColumn {
     this.hide = false,
     this.maxLength,
     this.maxLengthEnforcement,
+    this.keepFocusOnChange = false,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly;
 

@@ -74,5 +74,8 @@ class PlutoCurrencyCellState extends State<PlutoCurrencyCell> with TextCellState
     );
     widget.stateManager.setInputFormatters(inputFormatters);
     widget.stateManager.setTextEditingController(textController);
+    textController.addListener(() {
+      handleOnChanged(textController.text.toString());
+    });
   }
 }

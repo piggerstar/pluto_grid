@@ -36,6 +36,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Id',
       field: 'id',
       type: PlutoColumnType.text(),
+      enableRowChecked: true,
+      keepFocusOnChange: true,
     ),
     PlutoColumn(
       title: 'Name',

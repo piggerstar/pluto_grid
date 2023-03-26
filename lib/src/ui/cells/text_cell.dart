@@ -54,9 +54,12 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   void initState() {
     super.initState();
     cellFocus = FocusNode(onKey: _handleOnKey);
+
     textController.text = formattedValue;
     _initialCellValue = textController.text;
     _cellEditingStatus = CellEditingStatus.init;
+
+    cellFocus.addListener(_onFocusChange);
   }
 
   @override
@@ -82,9 +85,20 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     textController.dispose();
 
+    cellFocus.removeListener(_onFocusChange);
     cellFocus.dispose();
 
     super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (!cellFocus.hasFocus) {
+      widget.stateManager.setEditing(false, notify: !widget.column.keepFocusOnChange);
+
+      if (widget.column.keepFocusOnChange) {
+        widget.stateManager.setKeepFocus(true);
+      }
+    }
   }
 
   void _restoreText() {

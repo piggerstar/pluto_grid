@@ -41,5 +41,8 @@ class PlutoTextCellState extends State<PlutoTextCell> with TextCellState<PlutoTe
 
     widget.stateManager.setInputFormatters(inputFormatters);
     widget.stateManager.setTextEditingController(textController);
+    textController.addListener(() {
+      handleOnChanged(textController.text.toString());
+    });
   }
 }
