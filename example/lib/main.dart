@@ -148,23 +148,31 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(15),
-        child: PlutoGrid(
-          columns: columns,
-          rows: rows,
-          columnGroups: columnGroups,
-          onLoaded: (PlutoGridOnLoadedEvent event) {
-            stateManager = event.stateManager;
-            stateManager.setShowColumnFilter(true);
-          },
-          onChanged: (PlutoGridOnChangedEvent event) {
-            print('onChanged $event');
-          },
-          onCellChanged: (PlutoGridOnChangedEvent event) {
-            print('onCellChanged $event');
-          },
-          configuration: const PlutoGridConfiguration(),
+      body: Center(
+        child: Container(
+          height: 350,
+          width: 800,
+          padding: const EdgeInsets.all(15),
+          child: PlutoGrid(
+            columns: columns,
+            rows: rows,
+            columnGroups: columnGroups,
+            onLoaded: (PlutoGridOnLoadedEvent event) {
+              stateManager = event.stateManager;
+              stateManager.setShowColumnFilter(true);
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              print('onChanged $event');
+            },
+            onCellChanged: (PlutoGridOnChangedEvent event) {
+              print('onCellChanged $event');
+            },
+            configuration: const PlutoGridConfiguration(
+                scrollbar: PlutoGridScrollbarConfig(
+              isAlwaysShown: true,
+              showOnRender: true,
+            )),
+          ),
         ),
       ),
     );
