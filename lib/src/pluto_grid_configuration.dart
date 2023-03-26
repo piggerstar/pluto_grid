@@ -633,7 +633,6 @@ class PlutoGridScrollbarConfig {
   const PlutoGridScrollbarConfig({
     this.draggableScrollbar = true,
     this.isAlwaysShown = false,
-    this.showOnRender = false,
     this.showOnRenderType = Axis.horizontal,
     this.onlyDraggingThumb = true,
     this.enableScrollAfterDragEnd = true,
@@ -653,11 +652,6 @@ class PlutoGridScrollbarConfig {
   final bool draggableScrollbar;
 
   final bool isAlwaysShown;
-
-  /// Immediately show both horizontal & vertical scroll bar when the grid is rendered
-  /// This will only be enabled if [isAlwaysShown] is set to true
-  /// use [showOnRenderVerticalOnly] or [showOnRenderHorizontalOnly] to show only one of them
-  final bool showOnRender;
 
   final Axis showOnRenderType;
 
@@ -703,7 +697,6 @@ class PlutoGridScrollbarConfig {
             runtimeType == other.runtimeType &&
             draggableScrollbar == other.draggableScrollbar &&
             isAlwaysShown == other.isAlwaysShown &&
-            showOnRender == other.showOnRender &&
             showOnRenderType == other.showOnRenderType &&
             onlyDraggingThumb == other.onlyDraggingThumb &&
             enableScrollAfterDragEnd == other.enableScrollAfterDragEnd &&
@@ -724,7 +717,6 @@ class PlutoGridScrollbarConfig {
   int get hashCode => Object.hash(
         draggableScrollbar,
         isAlwaysShown,
-        showOnRender,
         showOnRenderType,
         onlyDraggingThumb,
         enableScrollAfterDragEnd,

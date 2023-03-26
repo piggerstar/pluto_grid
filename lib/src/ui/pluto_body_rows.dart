@@ -77,7 +77,6 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       verticalController: scrollbarConfig.draggableScrollbar ? _verticalScroll : null,
       horizontalController: scrollbarConfig.draggableScrollbar ? _horizontalScroll : null,
       isAlwaysShown: scrollbarConfig.isAlwaysShown,
-      showOnRender: scrollbarConfig.showOnRender,
       showOnRenderType: scrollbarConfig.showOnRenderType,
       onlyDraggingThumb: scrollbarConfig.onlyDraggingThumb,
       enableHover: PlatformHelper.isDesktop,

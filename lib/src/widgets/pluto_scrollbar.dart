@@ -38,7 +38,6 @@ class PlutoScrollbar extends StatefulWidget {
     this.horizontalController,
     this.verticalController,
     this.isAlwaysShown = false,
-    this.showOnRender = false,
     this.showOnRenderType = Axis.horizontal,
     this.onlyDraggingThumb = true,
     this.enableHover = true,
@@ -68,8 +67,6 @@ class PlutoScrollbar extends StatefulWidget {
   final ScrollController? verticalController;
 
   final bool isAlwaysShown;
-
-  final bool showOnRender;
 
   final Axis showOnRenderType;
 
@@ -167,10 +164,6 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     _thicknessAnimationController.addListener(() {
       _painter!.updateThickness(_thickness, _radius!);
     });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showScrollbarOnInit();
-    });
   }
 
   @override
@@ -220,34 +213,7 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     );
   }
 
-  void _showScrollbarOnInit() {
-    /// If [isAlwaysShown] is true, then we should show both the scrollbar immediately.
-    if (widget.isAlwaysShown && widget.showOnRender) {
-      if (widget.showOnRenderType == Axis.horizontal) {
-        _painter!.update(
-            FixedScrollMetrics(
-              minScrollExtent: widget.horizontalController?.position.minScrollExtent,
-              maxScrollExtent: widget.horizontalController?.position.maxScrollExtent,
-              pixels: widget.horizontalController?.position.pixels,
-              viewportDimension: widget.horizontalController?.position.viewportDimension,
-              axisDirection: widget.horizontalController?.position.axisDirection ?? AxisDirection.right,
-            ),
-            AxisDirection.right);
-      } else if (widget.showOnRenderType == Axis.vertical) {
-        _painter!.update(
-            FixedScrollMetrics(
-              minScrollExtent: widget.verticalController?.position.minScrollExtent,
-              maxScrollExtent: widget.verticalController?.position.maxScrollExtent,
-              pixels: widget.verticalController?.position.pixels,
-              viewportDimension: widget.verticalController?.position.viewportDimension,
-              axisDirection: widget.verticalController?.position.axisDirection ?? AxisDirection.down,
-            ),
-            AxisDirection.down);
-      }
-    }
-  }
-
-// Wait one frame and cause an empty scroll event.  This allows the thumb to
+  // Wait one frame and cause an empty scroll event.  This allows the thumb to
 // show immediately when isAlwaysShown is true.  A scroll event is required in
 // order to paint the thumb.
   void _triggerScrollbar() {

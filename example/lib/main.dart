@@ -170,7 +170,6 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             configuration: const PlutoGridConfiguration(
                 scrollbar: PlutoGridScrollbarConfig(
               isAlwaysShown: true,
-              showOnRender: true,
             )),
           ),
         ),
