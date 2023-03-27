@@ -12,6 +12,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import '../../pluto_grid.dart';
+
 const double _kScrollbarMinLength = 36.0;
 const double _kScrollbarMinOverscrollLength = 8.0;
 const Duration _kScrollbarTimeToFade = Duration(milliseconds: 1200);
@@ -45,6 +47,7 @@ class PlutoScrollbar extends StatefulWidget {
     this.thickness = defaultThickness,
     this.thicknessWhileDragging = defaultThicknessWhileDragging,
     this.hoverWidth = defaultScrollbarHoverWidth,
+    this.stateManager,
     double? mainAxisMargin,
     double? crossAxisMargin,
     Color? scrollBarColor,
@@ -108,6 +111,8 @@ class PlutoScrollbar extends StatefulWidget {
 
   static const Radius defaultRadiusWhileDragging = Radius.circular(4.0);
 
+  final PlutoGridStateManager? stateManager;
+
   @override
   PlutoGridCupertinoScrollbarState createState() => PlutoGridCupertinoScrollbarState();
 }
@@ -164,11 +169,14 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     _thicknessAnimationController.addListener(() {
       _painter!.updateThickness(_thickness, _radius!);
     });
+
+    widget.stateManager?.resizingChangeNotifier.addListener(_updateScrollbar);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     _textDirection = Directionality.of(context);
     if (_painter == null) {
       _painter = _buildCupertinoScrollbarPainter(context);
@@ -193,6 +201,12 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
       } else {
         _fadeoutAnimationController.reverse();
       }
+    }
+  }
+
+  void _updateScrollbar() {
+    if (widget.isAlwaysShown && widget.showOnRenderType == Axis.horizontal) {
+      _triggerScrollbar();
     }
   }
 
@@ -432,6 +446,7 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
 
   @override
   void dispose() {
+    widget.stateManager?.resizingChangeNotifier.removeListener(_updateScrollbar);
     _fadeoutAnimationController.dispose();
     _thicknessAnimationController.dispose();
     _fadeoutTimer?.cancel();

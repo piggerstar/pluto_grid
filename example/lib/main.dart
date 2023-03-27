@@ -38,6 +38,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       type: PlutoColumnType.text(),
       enableRowChecked: true,
       keepFocusOnChange: true,
+      frozen: PlutoColumnFrozen.start,
     ),
     PlutoColumn(
       title: 'Name',
