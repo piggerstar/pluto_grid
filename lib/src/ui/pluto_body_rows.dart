@@ -107,32 +107,35 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
             addRepaintBoundaries: false,
             itemBuilder: (ctx, i) {
               if (_rows[i].isLoading) {
-                return Stack(
-                  children: [
-                    PlutoBaseRow(
-                      key: ValueKey('body_row_${_rows[i].key}'),
-                      rowIdx: i,
-                      row: _rows[i],
-                      columns: _columns,
-                      stateManager: stateManager,
-                      visibilityLayout: true,
-                    ),
-                    Positioned.fill(
-                      child: Opacity(
-                        opacity: 0.7,
-                        child: ColoredBox(color: widget.loaderOverlayColor ?? Colors.white),
+                return MouseRegion(
+                  cursor: SystemMouseCursors.forbidden,
+                  child: Stack(
+                    children: [
+                      PlutoBaseRow(
+                        key: ValueKey('body_row_${_rows[i].key}'),
+                        rowIdx: i,
+                        row: _rows[i],
+                        columns: _columns,
+                        stateManager: stateManager,
+                        visibilityLayout: true,
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [widget.customLoading ?? const CircularProgressIndicator()],
+                      Positioned.fill(
+                        child: Opacity(
+                          opacity: 0.7,
+                          child: ColoredBox(color: widget.loaderOverlayColor ?? Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [widget.customLoading ?? const CircularProgressIndicator()],
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }
 
