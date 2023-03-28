@@ -67,6 +67,9 @@ abstract class IColumnState {
   /// to set it wider than the frozen column width constraint.
   void toggleFrozenColumn(PlutoColumn column, PlutoColumnFrozen frozen);
 
+  /// Toggle whether the column checkbox is visible or not.
+  void toggleCheckboxViewColumn(PlutoColumn column, bool value);
+
   /// Toggle column sorting.
   ///
   /// It works when you tap the title area of a column.
@@ -340,6 +343,15 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
+  void toggleCheckboxViewColumn(PlutoColumn column, bool value, {bool notify = true}) {
+    column.enableRowChecked = value;
+
+    if (notify) {
+      notifyListeners(true, toggleCheckboxViewColumn.hashCode);
+    }
+  }
+
+  @override
   void toggleFrozenColumn(PlutoColumn column, PlutoColumnFrozen frozen) {
     if (limitToggleFrozenColumn(column, frozen)) {
       return;
@@ -573,10 +585,7 @@ mixin ColumnState implements IPlutoGridState {
   void autoFitColumn(BuildContext context, PlutoColumn column) {
     final String maxValue = refRows.fold('', (previousValue, element) {
       final value = column.formattedValueForDisplay(
-        element.cells.entries
-            .firstWhere((element) => element.key == column.field)
-            .value
-            .value,
+        element.cells.entries.firstWhere((element) => element.key == column.field).value.value,
       );
 
       if (previousValue.length < value.length) {
@@ -602,15 +611,11 @@ mixin ColumnState implements IPlutoGridState {
 
     // todo : Apply (popup type icon, checkbox, drag indicator, renderer)
 
-    EdgeInsets cellPadding =
-        column.cellPadding ?? configuration.style.defaultCellPadding;
+    EdgeInsets cellPadding = column.cellPadding ?? configuration.style.defaultCellPadding;
 
     resizeColumn(
       column,
-      textPainter.width -
-          column.width +
-          (cellPadding.left + cellPadding.right) +
-          2,
+      textPainter.width - column.width + (cellPadding.left + cellPadding.right) + 2,
     );
   }
 
@@ -1019,9 +1024,7 @@ mixin ColumnState implements IPlutoGridState {
       return false;
     }
 
-    final columns = showFrozenColumn
-        ? leftFrozenColumns + bodyColumns + rightFrozenColumns
-        : refColumns;
+    final columns = showFrozenColumn ? leftFrozenColumns + bodyColumns + rightFrozenColumns : refColumns;
 
     final resizeHelper = getColumnsResizeHelper(
       columns: columns,

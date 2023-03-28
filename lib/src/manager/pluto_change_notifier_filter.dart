@@ -73,6 +73,7 @@ abstract class PlutoChangeNotifierFilterResolver {
 
       /// column_state
       stateManager.toggleFrozenColumn.hashCode: 'toggleFrozenColumn',
+      stateManager.toggleCheckboxViewColumn.hashCode: 'toggleCheckboxViewColumn',
       stateManager.toggleSortColumn.hashCode: 'toggleSortColumn',
       stateManager.insertColumns.hashCode: 'insertColumns',
       stateManager.removeColumns.hashCode: 'removeColumns',
@@ -186,6 +187,7 @@ class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterRes
       stateManager.setShowColumnGroups.hashCode,
       stateManager.setShowLoading.hashCode,
       stateManager.toggleFrozenColumn.hashCode,
+      stateManager.toggleCheckboxViewColumn.hashCode,
       stateManager.insertColumns.hashCode,
       stateManager.removeColumns.hashCode,
       stateManager.moveColumn.hashCode,
@@ -197,6 +199,7 @@ class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterRes
   static Set<int> defaultColumnsFilter(PlutoGridStateManager stateManager) {
     return {
       stateManager.toggleFrozenColumn.hashCode,
+      stateManager.toggleCheckboxViewColumn.hashCode,
       stateManager.insertColumns.hashCode,
       stateManager.removeColumns.hashCode,
       stateManager.moveColumn.hashCode,
@@ -210,6 +213,7 @@ class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterRes
   static Set<int> defaultRowsFilter(PlutoGridStateManager stateManager) {
     return {
       stateManager.toggleFrozenColumn.hashCode,
+      stateManager.toggleCheckboxViewColumn.hashCode,
       stateManager.insertColumns.hashCode,
       stateManager.removeColumns.hashCode,
       stateManager.moveColumn.hashCode,
@@ -271,6 +275,7 @@ class PlutoNotifierFilterResolverDefault implements PlutoChangeNotifierFilterRes
     }
 
     return {
+      stateManager.toggleCheckboxViewColumn.hashCode,
       stateManager.toggleAllRowChecked.hashCode,
       stateManager.setRowChecked.hashCode,
     };

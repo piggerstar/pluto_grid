@@ -149,32 +149,42 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: 350,
-          width: 800,
-          padding: const EdgeInsets.all(15),
-          child: PlutoGrid(
-            columns: columns,
-            rows: rows,
-            columnGroups: columnGroups,
-            onLoaded: (PlutoGridOnLoadedEvent event) {
-              stateManager = event.stateManager;
-              stateManager.setShowColumnFilter(true);
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextButton(
+            onPressed: () {
+              stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked, notify: false);
             },
-            onChanged: (PlutoGridOnChangedEvent event) {
-              print('onChanged $event');
-            },
-            onCellChanged: (PlutoGridOnChangedEvent event) {
-              print('onCellChanged $event');
-            },
-            configuration: const PlutoGridConfiguration(
-                scrollbar: PlutoGridScrollbarConfig(
-              isAlwaysShown: true,
-            )),
+            child: Text('Hide/Unhide Column Checkbox')),
+        Center(
+          child: Container(
+            height: 350,
+            width: 800,
+            padding: const EdgeInsets.all(15),
+            child: PlutoGrid(
+              columns: columns,
+              rows: rows,
+              columnGroups: columnGroups,
+              onLoaded: (PlutoGridOnLoadedEvent event) {
+                stateManager = event.stateManager;
+                stateManager.setShowColumnFilter(true);
+              },
+              onChanged: (PlutoGridOnChangedEvent event) {
+                print('onChanged $event');
+              },
+              onCellChanged: (PlutoGridOnChangedEvent event) {
+                print('onCellChanged $event');
+              },
+              configuration: const PlutoGridConfiguration(
+                  scrollbar: PlutoGridScrollbarConfig(
+                isAlwaysShown: true,
+              )),
+            ),
           ),
         ),
-      ),
-    );
+      ],
+    ));
   }
 }
