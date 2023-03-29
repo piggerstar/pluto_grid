@@ -660,7 +660,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                   id: _StackName.leftFrozenColumns,
                   child: PlutoLeftFrozenColumns(_stateManager),
                 ),
-                LayoutId(id: _StackName.leftFrozenRows, child: PlutoLeftFrozenRows(_stateManager)),
+                LayoutId(id: _StackName.leftFrozenRows, child: PlutoLeftFrozenRows(_stateManager, customLoading: widget.customRowLoading, loaderOverlayColor: widget.rowLoaderOverlayColor)),
                 LayoutId(
                   id: _StackName.leftFrozenDivider,
                   child: PlutoShadowLine(
@@ -682,7 +682,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                   id: _StackName.rightFrozenColumns,
                   child: PlutoRightFrozenColumns(_stateManager),
                 ),
-                LayoutId(id: _StackName.rightFrozenRows, child: PlutoRightFrozenRows(_stateManager)),
+                LayoutId(id: _StackName.rightFrozenRows, child: PlutoRightFrozenRows(_stateManager, customLoading: widget.customRowLoading, loaderOverlayColor: widget.rowLoaderOverlayColor)),
                 LayoutId(
                   id: _StackName.rightFrozenDivider,
                   child: PlutoShadowLine(

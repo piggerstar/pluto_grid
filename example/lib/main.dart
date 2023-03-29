@@ -44,6 +44,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Name',
       field: 'name',
       type: PlutoColumnType.text(),
+      frozen: PlutoColumnFrozen.start,
     ),
     PlutoColumn(
       title: 'Age',
@@ -74,6 +75,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'salary',
       field: 'salary',
       type: PlutoColumnType.currency(),
+      frozen: PlutoColumnFrozen.end,
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -155,13 +157,13 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       children: [
         TextButton(
             onPressed: () {
-              stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked, notify: false);
+              stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked);
             },
             child: Text('Hide/Unhide Column Checkbox')),
         Center(
           child: Container(
             height: 350,
-            width: 800,
+            width: 1200,
             padding: const EdgeInsets.all(15),
             child: PlutoGrid(
               columns: columns,

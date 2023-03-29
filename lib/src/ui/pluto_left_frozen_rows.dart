@@ -5,9 +5,13 @@ import 'ui.dart';
 
 class PlutoLeftFrozenRows extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
+  final Widget? customLoading;
+  final Color? loaderOverlayColor;
 
   const PlutoLeftFrozenRows(
     this.stateManager, {
+    this.customLoading,
+    this.loaderOverlayColor,
     super.key,
   });
 
@@ -15,8 +19,7 @@ class PlutoLeftFrozenRows extends PlutoStatefulWidget {
   PlutoLeftFrozenRowsState createState() => PlutoLeftFrozenRowsState();
 }
 
-class PlutoLeftFrozenRowsState
-    extends PlutoStateWithChange<PlutoLeftFrozenRows> {
+class PlutoLeftFrozenRowsState extends PlutoStateWithChange<PlutoLeftFrozenRows> {
   List<PlutoColumn> _columns = [];
 
   List<PlutoRow> _rows = [];
@@ -60,6 +63,28 @@ class PlutoLeftFrozenRowsState
       itemCount: _rows.length,
       itemExtent: stateManager.rowTotalHeight,
       itemBuilder: (ctx, i) {
+        if (_rows[i].isLoading) {
+          return MouseRegion(
+            cursor: SystemMouseCursors.forbidden,
+            child: Stack(
+              children: [
+                PlutoBaseRow(
+                  key: ValueKey('left_frozen_row_${_rows[i].key}'),
+                  rowIdx: i,
+                  row: _rows[i],
+                  columns: _columns,
+                  stateManager: stateManager,
+                ),
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.7,
+                    child: ColoredBox(color: widget.loaderOverlayColor ?? Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
         return PlutoBaseRow(
           key: ValueKey('left_frozen_row_${_rows[i].key}'),
           rowIdx: i,
