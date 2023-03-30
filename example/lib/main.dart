@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 void main() {
@@ -147,6 +148,12 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
   /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
   late final PlutoGridStateManager stateManager;
+  final ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,16 +163,20 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         TextButton(
-            onPressed: () {
-              stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked);
-            },
-            child: Text('Hide/Unhide Column Checkbox')),
-        Center(
-          child: Container(
-            height: 350,
-            width: 1200,
-            padding: const EdgeInsets.all(15),
+          onPressed: () {
+            stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked);
+          },
+          child: const Text('Hide/Unhide Column Checkbox'),
+        ),
+        Container(
+          height: 350,
+          width: 1200,
+          padding: const EdgeInsets.all(15),
+          child: ImprovedScrolling(
+            scrollController: controller,
+            enableMMBScrolling: true,
             child: PlutoGrid(
+              scrollController: controller,
               columns: columns,
               rows: rows,
               columnGroups: columnGroups,
@@ -185,7 +196,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               )),
             ),
           ),
-        ),
+        )
       ],
     ));
   }

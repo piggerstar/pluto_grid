@@ -14,6 +14,7 @@ dependencies:
   intl: ^0.17.0
   rxdart: ^0.27.7
   collection: ^1.16.0
+  flutter_improved_scrolling: ^0.0.3
 
 dev_dependencies:
   flutter_test:

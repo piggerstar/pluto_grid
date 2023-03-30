@@ -647,12 +647,12 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                   _stateManager,
                   customLoading: widget.customRowLoading,
                   loaderOverlayColor: widget.rowLoaderOverlayColor,
-                  scrollController: widget.scrollController
+                  scrollController: widget.scrollController,
                 ),
               ),
               LayoutId(
                 id: _StackName.bodyColumns,
-                child: PlutoBodyColumns(_stateManager),
+                child: PlutoBodyColumns(_stateManager, scrollController: widget.scrollController),
               ),
 
               /// Body columns footer.

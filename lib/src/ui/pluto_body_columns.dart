@@ -7,9 +7,11 @@ import 'ui.dart';
 
 class PlutoBodyColumns extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
+  final ScrollController? scrollController;
 
   const PlutoBodyColumns(
     this.stateManager, {
+    this.scrollController,
     super.key,
   });
 
@@ -36,15 +38,23 @@ class PlutoBodyColumnsState extends PlutoStateWithChange<PlutoBodyColumns> {
     super.initState();
 
     _scroll = stateManager.scroll.horizontal!.addAndGet();
-
+    if (widget.scrollController != null) {
+      stateManager.scroll.bodyRowsHorizontal?.addListener(_customScrollListener);
+    }
     updateState(PlutoNotifierEventForceUpdate.instance);
   }
 
   @override
   void dispose() {
     _scroll.dispose();
-
+    if (widget.scrollController != null) {
+      stateManager.scroll.bodyRowsHorizontal?.removeListener(_customScrollListener);
+    }
     super.dispose();
+  }
+
+  void _customScrollListener() {
+    _scroll.jumpTo(stateManager.scroll.bodyRowsHorizontal!.offset);
   }
 
   @override
@@ -72,9 +82,7 @@ class PlutoBodyColumnsState extends PlutoStateWithChange<PlutoBodyColumns> {
   }
 
   List<PlutoColumn> _getColumns() {
-    return stateManager.showFrozenColumn
-        ? stateManager.bodyColumns
-        : stateManager.columns;
+    return stateManager.showFrozenColumn ? stateManager.bodyColumns : stateManager.columns;
   }
 
   int _getItemCount() {
@@ -120,9 +128,7 @@ class PlutoBodyColumnsState extends PlutoStateWithChange<PlutoBodyColumns> {
         ),
         scrollController: _scroll,
         initialViewportDimension: MediaQuery.of(context).size.width,
-        children: _showColumnGroups == true
-            ? _columnGroups.map(_makeColumnGroup).toList(growable: false)
-            : _columns.map(_makeColumn).toList(growable: false),
+        children: _showColumnGroups == true ? _columnGroups.map(_makeColumnGroup).toList(growable: false) : _columns.map(_makeColumn).toList(growable: false),
       ),
     );
   }
@@ -154,8 +160,7 @@ class MainColumnLayoutDelegate extends MultiChildLayoutDelegate {
     totalColumnsHeight = 0;
 
     if (stateManager.showColumnGroups) {
-      totalColumnsHeight =
-          stateManager.columnGroupHeight + stateManager.columnHeight;
+      totalColumnsHeight = stateManager.columnGroupHeight + stateManager.columnHeight;
     } else {
       totalColumnsHeight = stateManager.columnHeight;
     }
