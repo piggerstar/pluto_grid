@@ -74,6 +74,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.showTableLoadingText = true,
     this.customRowLoading,
     this.rowLoaderOverlayColor,
+    this.scrollController,
   }) : super(key: key);
 
   /// {@template pluto_grid_property_columns}
@@ -343,6 +344,8 @@ class PlutoGrid extends PlutoStatefulWidget {
 
   /// custom color for row loader
   final Color? rowLoaderOverlayColor;
+
+  final ScrollController? scrollController;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [PlutoGrid].
   ///
@@ -640,7 +643,12 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
               /// Body columns and rows.
               LayoutId(
                 id: _StackName.bodyRows,
-                child: PlutoBodyRows(_stateManager, customLoading: widget.customRowLoading, loaderOverlayColor: widget.rowLoaderOverlayColor),
+                child: PlutoBodyRows(
+                  _stateManager,
+                  customLoading: widget.customRowLoading,
+                  loaderOverlayColor: widget.rowLoaderOverlayColor,
+                  scrollController: widget.scrollController
+                ),
               ),
               LayoutId(
                 id: _StackName.bodyColumns,

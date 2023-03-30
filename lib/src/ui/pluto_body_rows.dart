@@ -8,11 +8,13 @@ class PlutoBodyRows extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
   final Widget? customLoading;
   final Color? loaderOverlayColor;
+  final ScrollController? scrollController;
 
   const PlutoBodyRows(
     this.stateManager, {
     this.customLoading,
     this.loaderOverlayColor,
+    this.scrollController,
     super.key,
   });
 
@@ -38,7 +40,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
 
     _horizontalScroll = stateManager.scroll.horizontal!.addAndGet();
 
-    stateManager.scroll.setBodyRowsHorizontal(_horizontalScroll);
+    stateManager.scroll.setBodyRowsHorizontal(widget.scrollController ?? _horizontalScroll);
 
     _verticalScroll = stateManager.scroll.vertical!.addAndGet();
 
@@ -75,7 +77,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
 
     return PlutoScrollbar(
       verticalController: scrollbarConfig.draggableScrollbar ? _verticalScroll : null,
-      horizontalController: scrollbarConfig.draggableScrollbar ? _horizontalScroll : null,
+      horizontalController: scrollbarConfig.draggableScrollbar ? (widget.scrollController ?? _horizontalScroll) : null,
       isAlwaysShown: scrollbarConfig.isAlwaysShown,
       showOnRenderType: scrollbarConfig.showOnRenderType,
       onlyDraggingThumb: scrollbarConfig.onlyDraggingThumb,
@@ -93,7 +95,7 @@ class PlutoBodyRowsState extends PlutoStateWithChange<PlutoBodyRows> {
       longPressDuration: scrollbarConfig.longPressDuration,
       stateManager: stateManager,
       child: SingleChildScrollView(
-        controller: _horizontalScroll,
+        controller: (widget.scrollController ?? _horizontalScroll),
         scrollDirection: Axis.horizontal,
         physics: const ClampingScrollPhysics(),
         child: CustomSingleChildLayout(
