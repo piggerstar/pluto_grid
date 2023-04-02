@@ -1230,6 +1230,7 @@ class _GridContainer extends StatelessWidget {
             color: style.gridBackgroundColor,
             borderRadius: style.gridBorderRadius,
             border: Border.all(
+              color: style.gridBorderColor,
               width: PlutoGridSettings.gridBorderWidth,
             ),
           ),
