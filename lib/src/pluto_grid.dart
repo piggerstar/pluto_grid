@@ -1230,12 +1230,11 @@ class _GridContainer extends StatelessWidget {
             color: style.gridBackgroundColor,
             borderRadius: style.gridBorderRadius,
             border: Border.all(
-              color: style.gridBorderColor,
               width: PlutoGridSettings.gridBorderWidth,
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(PlutoGridSettings.gridPadding),
+            padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
             child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
           ),
         ),

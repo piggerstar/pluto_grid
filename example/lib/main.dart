@@ -147,7 +147,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
 
   /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
   /// You can manipulate the grid dynamically at runtime by passing this through the [onLoaded] callback.
-  late final PlutoGridStateManager stateManager;
+  PlutoGridStateManager? stateManager;
   final ScrollController controller = ScrollController();
 
   @override
@@ -164,13 +164,15 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       children: [
         TextButton(
           onPressed: () {
-            stateManager.toggleCheckboxViewColumn(stateManager.columns.first, !stateManager.columns.first.enableRowChecked);
+            stateManager!.toggleCheckboxViewColumn(stateManager!.columns.first, !stateManager!.columns.first.enableRowChecked);
           },
           child: const Text('Hide/Unhide Column Checkbox'),
         ),
         Container(
-          height: 350,
-          width: 1200,
+          height: rows.length * 135,
+          constraints: BoxConstraints(
+            maxWidth: (stateManager?.columnsWidth ?? columns.map((e) => e.width).reduce((value, element) => value + element)) + 36,
+          ),
           padding: const EdgeInsets.all(15),
           child: ImprovedScrolling(
             scrollController: controller,
@@ -180,9 +182,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               columns: columns,
               rows: rows,
               columnGroups: columnGroups,
-              onLoaded: (PlutoGridOnLoadedEvent event) {
-                stateManager = event.stateManager;
-                stateManager.setShowColumnFilter(true);
+              onLoaded: (PlutoGridOnLoadedEvent event) async {
+                event.stateManager.setShowColumnFilter(true);
+                setState(() {
+                  stateManager = event.stateManager;
+                });
               },
               onChanged: (PlutoGridOnChangedEvent event) {
                 print('onChanged $event');
@@ -191,9 +195,18 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 print('onCellChanged $event');
               },
               configuration: const PlutoGridConfiguration(
-                  scrollbar: PlutoGridScrollbarConfig(
-                isAlwaysShown: true,
-              )),
+                scrollbar: PlutoGridScrollbarConfig(
+                  isAlwaysShown: false,
+                ),
+                style: PlutoGridStyleConfig(
+                  activatedColor: Colors.white,
+                  gridBorderColor: Colors.green,
+                  borderColor: Colors.lightBlueAccent,
+                  rowHeight: 46,
+                  columnHeight: 46,
+                  gridPadding: EdgeInsets.symmetric(horizontal: 2),
+                ),
+              ),
             ),
           ),
         )

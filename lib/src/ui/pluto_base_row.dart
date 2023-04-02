@@ -84,6 +84,8 @@ class PlutoBaseRow extends StatelessWidget {
               delegate: _RowCellsLayoutDelegate(
                 stateManager: stateManager,
                 columns: columns,
+                rowIdx: rowIdx,
+                row: row,
                 textDirection: stateManager.textDirection,
               ),
               scrollController: stateManager.scroll.bodyRowsHorizontal!,
@@ -95,6 +97,8 @@ class PlutoBaseRow extends StatelessWidget {
               delegate: _RowCellsLayoutDelegate(
                 stateManager: stateManager,
                 columns: columns,
+                rowIdx: rowIdx,
+                row: row,
                 textDirection: stateManager.textDirection,
               ),
               children: columns.map(_makeCell).toList(growable: false),
@@ -119,11 +123,22 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
 
   final TextDirection textDirection;
 
+  final int rowIdx;
+
+  final PlutoRow row;
+
   _RowCellsLayoutDelegate({
     required this.stateManager,
     required this.columns,
     required this.textDirection,
+    required this.rowIdx,
+    required this.row,
   }) : super(relayout: stateManager.resizingChangeNotifier);
+
+  bool get isLast => stateManager.refRows.indexWhere((element) => element == row) == stateManager.refRows.length - 1;
+
+  double get rowHeight =>
+      (isLast && stateManager.configuration.style.hideLastRowBorder) ? stateManager.rowHeight + (stateManager.configuration.style.lastRowHeightPadding ?? 4) : stateManager.rowHeight;
 
   @override
   Size getSize(BoxConstraints constraints) {
@@ -132,7 +147,7 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
       (previousValue, element) => previousValue + element.width,
     );
 
-    return Size(width, stateManager.rowHeight);
+    return Size(width, rowHeight);
   }
 
   @override
@@ -149,7 +164,7 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
           element.field,
           BoxConstraints.tightFor(
             width: width,
-            height: stateManager.rowHeight,
+            height: rowHeight,
           ),
         );
 
@@ -287,6 +302,8 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
       isCheckedRow: isCheckedRow,
     );
 
+    bool isLast = widget.stateManager.refRows.indexWhere((element) => element == widget.row) == widget.stateManager.refRows.length - 1;
+
     return BoxDecoration(
       color: rowColor,
       border: Border(
@@ -304,7 +321,7 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
             : stateManager.configuration.style.enableCellBorderHorizontal
                 ? BorderSide(
                     width: PlutoGridSettings.rowBorderWidth,
-                    color: stateManager.configuration.style.borderColor,
+                    color: (isLast && stateManager.configuration.style.hideLastRowBorder) ? Colors.transparent : stateManager.configuration.style.borderColor,
                   )
                 : BorderSide.none,
       ),

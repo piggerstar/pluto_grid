@@ -273,14 +273,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     } else {
       return BoxDecoration(
         color: isGroupedRowCell ? cellColorGroupedRow : null,
-        border: enableCellVerticalBorder
-            ? BorderDirectional(
-                end: BorderSide(
-                  color: borderColor,
-                  width: 1.0,
-                ),
-              )
-            : null,
+        border: enableCellVerticalBorder ? BorderDirectional(end: BorderSide(color: borderColor, width: 1)) : null,
       );
     }
   }
@@ -308,15 +301,12 @@ class _Cell extends PlutoStatefulWidget {
 
   final PlutoCell cell;
 
-  final Widget? customCellWidget;
-
   const _Cell({
     required this.stateManager,
     required this.rowIdx,
     required this.row,
     required this.column,
     required this.cell,
-    this.customCellWidget,
     Key? key,
   }) : super(key: key);
 

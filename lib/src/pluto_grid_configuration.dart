@@ -240,6 +240,9 @@ class PlutoGridStyleConfig {
     this.rowGroupEmptyIcon = Icons.noise_control_off,
     this.gridBorderRadius = BorderRadius.zero,
     this.gridPopupBorderRadius = BorderRadius.zero,
+    this.hideLastRowBorder = false,
+    this.gridPadding,
+    this.lastRowHeightPadding,
   });
 
   const PlutoGridStyleConfig.dark({
@@ -296,6 +299,9 @@ class PlutoGridStyleConfig {
     this.rowGroupEmptyIcon = Icons.noise_control_off,
     this.gridBorderRadius = BorderRadius.zero,
     this.gridPopupBorderRadius = BorderRadius.zero,
+    this.hideLastRowBorder = false,
+    this.gridPadding,
+    this.lastRowHeightPadding,
   });
 
   /// Enable borderShadow in [PlutoGrid].
@@ -443,6 +449,13 @@ class PlutoGridStyleConfig {
   /// Apply border radius to popup opened inside [PlutoGrid].
   final BorderRadiusGeometry gridPopupBorderRadius;
 
+  /// Hide the last row border
+  final bool hideLastRowBorder;
+
+  final EdgeInsetsGeometry? gridPadding;
+
+  final double? lastRowHeightPadding;
+
   PlutoGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
@@ -485,6 +498,9 @@ class PlutoGridStyleConfig {
     IconData? rowGroupEmptyIcon,
     BorderRadiusGeometry? gridBorderRadius,
     BorderRadiusGeometry? gridPopupBorderRadius,
+    bool? hideLastRowBorder,
+    EdgeInsetsGeometry? gridPadding,
+    double? lastRowHeightPadding,
   }) {
     return PlutoGridStyleConfig(
       enableGridBorderShadow: enableGridBorderShadow ?? this.enableGridBorderShadow,
@@ -528,6 +544,9 @@ class PlutoGridStyleConfig {
       rowGroupEmptyIcon: rowGroupEmptyIcon ?? this.rowGroupEmptyIcon,
       gridBorderRadius: gridBorderRadius ?? this.gridBorderRadius,
       gridPopupBorderRadius: gridPopupBorderRadius ?? this.gridPopupBorderRadius,
+      hideLastRowBorder: hideLastRowBorder ?? this.hideLastRowBorder,
+      gridPadding: gridPadding ?? this.gridPadding,
+      lastRowHeightPadding: lastRowHeightPadding ?? this.lastRowHeightPadding,
     );
   }
 
@@ -576,7 +595,10 @@ class PlutoGridStyleConfig {
             rowGroupCollapsedIcon == other.rowGroupCollapsedIcon &&
             rowGroupEmptyIcon == other.rowGroupEmptyIcon &&
             gridBorderRadius == other.gridBorderRadius &&
-            gridPopupBorderRadius == other.gridPopupBorderRadius;
+            gridPopupBorderRadius == other.gridPopupBorderRadius &&
+            hideLastRowBorder == other.hideLastRowBorder &&
+            gridPadding == other.gridPadding &&
+            lastRowHeightPadding == other.lastRowHeightPadding;
   }
 
   @override
@@ -622,6 +644,9 @@ class PlutoGridStyleConfig {
         rowGroupEmptyIcon,
         gridBorderRadius,
         gridPopupBorderRadius,
+        hideLastRowBorder,
+        gridPadding,
+        lastRowHeightPadding,
       ]);
 }
 
@@ -941,7 +966,7 @@ class PlutoGridColumnSizeConfig {
 }
 
 class PlutoGridLocaleText {
-  // Column menu
+// Column menu
   final String unfreezeColumn;
   final String freezeColumnToStart;
   final String freezeColumnToEnd;
@@ -951,10 +976,10 @@ class PlutoGridLocaleText {
   final String setFilter;
   final String resetFilter;
 
-  // SetColumns popup
+// SetColumns popup
   final String setColumnsTitle;
 
-  // Filter popup
+// Filter popup
   final String filterColumn;
   final String filterType;
   final String filterValue;
@@ -968,7 +993,7 @@ class PlutoGridLocaleText {
   final String filterLessThan;
   final String filterLessThanOrEqualTo;
 
-  // Date column popup
+// Date column popup
   final String sunday;
   final String monday;
   final String tuesday;
@@ -977,15 +1002,15 @@ class PlutoGridLocaleText {
   final String friday;
   final String saturday;
 
-  // Time column popup
+// Time column popup
   final String hour;
   final String minute;
 
-  // Common
+// Common
   final String loadingText;
 
   const PlutoGridLocaleText({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Unfreeze',
     this.freezeColumnToStart = 'Freeze to start',
     this.freezeColumnToEnd = 'Freeze to end',
@@ -994,9 +1019,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Set columns',
     this.setFilter = 'Set filter',
     this.resetFilter = 'Reset filter',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Column title',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Column',
     this.filterType = 'Type',
     this.filterValue = 'Value',
@@ -1009,7 +1034,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Greater than or equal to',
     this.filterLessThan = 'Less than',
     this.filterLessThanOrEqualTo = 'Less than or equal to',
-    // Date popup
+// Date popup
     this.sunday = 'Su',
     this.monday = 'Mo',
     this.tuesday = 'Tu',
@@ -1017,15 +1042,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Th',
     this.friday = 'Fr',
     this.saturday = 'Sa',
-    // Time column popup
+// Time column popup
     this.hour = 'Hour',
     this.minute = 'Minute',
-    // Common
+// Common
     this.loadingText = 'Loading',
   });
 
   const PlutoGridLocaleText.french({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Libérer',
     this.freezeColumnToStart = 'Figer au début',
     this.freezeColumnToEnd = 'Figer à la fin',
@@ -1034,9 +1059,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Définir les colonnes',
     this.setFilter = 'Filtrer',
     this.resetFilter = 'Défiltrer',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Titre de colonne',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Colonne',
     this.filterType = 'Type',
     this.filterValue = 'Valeur',
@@ -1049,7 +1074,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Supérieur ou égal à',
     this.filterLessThan = 'Inférieur à',
     this.filterLessThanOrEqualTo = 'Inférieur ou égal à',
-    // Date popup
+// Date popup
     this.sunday = 'Di',
     this.monday = 'Lu',
     this.tuesday = 'Ma',
@@ -1057,15 +1082,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Je',
     this.friday = 'Ve',
     this.saturday = 'Sa',
-    // Time column popup
+// Time column popup
     this.hour = 'Heure',
     this.minute = 'Minute',
-    // Common
+// Common
     this.loadingText = 'Chargement',
   });
 
   const PlutoGridLocaleText.china({
-    // Column menu
+// Column menu
     this.unfreezeColumn = '解冻列',
     this.freezeColumnToStart = '冻结列至起点',
     this.freezeColumnToEnd = '冻结列至终点',
@@ -1074,9 +1099,9 @@ class PlutoGridLocaleText {
     this.setColumns = '设置列',
     this.setFilter = '设置过滤器',
     this.resetFilter = '重置过滤器',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = '列标题',
-    // Filter popup
+// Filter popup
     this.filterColumn = '列',
     this.filterType = '类型',
     this.filterValue = '值',
@@ -1089,7 +1114,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = '大于等于',
     this.filterLessThan = '小于',
     this.filterLessThanOrEqualTo = '小于等于',
-    // Date popup
+// Date popup
     this.sunday = '日',
     this.monday = '一',
     this.tuesday = '二',
@@ -1097,15 +1122,15 @@ class PlutoGridLocaleText {
     this.thursday = '四',
     this.friday = '五',
     this.saturday = '六',
-    // Time column popup
+// Time column popup
     this.hour = '时',
     this.minute = '分',
-    // Common
+// Common
     this.loadingText = '加载中',
   });
 
   const PlutoGridLocaleText.korean({
-    // Column menu
+// Column menu
     this.unfreezeColumn = '고정 해제',
     this.freezeColumnToStart = '시작에 고정',
     this.freezeColumnToEnd = '끝에 고정',
@@ -1114,9 +1139,9 @@ class PlutoGridLocaleText {
     this.setColumns = '컬럼 설정',
     this.setFilter = '필터 설정',
     this.resetFilter = '필터 초기화',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = '컬럼명',
-    // Filter popup
+// Filter popup
     this.filterColumn = '컬럼',
     this.filterType = '종류',
     this.filterValue = '값',
@@ -1129,7 +1154,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = '~보다 크거나 같은',
     this.filterLessThan = '~보다 작은',
     this.filterLessThanOrEqualTo = '~보다 작거나 같은',
-    // Date popup
+// Date popup
     this.sunday = '일',
     this.monday = '월',
     this.tuesday = '화',
@@ -1137,15 +1162,15 @@ class PlutoGridLocaleText {
     this.thursday = '목',
     this.friday = '금',
     this.saturday = '토',
-    // Time column popup
+// Time column popup
     this.hour = '시',
     this.minute = '분',
-    // Common
+// Common
     this.loadingText = '로딩중',
   });
 
   const PlutoGridLocaleText.russian({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Открепить',
     this.freezeColumnToStart = 'Закрепить в начале',
     this.freezeColumnToEnd = 'Закрепить в конце',
@@ -1154,9 +1179,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Выбрать колонки',
     this.setFilter = 'Установить фильтр',
     this.resetFilter = 'Сбросить фильтр',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Column title',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Колонка',
     this.filterType = 'Тип',
     this.filterValue = 'Значение',
@@ -1169,7 +1194,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Больше или равно',
     this.filterLessThan = 'Меньше чем',
     this.filterLessThanOrEqualTo = 'Меньше или равно',
-    // Date popup
+// Date popup
     this.sunday = 'Вск',
     this.monday = 'Пн',
     this.tuesday = 'Вт',
@@ -1177,15 +1202,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Чт',
     this.friday = 'Пт',
     this.saturday = 'Сб',
-    // Time column popup
+// Time column popup
     this.hour = 'Часы',
     this.minute = 'Минуты',
-    // Common
+// Common
     this.loadingText = 'Загрузка',
   });
 
   const PlutoGridLocaleText.czech({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Uvolnit',
     this.freezeColumnToStart = 'Ukotvit na začátek',
     this.freezeColumnToEnd = 'Ukotvit na konec',
@@ -1194,9 +1219,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Upravit sloupce',
     this.setFilter = 'Nastavit filtr',
     this.resetFilter = 'Resetovat filtr',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Název sloupce',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Sloupec',
     this.filterType = 'Typ',
     this.filterValue = 'Hodnota',
@@ -1209,7 +1234,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Větší než nebo rovno',
     this.filterLessThan = 'Menší než',
     this.filterLessThanOrEqualTo = 'Menší než nebo rovno',
-    // Date popup
+// Date popup
     this.sunday = 'Ne',
     this.monday = 'Po',
     this.tuesday = 'Út',
@@ -1217,15 +1242,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Čt',
     this.friday = 'Pá',
     this.saturday = 'So',
-    // Time column popup
+// Time column popup
     this.hour = 'Hodina',
     this.minute = 'Minuta',
-    // Common
+// Common
     this.loadingText = 'Načítání',
   });
 
   const PlutoGridLocaleText.brazilianPortuguese({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Descongelar',
     this.freezeColumnToStart = 'Congelar ao início',
     this.freezeColumnToEnd = 'Congelar ao final',
@@ -1234,9 +1259,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Definir colunas',
     this.setFilter = 'Definir fitros',
     this.resetFilter = 'Limpar filtros',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Título da coluna',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Coluna',
     this.filterType = 'Tipo',
     this.filterValue = 'Valor',
@@ -1249,7 +1274,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Maior ou igual que',
     this.filterLessThan = 'Menor que',
     this.filterLessThanOrEqualTo = 'Menor ou igual que',
-    // Date popup
+// Date popup
     this.sunday = 'Dom',
     this.monday = 'Seg',
     this.tuesday = 'Ter',
@@ -1257,15 +1282,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Qui',
     this.friday = 'Sex',
     this.saturday = 'Sab',
-    // Time column popup
+// Time column popup
     this.hour = 'Hora',
     this.minute = 'Minuto',
-    // Common
+// Common
     this.loadingText = 'Carregando',
   });
 
   const PlutoGridLocaleText.spanish({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Descongelar',
     this.freezeColumnToStart = 'Inmovilizar al principio',
     this.freezeColumnToEnd = 'Inmovilizar al final',
@@ -1274,9 +1299,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Eligir columnas',
     this.setFilter = 'Definir fitros',
     this.resetFilter = 'Limpiar filtros',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Título de la columna',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Columna',
     this.filterType = 'Tipo',
     this.filterValue = 'Valor',
@@ -1289,7 +1314,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Más grande o igual que',
     this.filterLessThan = 'Más pequeño que',
     this.filterLessThanOrEqualTo = 'Más pequeño o igual que',
-    // Date popup
+// Date popup
     this.sunday = 'Dom',
     this.monday = 'Lu',
     this.tuesday = 'Ma',
@@ -1297,15 +1322,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Ju',
     this.friday = 'Vi',
     this.saturday = 'Sa',
-    // Time column popup
+// Time column popup
     this.hour = 'Hora',
     this.minute = 'Minuto',
-    // Common
+// Common
     this.loadingText = 'Cargando',
   });
 
   const PlutoGridLocaleText.persian({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'جدا کردن',
     this.freezeColumnToStart = 'چسباندن به ابتدا',
     this.freezeColumnToEnd = 'چسباندن به انتها',
@@ -1314,9 +1339,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'تنظیم ستون ها',
     this.setFilter = 'اعمال فیلتر',
     this.resetFilter = 'ریست فیلتر',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'عنوان ستون',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'ستون',
     this.filterType = 'نوع',
     this.filterValue = 'مقدار',
@@ -1329,7 +1354,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'بزرگتر مساوی از',
     this.filterLessThan = 'کمتر از',
     this.filterLessThanOrEqualTo = 'کمتر مساوی از',
-    // Date popup
+// Date popup
     this.sunday = 'ی',
     this.monday = 'د',
     this.tuesday = 'س',
@@ -1337,15 +1362,15 @@ class PlutoGridLocaleText {
     this.thursday = 'پ',
     this.friday = 'ج',
     this.saturday = 'ش',
-    // Time column popup
+// Time column popup
     this.hour = 'ساعت',
     this.minute = 'دقیقه',
-    // Common
+// Common
     this.loadingText = 'در حال بارگیری',
   });
 
   const PlutoGridLocaleText.arabic({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'إلغاء التجميد',
     this.freezeColumnToStart = 'تجميد إلى البداية',
     this.freezeColumnToEnd = 'تجميد إلى النهاية',
@@ -1354,9 +1379,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'إدراج أعمدة',
     this.setFilter = 'فلترة',
     this.resetFilter = 'تهيئة الفلترة',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'اسم العمود',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'العمود',
     this.filterType = 'النوع',
     this.filterValue = 'القيمة',
@@ -1369,7 +1394,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'أكبر من أو يساوي',
     this.filterLessThan = 'اصغر من',
     this.filterLessThanOrEqualTo = 'أصغر من أو يساوي',
-    // Date popup
+// Date popup
     this.sunday = 'أح',
     this.monday = 'إث',
     this.tuesday = 'ثل',
@@ -1377,15 +1402,15 @@ class PlutoGridLocaleText {
     this.thursday = 'خم',
     this.friday = 'جم',
     this.saturday = 'سب',
-    // Time column popup
+// Time column popup
     this.hour = 'ساعة',
     this.minute = 'دقيقي',
-    // Common
+// Common
     this.loadingText = 'جاري التحميل',
   });
 
   const PlutoGridLocaleText.norway({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Løsne',
     this.freezeColumnToStart = 'Fest til start',
     this.freezeColumnToEnd = 'Fest til slutt',
@@ -1394,9 +1419,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Sett kolonner',
     this.setFilter = 'Sett filter',
     this.resetFilter = 'Tilbakestill filter',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Kolonnetittel',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Kolonne',
     this.filterType = 'Type',
     this.filterValue = 'Verdi',
@@ -1409,7 +1434,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Større enn eller lik',
     this.filterLessThan = 'Mindre enn',
     this.filterLessThanOrEqualTo = 'Mindre enn eller lik',
-    // Date popup
+// Date popup
     this.sunday = 'Søn',
     this.monday = 'Man',
     this.tuesday = 'Tir',
@@ -1417,15 +1442,15 @@ class PlutoGridLocaleText {
     this.thursday = 'Tor',
     this.friday = 'Frr',
     this.saturday = 'Lør',
-    // Time column popup
+// Time column popup
     this.hour = 'Time',
     this.minute = 'Minutt',
-    // Common
+// Common
     this.loadingText = 'Laster',
   });
 
   const PlutoGridLocaleText.german({
-    // Column menu
+// Column menu
     this.unfreezeColumn = 'Spalte lösen',
     this.freezeColumnToStart = 'An den Anfang pinnen',
     this.freezeColumnToEnd = 'Ans Ende pinnen',
@@ -1434,9 +1459,9 @@ class PlutoGridLocaleText {
     this.setColumns = 'Spalten auswählen',
     this.setFilter = 'Filter anwenden',
     this.resetFilter = 'Filter zurücksetzen',
-    // SetColumns popup
+// SetColumns popup
     this.setColumnsTitle = 'Spaltentitel',
-    // Filter popup
+// Filter popup
     this.filterColumn = 'Spalte',
     this.filterType = 'Typ',
     this.filterValue = 'Wert',
@@ -1449,7 +1474,7 @@ class PlutoGridLocaleText {
     this.filterGreaterThanOrEqualTo = 'Größer als oder gleich',
     this.filterLessThan = 'Kleiner als',
     this.filterLessThanOrEqualTo = 'Kleiner als oder gleich',
-    // Date popup
+// Date popup
     this.sunday = 'So',
     this.monday = 'Mo',
     this.tuesday = 'Di',
@@ -1457,10 +1482,10 @@ class PlutoGridLocaleText {
     this.thursday = 'Do',
     this.friday = 'Fr',
     this.saturday = 'Sa',
-    // Time column popup
+// Time column popup
     this.hour = 'Stunde',
     this.minute = 'Minute',
-    // Common
+// Common
     this.loadingText = 'Lädt',
   });
 

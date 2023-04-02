@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/text_formatter.dart';
+import 'package:flutter/services.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 import 'text_cell.dart';
