@@ -293,7 +293,11 @@ class PlutoColumn {
   double startPosition = 0;
 
   bool checkReadOnly(PlutoRow row, PlutoCell cell) {
-    return hasCheckReadOnly ? _checkReadOnly!(row, cell) : readOnly;
+    return hasCheckReadOnly
+        ? _checkReadOnly!(row, cell)
+        : cell.enabled
+            ? false
+            : readOnly;
   }
 
   void setFilterFocusNode(FocusNode? node) {

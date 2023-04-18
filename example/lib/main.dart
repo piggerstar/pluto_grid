@@ -52,6 +52,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       field: 'age',
       type: PlutoColumnType.number(),
       maxLength: 3,
+      enableAutoEditing: false,
     ),
     PlutoColumn(
       title: 'Role',
@@ -99,12 +100,81 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
     ),
   ];
 
+  final List<PlutoColumn> simpleColumns = <PlutoColumn>[
+    PlutoColumn(
+      title: 'Id',
+      field: 'id',
+      type: PlutoColumnType.text(),
+      enableRowChecked: true,
+      keepFocusOnChange: true,
+      frozen: PlutoColumnFrozen.start,
+    ),
+    PlutoColumn(
+      title: 'Name',
+      field: 'name',
+      type: PlutoColumnType.text(),
+      frozen: PlutoColumnFrozen.start,
+    ),
+    PlutoColumn(
+      title: 'Age',
+      field: 'age',
+      type: PlutoColumnType.number(),
+      maxLength: 3,
+      enableEditingMode: true,
+      enableAutoEditing: false,
+      checkReadOnly: (row, cell) {
+        if (row.cells['id']?.value == 'user1') {
+          return true;
+        }
+        return false;
+      },
+    ),
+    PlutoColumn(
+      title: 'Role',
+      field: 'role',
+      type: PlutoColumnType.select(<String>[
+        'Programmer',
+        'Designer',
+        'Owner',
+      ]),
+    ),
+    PlutoColumn(
+      title: 'Joined',
+      field: 'joined',
+      type: PlutoColumnType.date(),
+    ),
+    PlutoColumn(
+      title: 'Working time',
+      field: 'working_time',
+      type: PlutoColumnType.time(),
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.count,
+          alignment: Alignment.center,
+          titleSpanBuilder: (text) {
+            return [
+              const TextSpan(
+                text: 'Count',
+                style: TextStyle(color: Colors.red),
+              ),
+              const TextSpan(text: ' : '),
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    ),
+  ];
+
+  final List<PlutoRow> emptyRows = [];
+
   final List<PlutoRow> rows = [
     PlutoRow(
       cells: {
         'id': PlutoCell(value: 'user1'),
-        'name': PlutoCell(value: 'Mike'),
-        'age': PlutoCell(value: 20),
+        'name': PlutoCell(value: 'Mike', enabled: false),
+        'age': PlutoCell(value: 20, enabled: false),
         'role': PlutoCell(value: 'Programmer'),
         'joined': PlutoCell(value: '2021-01-01'),
         'working_time': PlutoCell(value: '09:00'),
@@ -150,6 +220,12 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   PlutoGridStateManager? stateManager;
   final ScrollController controller = ScrollController();
 
+  List<PlutoRow> get getRows => rows;
+
+  List<PlutoColumn> get getColumns => simpleColumns;
+
+  List<PlutoColumnGroup>? get getColumnGroups => null;
+
   @override
   void initState() {
     super.initState();
@@ -168,44 +244,53 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           },
           child: const Text('Hide/Unhide Column Checkbox'),
         ),
-        Container(
-          height: rows.length * 135,
-          constraints: BoxConstraints(
-            maxWidth: (stateManager?.columnsWidth ?? columns.map((e) => e.width).reduce((value, element) => value + element)) + 36,
-          ),
-          padding: const EdgeInsets.all(15),
-          child: ImprovedScrolling(
-            scrollController: controller,
-            enableMMBScrolling: true,
-            child: PlutoGrid(
+        Center(
+          child: Container(
+            height: getRows.isNotEmpty ? (getRows.length * 135) : 115,
+            constraints: BoxConstraints(
+              maxWidth: (stateManager?.columnsWidth ?? getColumns.map((e) => e.width).reduce((value, element) => value + element)) + 36,
+            ),
+            padding: const EdgeInsets.all(15),
+            child: ImprovedScrolling(
               scrollController: controller,
-              columns: columns,
-              rows: rows,
-              columnGroups: columnGroups,
-              onLoaded: (PlutoGridOnLoadedEvent event) async {
-                event.stateManager.setShowColumnFilter(true);
-                setState(() {
-                  stateManager = event.stateManager;
-                });
-              },
-              onChanged: (PlutoGridOnChangedEvent event) {
-                print('onChanged $event');
-              },
-              onCellChanged: (PlutoGridOnChangedEvent event) {
-                print('onCellChanged $event');
-              },
-              configuration: const PlutoGridConfiguration(
-                scrollbar: PlutoGridScrollbarConfig(
-                  isAlwaysShown: false,
+              enableMMBScrolling: true,
+              child: PlutoGrid(
+                scrollController: controller,
+                columns: getColumns,
+                rows: getRows,
+                columnGroups: getColumnGroups,
+                onLoaded: (PlutoGridOnLoadedEvent event) async {
+                  // event.stateManager.setShowColumnFilter(true);
+                  setState(() {
+                    stateManager = event.stateManager;
+                  });
+                },
+                onChanged: (PlutoGridOnChangedEvent event) {
+                  print('onChanged $event');
+                },
+                onCellChanged: (PlutoGridOnChangedEvent event) {
+                  print('onCellChanged $event');
+                },
+                configuration: const PlutoGridConfiguration(
+                  scrollbar: PlutoGridScrollbarConfig(
+                    isAlwaysShown: false,
+                  ),
+                  style: PlutoGridStyleConfig(
+                    activatedColor: Colors.white,
+                    gridBorderColor: Colors.green,
+                    borderColor: Colors.lightBlueAccent,
+                    rowHeight: 46,
+                    columnHeight: 46,
+                  ),
                 ),
-                style: PlutoGridStyleConfig(
-                  activatedColor: Colors.white,
-                  gridBorderColor: Colors.green,
-                  borderColor: Colors.lightBlueAccent,
-                  rowHeight: 46,
-                  columnHeight: 46,
-                  gridPadding: EdgeInsets.symmetric(horizontal: 2),
-                ),
+                // createFooter: (state) {
+                //   return const SizedBox(
+                //     height: 50,
+                //     child: Center(
+                //       child: Text('Footer'),
+                //     ),
+                //   );
+                // },
               ),
             ),
           ),

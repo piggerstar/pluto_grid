@@ -189,11 +189,7 @@ mixin CellState implements IPlutoGridState {
     int? rowIdx, {
     bool notify = true,
   }) {
-    if (cell == null ||
-        rowIdx == null ||
-        refRows.isEmpty ||
-        rowIdx < 0 ||
-        rowIdx > refRows.length - 1) {
+    if (cell == null || rowIdx == null || refRows.isEmpty || rowIdx < 0 || rowIdx > refRows.length - 1) {
       return;
     }
 
@@ -290,15 +286,12 @@ mixin CellState implements IPlutoGridState {
     dynamic oldValue,
   }) {
     if (column.type.isSelect) {
-      return column.type.select.items.contains(newValue) == true
-          ? newValue
-          : oldValue;
+      return column.type.select.items.contains(newValue) == true ? newValue : oldValue;
     }
 
     if (column.type.isDate) {
       try {
-        final parseNewValue =
-            column.type.date.dateFormat.parseStrict(newValue.toString());
+        final parseNewValue = column.type.date.dateFormat.parseStrict(newValue.toString());
 
         return PlutoDateTimeHelper.isValidRange(
           date: parseNewValue,

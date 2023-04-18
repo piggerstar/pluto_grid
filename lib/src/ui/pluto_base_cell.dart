@@ -247,16 +247,18 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
   }) {
     if (isCurrentCell) {
       return BoxDecoration(
-        color: _currentCellColor(
-          hasFocus: hasFocus,
-          isEditing: isEditing,
-          readOnly: readOnly,
-          gridBackgroundColor: gridBackgroundColor,
-          activatedColor: activatedColor,
-          cellColorInReadOnlyState: cellColorInReadOnlyState,
-          cellColorInEditState: cellColorInEditState,
-          selectingMode: selectingMode,
-        ),
+        color: widget.cell.enabled
+            ? _currentCellColor(
+                hasFocus: hasFocus,
+                isEditing: isEditing,
+                readOnly: readOnly,
+                gridBackgroundColor: gridBackgroundColor,
+                activatedColor: activatedColor,
+                cellColorInReadOnlyState: cellColorInReadOnlyState,
+                cellColorInEditState: cellColorInEditState,
+                selectingMode: selectingMode,
+              )
+            : cellColorInReadOnlyState,
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,
@@ -264,7 +266,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       );
     } else if (isSelectedCell) {
       return BoxDecoration(
-        color: activatedColor,
+        color: widget.cell.enabled ? activatedColor : cellColorInReadOnlyState,
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,
@@ -272,7 +274,11 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       );
     } else {
       return BoxDecoration(
-        color: isGroupedRowCell ? cellColorGroupedRow : null,
+        color: isGroupedRowCell
+            ? cellColorGroupedRow
+            : widget.cell.enabled
+                ? null
+                : cellColorInReadOnlyState,
         border: enableCellVerticalBorder ? BorderDirectional(end: BorderSide(color: borderColor, width: 1)) : null,
       );
     }

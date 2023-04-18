@@ -101,7 +101,7 @@ class PlutoGridKeyManager {
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (stateManager.textEditingController != null) {
+        if (stateManager.textEditingController != null && stateManager.currentCell?.enabled == true) {
           TextEditingValue value = TextEditingValue(text: keyEvent.event.character!);
           try {
             value = stateManager.inputFormatters?.fold<TextEditingValue>(

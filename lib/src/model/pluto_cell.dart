@@ -5,6 +5,7 @@ class PlutoCell {
   PlutoCell({
     dynamic value,
     Key? key,
+    this.enabled = true,
   })  : _key = key ?? UniqueKey(),
         _value = value;
 
@@ -13,6 +14,8 @@ class PlutoCell {
   dynamic _value;
 
   dynamic _valueForSorting;
+
+  bool enabled;
 
   /// Set initial value according to [PlutoColumn] setting.
   ///
@@ -94,8 +97,7 @@ class PlutoCell {
     _value = _column!.type.applyFormat(_value);
 
     if (_column!.type is PlutoColumnTypeWithNumberFormat) {
-      _value =
-          (_column!.type as PlutoColumnTypeWithNumberFormat).toNumber(_value);
+      _value = (_column!.type as PlutoColumnTypeWithNumberFormat).toNumber(_value);
     }
 
     _needToApplyFormatOnInit = false;

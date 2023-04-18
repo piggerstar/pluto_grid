@@ -149,7 +149,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _changeValue() {
-    if (formattedValue == textController.text) {
+    if (formattedValue == textController.text || !widget.cell.enabled) {
       return;
     }
 
@@ -188,6 +188,10 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+    if (!widget.cell.enabled) {
+      return KeyEventResult.ignored;
+    }
+
     var keyManager = PlutoKeyManagerEvent(
       focusNode: node,
       event: event,
@@ -243,6 +247,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
     return TextField(
       focusNode: cellFocus,
+      enabled: widget.cell.enabled,
       controller: textController,
       readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
       onChanged: handleOnChanged,

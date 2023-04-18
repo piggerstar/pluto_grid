@@ -53,7 +53,7 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
       return;
     }
 
-    if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true) {
+    if (stateManager.isCurrentCell(cell) && stateManager.isEditing != true && cell.enabled) {
       stateManager.setEditing(true);
     } else {
       stateManager.setCurrentCell(cell, rowIdx);
@@ -196,8 +196,7 @@ enum PlutoGridGestureType {
 
   bool get isOnLongPressStart => this == PlutoGridGestureType.onLongPressStart;
 
-  bool get isOnLongPressMoveUpdate =>
-      this == PlutoGridGestureType.onLongPressMoveUpdate;
+  bool get isOnLongPressMoveUpdate => this == PlutoGridGestureType.onLongPressMoveUpdate;
 
   bool get isOnLongPressEnd => this == PlutoGridGestureType.onLongPressEnd;
 
