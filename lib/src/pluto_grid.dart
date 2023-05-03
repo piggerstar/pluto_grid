@@ -75,6 +75,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.customRowLoading,
     this.rowLoaderOverlayColor,
     this.scrollController,
+    this.useCustomFooter = false,
   }) : super(key: key);
 
   /// {@template pluto_grid_property_columns}
@@ -346,6 +347,10 @@ class PlutoGrid extends PlutoStatefulWidget {
   final Color? rowLoaderOverlayColor;
 
   final ScrollController? scrollController;
+
+  /// default to false
+  /// if enabled - render footer widget separate from table view
+  final bool useCustomFooter;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [PlutoGrid].
   ///
@@ -619,6 +624,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
   Widget build(BuildContext context) {
     return _GridContainer(
       stateManager: _stateManager,
+      customFooter: widget.useCustomFooter ? _footer : null,
       child: LayoutBuilder(
         builder: (c, size) {
           _stateManager.setLayout(size);
@@ -746,7 +752,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                 ),
 
               /// Footer and divider.
-              if (_stateManager.showFooter) ...[
+              if (_stateManager.showFooter && !widget.useCustomFooter) ...[
                 LayoutId(
                   id: _StackName.footerDivider,
                   child: PlutoShadowLine(
@@ -1192,10 +1198,12 @@ class _GridContainer extends StatelessWidget {
   final PlutoGridStateManager stateManager;
 
   final Widget child;
+  final Widget? customFooter;
 
   const _GridContainer({
     required this.stateManager,
     required this.child,
+    this.customFooter,
     Key? key,
   }) : super(key: key);
 
@@ -1225,19 +1233,28 @@ class _GridContainer extends StatelessWidget {
           isMobile: PlatformHelper.isMobile,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: style.gridBackgroundColor,
-            borderRadius: style.gridBorderRadius,
-            border: Border.all(
-              color: style.gridBorderColor,
-              width: PlutoGridSettings.gridBorderWidth,
+        child: Column(
+          children: [
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: style.gridBackgroundColor,
+                  borderRadius: style.gridBorderRadius,
+                  border: Border.all(
+                    color: style.gridBorderColor,
+                    width: PlutoGridSettings.gridBorderWidth,
+                  ),
+                ),
+                child: Padding(
+                  padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
+                  child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
+                ),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
-            child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
-          ),
+
+            /// Footer and divider.
+            if (customFooter != null) customFooter!,
+          ],
         ),
       ),
     );

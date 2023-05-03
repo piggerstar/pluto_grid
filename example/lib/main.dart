@@ -283,14 +283,15 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                     columnHeight: 46,
                   ),
                 ),
-                // createFooter: (state) {
-                //   return const SizedBox(
-                //     height: 50,
-                //     child: Center(
-                //       child: Text('Footer'),
-                //     ),
-                //   );
-                // },
+                useCustomFooter: true,
+                createFooter: (state) {
+                  return const SizedBox(
+                    height: 50,
+                    child: Center(
+                      child: Text('Footer'),
+                    ),
+                  );
+                },
               ),
             ),
           ),
