@@ -1242,7 +1242,7 @@ class _GridContainer extends StatelessWidget {
     if (customFooter != null) {
       widget = Column(
         children: [
-          Expanded(child: child),
+          Expanded(child: widget),
           customFooter!,
         ],
       );
