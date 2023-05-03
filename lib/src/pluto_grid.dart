@@ -1224,6 +1224,30 @@ class _GridContainer extends StatelessWidget {
 
     final borderRadius = style.gridBorderRadius.resolve(TextDirection.ltr);
 
+    Widget widget = DecoratedBox(
+      decoration: BoxDecoration(
+        color: style.gridBackgroundColor,
+        borderRadius: style.gridBorderRadius,
+        border: Border.all(
+          color: style.gridBorderColor,
+          width: PlutoGridSettings.gridBorderWidth,
+        ),
+      ),
+      child: Padding(
+        padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
+        child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
+      ),
+    );
+
+    if (customFooter != null) {
+      widget = Column(
+        children: [
+          Expanded(child: child),
+          customFooter!,
+        ],
+      );
+    }
+
     return Focus(
       focusNode: stateManager.gridFocusNode,
       onFocusChange: stateManager.setKeepFocus,
@@ -1233,29 +1257,7 @@ class _GridContainer extends StatelessWidget {
           isMobile: PlatformHelper.isMobile,
           userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: style.gridBackgroundColor,
-                  borderRadius: style.gridBorderRadius,
-                  border: Border.all(
-                    color: style.gridBorderColor,
-                    width: PlutoGridSettings.gridBorderWidth,
-                  ),
-                ),
-                child: Padding(
-                  padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
-                  child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
-                ),
-              ),
-            ),
-
-            /// Footer and divider.
-            if (customFooter != null) customFooter!,
-          ],
-        ),
+        child: widget,
       ),
     );
   }
