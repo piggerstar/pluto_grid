@@ -1289,7 +1289,7 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
   double _safe(double value) => max(0, value);
 }
 
-class _GridContainer extends StatefulWidget {
+class _GridContainer extends StatelessWidget {
   final PlutoGridStateManager stateManager;
 
   final Widget child;
@@ -1308,39 +1308,30 @@ class _GridContainer extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<_GridContainer> createState() => _GridContainerState();
-}
+  double get defaultTableHeight {
+    final rowBorderHeight = customFooter != null ? 3 : 1.5;
 
-class _GridContainerState extends State<_GridContainer> {
-  double autoSizeHeight = 0;
-  double autoSizeWidth = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    autoSizeHeight = (widget.stateManager.tableHeight ?? widget.stateManager.defaultTableHeight) + widget.autoSizeHeightOffset;
-    autoSizeWidth = defaultTableWidth + widget.autoSizeWidthOffset;
+    return stateManager.defaultTableHeight + (stateManager.refRows.length * rowBorderHeight);
   }
 
   double get defaultTableWidth {
-    return widget.stateManager.refColumns.where((e) => !e.hide).map((element) => element.width + 1).reduce((value, element) => value + element);
+    return stateManager.refColumns.where((e) => !e.hide).map((element) => element.width + 1).reduce((value, element) => value + element);
   }
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, RawKeyEvent event) {
-    if (widget.stateManager.keyManager!.eventResult.isSkip == false) {
-      widget.stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
+    if (stateManager.keyManager!.eventResult.isSkip == false) {
+      stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
         focusNode: focusNode,
         event: event,
       ));
     }
 
-    return widget.stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
+    return stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
   }
 
   @override
   Widget build(BuildContext context) {
-    final style = widget.stateManager.style;
+    final style = stateManager.style;
 
     final borderRadius = style.gridBorderRadius.resolve(TextDirection.ltr);
 
@@ -1355,34 +1346,38 @@ class _GridContainerState extends State<_GridContainer> {
       ),
       child: Padding(
         padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
-        child: borderRadius == BorderRadius.zero ? widget.child : ClipRRect(borderRadius: borderRadius, child: widget.child),
+        child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
       ),
     );
 
-    if (widget.customFooter != null) {
+    if (customFooter != null) {
       tableWidget = Column(
         children: [
           Expanded(child: tableWidget),
-          widget.customFooter!,
+          customFooter!,
         ],
       );
     }
 
     Widget childView = Focus(
-      focusNode: widget.stateManager.gridFocusNode,
-      onFocusChange: widget.stateManager.setKeepFocus,
+      focusNode: stateManager.gridFocusNode,
+      onFocusChange: stateManager.setKeepFocus,
       onKey: _handleGridFocusOnKey,
       child: ScrollConfiguration(
         behavior: PlutoScrollBehavior(
           isMobile: PlatformHelper.isMobile,
-          userDragDevices: widget.stateManager.configuration.scrollbar.dragDevices,
+          userDragDevices: stateManager.configuration.scrollbar.dragDevices,
         ),
         child: tableWidget,
       ),
     );
 
-    if (widget.autoSize) {
-      childView = SizedBox(height: autoSizeHeight, width: autoSizeWidth, child: childView);
+    if (autoSize) {
+      childView = SizedBox(
+        height: defaultTableHeight + autoSizeHeightOffset,
+        width: defaultTableWidth + autoSizeWidthOffset,
+        child: childView,
+      );
     }
 
     return childView;

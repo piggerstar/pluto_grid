@@ -320,7 +320,7 @@ mixin LayoutState implements IPlutoGridState {
   double get rowTotalHeight => rowHeight + PlutoGridSettings.rowBorderWidth;
 
   @override
-  double get rowBodyHeight => refRows.length * (rowHeight + PlutoGridSettings.rowBorderWidth) + 4;
+  double get rowBodyHeight => refRows.length * (rowHeight + PlutoGridSettings.rowBorderWidth);
 
   @override
   double get bodyTopOffset => gridGlobalOffset!.dy + PlutoGridSettings.gridPadding + headerHeight + PlutoGridSettings.gridBorderWidth + columnGroupHeight + columnHeight + columnFilterHeight;
