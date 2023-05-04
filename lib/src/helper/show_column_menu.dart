@@ -80,7 +80,7 @@ Future<T?>? showColumnMenu<T>({
   required List<PopupMenuEntry<T>> items,
   Color backgroundColor = Colors.white,
 }) {
-  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+  final RenderBox overlay = Overlay.of(context)?.context.findRenderObject() as RenderBox;
 
   return showMenu<T>(
     context: context,
