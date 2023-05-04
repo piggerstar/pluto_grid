@@ -93,9 +93,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   void _onFocusChange() {
     if (!cellFocus.hasFocus) {
-      widget.stateManager.setEditing(false, notify: !widget.column.keepFocusOnChange);
+      widget.stateManager.setEditing(false, notify: !column.keepFocusOnChange);
 
-      if (widget.column.keepFocusOnChange) {
+      if (column.keepFocusOnChange) {
         widget.stateManager.setKeepFocus(true);
       }
     }
@@ -121,7 +121,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       return false;
     }
 
-    if (widget.column.readOnly == true) {
+    if (column.readOnly == true) {
       return true;
     }
 
@@ -245,30 +245,36 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
       cellFocus.requestFocus();
     }
 
-    return TextField(
-      focusNode: cellFocus,
-      enabled: widget.cell.enabled,
-      controller: textController,
-      readOnly: widget.column.checkReadOnly(widget.row, widget.cell),
-      onChanged: handleOnChanged,
-      onEditingComplete: _handleOnComplete,
-      onSubmitted: (_) => _handleOnComplete(),
-      onTap: _handleOnTap,
-      style: widget.stateManager.configuration.style.cellTextStyle,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-        ),
-        contentPadding: EdgeInsets.zero,
+    return Container(
+      padding: column.type.text.padding,
+      child: TextField(
+        focusNode: cellFocus,
+        enabled: widget.cell.enabled,
+        controller: textController,
+        readOnly: column.checkReadOnly(widget.row, widget.cell),
+        onChanged: handleOnChanged,
+        onEditingComplete: _handleOnComplete,
+        onSubmitted: (_) => _handleOnComplete(),
+        onTap: _handleOnTap,
+        expands: column.type.text.expands,
+        style: widget.stateManager.configuration.style.cellTextStyle,
+        decoration: column.type.text.inputDecoration ??
+            (widget.stateManager.configuration.style.cellTextInputDecoration ??
+                const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                )),
+        maxLines: column.type.text.expands ? null : column.type.text.maxLines,
+        buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatters,
+        maxLength: column.maxLength,
+        maxLengthEnforcement: column.maxLengthEnforcement,
+        textAlignVertical: TextAlignVertical.center,
+        textAlign: column.textAlign.value,
       ),
-      maxLines: 1,
-      buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      maxLength: column.maxLength,
-      maxLengthEnforcement: column.maxLengthEnforcement,
-      textAlignVertical: TextAlignVertical.center,
-      textAlign: column.textAlign.value,
     );
   }
 }

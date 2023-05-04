@@ -227,6 +227,7 @@ class PlutoGridStyleConfig {
       color: Colors.black,
       fontSize: 14,
     ),
+    this.cellTextInputDecoration,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
     this.columnAscendingIcon,
@@ -286,6 +287,7 @@ class PlutoGridStyleConfig {
       color: Colors.white,
       fontSize: 14,
     ),
+    this.cellTextInputDecoration,
     this.columnContextIcon = Icons.dehaze,
     this.columnResizeIcon = Icons.code_sharp,
     this.columnAscendingIcon,
@@ -416,6 +418,9 @@ class PlutoGridStyleConfig {
   /// Cell - text style
   final TextStyle cellTextStyle;
 
+  /// Cell - text field input decoration
+  final InputDecoration? cellTextInputDecoration;
+
   /// Icon that can open a pop-up menu next to the column title
   /// when [enableContextMenu] of [PlutoColumn] is true.
   final IconData columnContextIcon;
@@ -489,6 +494,7 @@ class PlutoGridStyleConfig {
     EdgeInsets? defaultCellPadding,
     TextStyle? columnTextStyle,
     TextStyle? cellTextStyle,
+    InputDecoration? cellTextInputDecoration,
     IconData? columnContextIcon,
     IconData? columnResizeIcon,
     PlutoOptional<Icon?>? columnAscendingIcon,
@@ -535,6 +541,7 @@ class PlutoGridStyleConfig {
       defaultCellPadding: defaultCellPadding ?? this.defaultCellPadding,
       columnTextStyle: columnTextStyle ?? this.columnTextStyle,
       cellTextStyle: cellTextStyle ?? this.cellTextStyle,
+      cellTextInputDecoration: cellTextInputDecoration,
       columnContextIcon: columnContextIcon ?? this.columnContextIcon,
       columnResizeIcon: columnResizeIcon ?? this.columnResizeIcon,
       columnAscendingIcon: columnAscendingIcon == null ? this.columnAscendingIcon : columnAscendingIcon.value,
@@ -587,6 +594,7 @@ class PlutoGridStyleConfig {
             defaultCellPadding == other.defaultCellPadding &&
             columnTextStyle == other.columnTextStyle &&
             cellTextStyle == other.cellTextStyle &&
+            cellTextInputDecoration == other.cellTextInputDecoration &&
             columnContextIcon == other.columnContextIcon &&
             columnResizeIcon == other.columnResizeIcon &&
             columnAscendingIcon == other.columnAscendingIcon &&
@@ -635,6 +643,7 @@ class PlutoGridStyleConfig {
         defaultCellPadding,
         columnTextStyle,
         cellTextStyle,
+        cellTextInputDecoration,
         columnContextIcon,
         columnResizeIcon,
         columnAscendingIcon,

@@ -9,10 +9,18 @@ abstract class PlutoColumnType {
   factory PlutoColumnType.text({
     dynamic defaultValue = '',
     List<TextInputFormatter>? inputFormatters,
+    InputDecoration? inputDecoration,
+    bool expands = false,
+    EdgeInsets? padding,
+    int maxLines = 1,
   }) {
     return PlutoColumnTypeText(
       defaultValue: defaultValue,
       inputFormatters: inputFormatters ?? [],
+      inputDecoration: inputDecoration,
+      expands: expands,
+      padding: padding,
+      maxLines: maxLines,
     );
   }
 
@@ -242,9 +250,21 @@ class PlutoColumnTypeText implements PlutoColumnType {
 
   final List<TextInputFormatter> inputFormatters;
 
+  final InputDecoration? inputDecoration;
+
+  final bool expands;
+
+  final EdgeInsets? padding;
+
+  final int maxLines;
+
   const PlutoColumnTypeText({
     this.defaultValue,
     this.inputFormatters = const [],
+    this.inputDecoration,
+    this.expands = false,
+    this.padding,
+    this.maxLines = 1,
   });
 
   @override

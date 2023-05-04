@@ -1309,9 +1309,14 @@ class _GridContainer extends StatelessWidget {
   }) : super(key: key);
 
   double get defaultTableHeight {
-    final rowBorderHeight = customFooter != null ? 3 : 1.5;
+    double rowBorderHeight = 0;
 
-    return stateManager.defaultTableHeight + (stateManager.refRows.length * rowBorderHeight);
+    if (customFooter != null) {
+      rowBorderHeight = stateManager.footerHeight - 7;
+    } else {
+      rowBorderHeight = stateManager.footerHeight - stateManager.rowTotalHeight - 1;
+    }
+    return stateManager.defaultTableHeight + rowBorderHeight;
   }
 
   double get defaultTableWidth {
