@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 void main() {
@@ -147,23 +146,23 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Working time',
       field: 'working_time',
       type: PlutoColumnType.time(),
-      footerRenderer: (rendererContext) {
-        return PlutoAggregateColumnFooter(
-          rendererContext: rendererContext,
-          type: PlutoAggregateColumnType.count,
-          alignment: Alignment.center,
-          titleSpanBuilder: (text) {
-            return [
-              const TextSpan(
-                text: 'Count',
-                style: TextStyle(color: Colors.red),
-              ),
-              const TextSpan(text: ' : '),
-              TextSpan(text: text),
-            ];
-          },
-        );
-      },
+      // footerRenderer: (rendererContext) {
+      //   return PlutoAggregateColumnFooter(
+      //     rendererContext: rendererContext,
+      //     type: PlutoAggregateColumnType.count,
+      //     alignment: Alignment.center,
+      //     titleSpanBuilder: (text) {
+      //       return [
+      //         const TextSpan(
+      //           text: 'Count',
+      //           style: TextStyle(color: Colors.red),
+      //         ),
+      //         const TextSpan(text: ' : '),
+      //         TextSpan(text: text),
+      //       ];
+      //     },
+      //   );
+      // },
     ),
   ];
 
@@ -179,28 +178,6 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         'joined': PlutoCell(value: '2021-01-01'),
         'working_time': PlutoCell(value: '09:00'),
         'salary': PlutoCell(value: 300),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user2'),
-        'name': PlutoCell(value: 'Jack'),
-        'age': PlutoCell(value: null),
-        'role': PlutoCell(value: 'Designer'),
-        'joined': PlutoCell(value: '2021-02-01'),
-        'working_time': PlutoCell(value: '10:00'),
-        'salary': PlutoCell(value: 400),
-      },
-    ),
-    PlutoRow(
-      cells: {
-        'id': PlutoCell(value: 'user3'),
-        'name': PlutoCell(value: 'Suzi'),
-        'age': PlutoCell(value: 40),
-        'role': PlutoCell(value: 'Owner'),
-        'joined': PlutoCell(value: '2021-03-01'),
-        'working_time': PlutoCell(value: '11:00'),
-        'salary': PlutoCell(value: 700),
       },
     ),
   ];
@@ -220,7 +197,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
   PlutoGridStateManager? stateManager;
   final ScrollController controller = ScrollController();
 
-  List<PlutoRow> get getRows => rows;
+  List<PlutoRow> get getRows => List.generate(0, (index) => rows[0]);
 
   List<PlutoColumn> get getColumns => simpleColumns;
 
@@ -237,65 +214,53 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: [
         TextButton(
           onPressed: () {
             stateManager!.toggleCheckboxViewColumn(stateManager!.columns.first, !stateManager!.columns.first.enableRowChecked);
           },
-          child: const Text('Hide/Unhide Column Checkbox'),
+          child: Text('Hide/Unhide Column Checkbox ${stateManager?.tableHeight}'),
         ),
         Center(
-          child: Container(
-            height: getRows.isNotEmpty ? (getRows.length * 135) : 115,
-            constraints: BoxConstraints(
-              maxWidth: (stateManager?.columnsWidth ?? getColumns.map((e) => e.width).reduce((value, element) => value + element)) + 36,
-            ),
-            padding: const EdgeInsets.all(15),
-            child: ImprovedScrolling(
-              scrollController: controller,
-              enableMMBScrolling: true,
-              child: PlutoGrid(
-                scrollController: controller,
-                columns: getColumns,
-                rows: getRows,
-                columnGroups: getColumnGroups,
-                onLoaded: (PlutoGridOnLoadedEvent event) async {
-                  // event.stateManager.setShowColumnFilter(true);
-                  setState(() {
-                    stateManager = event.stateManager;
-                  });
-                },
-                onChanged: (PlutoGridOnChangedEvent event) {
-                  print('onChanged $event');
-                },
-                onCellChanged: (PlutoGridOnChangedEvent event) {
-                  print('onCellChanged $event');
-                },
-                configuration: const PlutoGridConfiguration(
-                  scrollbar: PlutoGridScrollbarConfig(
-                    isAlwaysShown: false,
-                  ),
-                  style: PlutoGridStyleConfig(
-                    activatedColor: Colors.white,
-                    gridBorderColor: Colors.green,
-                    borderColor: Colors.lightBlueAccent,
-                    rowHeight: 46,
-                    columnHeight: 46,
-                  ),
-                ),
-                useCustomFooter: true,
-                createFooter: (state) {
-                  return const SizedBox(
-                    height: 50,
-                    child: Center(
-                      child: Text('Footer'),
-                    ),
-                  );
-                },
+          child: PlutoGrid(
+            autoSize: true,
+            scrollController: controller,
+            columns: getColumns,
+            rows: getRows,
+            columnGroups: getColumnGroups,
+            autoSizeHeightOffset: getRows.isEmpty ? 50 : 0,
+            noRowsWidget: Container(height: 50, color: Colors.lightBlueAccent, child: const Text('No data.')),
+            onLoaded: (PlutoGridOnLoadedEvent event) async {
+              // event.stateManager.setShowColumnFilter(true);
+              // event.stateManager.setShowColumnFooter(true);
+              setState(() {
+                stateManager = event.stateManager;
+              });
+            },
+            onChanged: (PlutoGridOnChangedEvent event) {
+              print('onChanged $event');
+            },
+            onCellChanged: (PlutoGridOnChangedEvent event) {
+              print('onCellChanged $event');
+            },
+            configuration: const PlutoGridConfiguration(
+              scrollbar: PlutoGridScrollbarConfig(
+                isAlwaysShown: false,
+              ),
+              style: PlutoGridStyleConfig(
+                activatedColor: Colors.white,
+                gridBorderColor: Colors.green,
+                borderColor: Colors.lightBlueAccent,
+                rowHeight: 46,
+                columnHeight: 46,
               ),
             ),
+            createFooter: (v) {
+              return const SizedBox(height: 50);
+            },
           ),
-        )
+        ),
       ],
     ));
   }

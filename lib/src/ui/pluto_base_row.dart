@@ -142,11 +142,7 @@ class _RowCellsLayoutDelegate extends MultiChildLayoutDelegate {
 
   @override
   Size getSize(BoxConstraints constraints) {
-    final double width = columns.fold(
-      0,
-      (previousValue, element) => previousValue + element.width,
-    );
-
+    final double width = columns.fold(0, (previousValue, element) => previousValue + element.width);
     return Size(width, rowHeight);
   }
 

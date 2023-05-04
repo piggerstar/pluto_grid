@@ -11,11 +11,17 @@ abstract class ILayoutState {
   /// Screen height
   double? get maxHeight;
 
+  /// table height
+  double? get tableHeight;
+
   /// grid header height
   double get headerHeight;
 
   /// grid footer height
   double get footerHeight;
+
+  /// grid footer height
+  double get footerDividerHeight;
 
   double get columnRowContainerHeight;
 
@@ -66,6 +72,8 @@ abstract class ILayoutState {
   double get rowHeight;
 
   double get rowTotalHeight;
+
+  double get rowBodyHeight;
 
   double get bodyTopOffset;
 
@@ -131,9 +139,13 @@ class _State {
 
   double? _maxHeight;
 
+  double? _tableHeight;
+
   double? _headerHeight;
 
   double? _footerHeight;
+
+  double? _footerDividerHeight;
 
   double? _columnFooterHeight;
 
@@ -162,11 +174,22 @@ mixin LayoutState implements IPlutoGridState {
 
   final ChangeNotifier _resizingChangeNotifier = ChangeNotifier();
 
+  double get defaultTableHeight {
+    return headerHeight + columnGroupHeight + columnHeight + rowBodyHeight + footerDividerHeight + footerHeight;
+  }
+
   @override
   double? get maxWidth => _state._maxWidth;
 
   @override
   double? get maxHeight => _state._maxHeight;
+
+  @override
+  double? get tableHeight => _state._tableHeight;
+
+  set tableHeight(double? value) {
+    _state._tableHeight = value;
+  }
 
   @override
   double get headerHeight {
@@ -192,6 +215,19 @@ mixin LayoutState implements IPlutoGridState {
 
   set footerHeight(double value) {
     _state._footerHeight = value;
+  }
+
+  @override
+  double get footerDividerHeight {
+    if (createFooter == null) {
+      return 0;
+    }
+
+    return _state._footerDividerHeight ?? 0;
+  }
+
+  set footerDividerHeight(double value) {
+    _state._footerDividerHeight = value;
   }
 
   @override
@@ -282,6 +318,9 @@ mixin LayoutState implements IPlutoGridState {
 
   @override
   double get rowTotalHeight => rowHeight + PlutoGridSettings.rowBorderWidth;
+
+  @override
+  double get rowBodyHeight => refRows.length * (rowHeight + PlutoGridSettings.rowBorderWidth) + 4;
 
   @override
   double get bodyTopOffset => gridGlobalOffset!.dy + PlutoGridSettings.gridPadding + headerHeight + PlutoGridSettings.gridBorderWidth + columnGroupHeight + columnHeight + columnFilterHeight;

@@ -15,8 +15,7 @@ class PlutoNoRowsWidget extends PlutoStatefulWidget {
   final Widget child;
 
   @override
-  PlutoStateWithChange<PlutoNoRowsWidget> createState() =>
-      _PlutoNoRowsWidgetState();
+  PlutoStateWithChange<PlutoNoRowsWidget> createState() => _PlutoNoRowsWidgetState();
 }
 
 class _PlutoNoRowsWidgetState extends PlutoStateWithChange<PlutoNoRowsWidget> {

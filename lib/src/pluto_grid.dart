@@ -76,6 +76,9 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.rowLoaderOverlayColor,
     this.scrollController,
     this.useCustomFooter = false,
+    this.autoSize = false,
+    this.autoSizeHeightOffset,
+    this.autoSizeWidthOffset,
   }) : super(key: key);
 
   /// {@template pluto_grid_property_columns}
@@ -352,6 +355,16 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// if enabled - render footer widget separate from table view
   final bool useCustomFooter;
 
+  /// default to false
+  /// if enabled - render table with auto adjust height & width based on content
+  final bool autoSize;
+
+  /// used with [autoSize] to manually add extra height to the table
+  final double? autoSizeHeightOffset;
+
+  /// used with [autoSize] to manually add extra width to the table
+  final double? autoSizeWidthOffset;
+
   /// [setDefaultLocale] sets locale when [Intl] package is used in [PlutoGrid].
   ///
   /// {@template intl_default_locale}
@@ -625,6 +638,9 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
     return _GridContainer(
       stateManager: _stateManager,
       customFooter: widget.useCustomFooter ? _footer : null,
+      autoSize: widget.autoSize,
+      autoSizeHeightOffset: widget.autoSizeHeightOffset ?? 0,
+      autoSizeWidthOffset: widget.autoSizeWidthOffset ?? 0,
       child: LayoutBuilder(
         builder: (c, size) {
           _stateManager.setLayout(size);
@@ -656,6 +672,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
                   scrollController: widget.scrollController,
                 ),
               ),
+
               LayoutId(
                 id: _StackName.bodyColumns,
                 child: PlutoBodyColumns(_stateManager, scrollController: widget.scrollController),
@@ -818,24 +835,29 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
     double columnsTopOffset = 0;
     double bodyLeftOffset = 0;
     double bodyRightOffset = 0;
+    double totalHeight = 0;
 
     // first layout header and footer and see what remains for the scrolling part
+    // custom header renderer using createHeader Function
     if (hasChild(_StackName.header)) {
       // maximum 40% of the height
       var s = layoutChild(
         _StackName.header,
         BoxConstraints.loose(Size(size.width, _safe(size.height / 100 * 40))),
       );
-
       _stateManager.headerHeight = s.height;
 
       bodyRowsTopOffset += s.height;
 
       columnsTopOffset += s.height;
+
+      if (_StackName.header.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.headerDivider)) {
-      layoutChild(
+      var s = layoutChild(
         _StackName.headerDivider,
         BoxConstraints.tight(
           Size(size.width, PlutoGridSettings.gridBorderWidth),
@@ -846,8 +868,13 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.headerDivider,
         Offset(0, columnsTopOffset),
       );
+
+      if (_StackName.headerDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
+    // custom footer renderer using createFooter Function
     if (hasChild(_StackName.footer)) {
       // maximum 40% of the height
       var s = layoutChild(
@@ -863,20 +890,30 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.footer,
         Offset(0, size.height - bodyRowsBottomOffset),
       );
+
+      if (_StackName.footer.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.footerDivider)) {
-      layoutChild(
+      var s = layoutChild(
         _StackName.footerDivider,
         BoxConstraints.tight(
           Size(size.width, PlutoGridSettings.gridBorderWidth),
         ),
       );
 
+      _stateManager.footerDividerHeight = s.height;
+
       positionChild(
         _StackName.footerDivider,
         Offset(0, size.height - bodyRowsBottomOffset),
       );
+
+      if (_StackName.footerDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     // now layout columns of frozen sides and see what remains for the body width
@@ -897,6 +934,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         bodyLeftOffset = s.width;
       } else {
         bodyRightOffset = s.width;
+      }
+
+      if (_StackName.leftFrozenColumns.isTableHeightVariable) {
+        totalHeight += s.height;
       }
     }
 
@@ -923,6 +964,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       } else {
         bodyRightOffset += s.width;
       }
+
+      if (_StackName.leftFrozenDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.rightFrozenColumns)) {
@@ -942,6 +987,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         bodyRightOffset = s.width;
       } else {
         bodyLeftOffset = s.width;
+      }
+
+      if (_StackName.rightFrozenColumns.isTableHeightVariable) {
+        totalHeight += s.height;
       }
     }
 
@@ -968,6 +1017,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       } else {
         bodyLeftOffset += s.width;
       }
+
+      if (_StackName.rightFrozenDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.bodyColumns)) {
@@ -989,6 +1042,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       );
 
       bodyRowsTopOffset += s.height;
+
+      if (_StackName.bodyColumns.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.bodyColumnFooters)) {
@@ -1012,6 +1069,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       );
 
       bodyRowsBottomOffset += s.height;
+
+      if (_StackName.bodyColumnFooters.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.columnFooterDivider)) {
@@ -1026,6 +1087,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.columnFooterDivider,
         Offset(0, size.height - bodyRowsBottomOffset - s.height),
       );
+
+      if (_StackName.columnFooterDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     // layout rows
@@ -1043,6 +1108,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       );
 
       bodyRowsTopOffset += s.height;
+
+      if (_StackName.columnRowDivider.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     } else {
       bodyRowsTopOffset += PlutoGridSettings.gridBorderWidth;
     }
@@ -1051,7 +1120,7 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
       final double offset = isLTR ? bodyLeftOffset : bodyRightOffset;
       final double posX = isLTR ? 0 : size.width - bodyRightOffset + PlutoGridSettings.gridBorderWidth;
 
-      layoutChild(
+      var s = layoutChild(
         _StackName.leftFrozenRows,
         BoxConstraints.loose(
           Size(
@@ -1065,13 +1134,17 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.leftFrozenRows,
         Offset(posX, bodyRowsTopOffset),
       );
+
+      if (_StackName.leftFrozenRows.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.leftFrozenColumnFooters)) {
       final double offset = isLTR ? bodyLeftOffset : bodyRightOffset;
       final double posX = isLTR ? 0 : size.width - bodyRightOffset + PlutoGridSettings.gridBorderWidth;
 
-      layoutChild(
+      var s = layoutChild(
         _StackName.leftFrozenColumnFooters,
         BoxConstraints.loose(
           Size(offset, _safe(size.height - bodyRowsBottomOffset)),
@@ -1082,13 +1155,17 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.leftFrozenColumnFooters,
         Offset(posX, size.height - bodyRowsBottomOffset),
       );
+
+      if (_StackName.leftFrozenColumnFooters.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.rightFrozenRows)) {
       final double offset = isLTR ? bodyRightOffset : bodyLeftOffset;
       final double posX = isLTR ? size.width - bodyRightOffset + PlutoGridSettings.gridBorderWidth : 0;
 
-      layoutChild(
+      var s = layoutChild(
         _StackName.rightFrozenRows,
         BoxConstraints.loose(
           Size(
@@ -1102,6 +1179,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.rightFrozenRows,
         Offset(posX, bodyRowsTopOffset),
       );
+
+      if (_StackName.rightFrozenRows.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.rightFrozenColumnFooters)) {
@@ -1117,10 +1198,14 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.rightFrozenColumnFooters,
         Offset(posX, size.height - bodyRowsBottomOffset),
       );
+
+      if (_StackName.rightFrozenColumnFooters.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.bodyRows)) {
-      layoutChild(
+      var s = layoutChild(
         _StackName.bodyRows,
         BoxConstraints.tight(Size(
           _safe(size.width - bodyLeftOffset - bodyRightOffset),
@@ -1134,6 +1219,10 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.bodyRows,
         Offset(bodyLeftOffset, bodyRowsTopOffset),
       );
+
+      if (_StackName.bodyRows.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
 
     if (hasChild(_StackName.loading)) {
@@ -1169,7 +1258,7 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
     }
 
     if (hasChild(_StackName.noRows)) {
-      layoutChild(
+      var s = layoutChild(
         _StackName.noRows,
         BoxConstraints.loose(
           Size(
@@ -1183,7 +1272,13 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
         _StackName.noRows,
         Offset(0, bodyRowsTopOffset),
       );
+
+      if (_StackName.noRows.isTableHeightVariable) {
+        totalHeight += s.height;
+      }
     }
+
+    _stateManager.tableHeight = totalHeight + _stateManager.rowBodyHeight;
   }
 
   @override
@@ -1194,37 +1289,62 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
   double _safe(double value) => max(0, value);
 }
 
-class _GridContainer extends StatelessWidget {
+class _GridContainer extends StatefulWidget {
   final PlutoGridStateManager stateManager;
 
   final Widget child;
   final Widget? customFooter;
+  final bool autoSize;
+  final double autoSizeHeightOffset;
+  final double autoSizeWidthOffset;
 
   const _GridContainer({
     required this.stateManager,
     required this.child,
     this.customFooter,
+    this.autoSize = false,
+    this.autoSizeHeightOffset = 0,
+    this.autoSizeWidthOffset = 0,
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<_GridContainer> createState() => _GridContainerState();
+}
+
+class _GridContainerState extends State<_GridContainer> {
+  double autoSizeHeight = 0;
+  double autoSizeWidth = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    autoSizeHeight = (widget.stateManager.tableHeight ?? widget.stateManager.defaultTableHeight) + widget.autoSizeHeightOffset;
+    autoSizeWidth = defaultTableWidth + widget.autoSizeWidthOffset;
+  }
+
+  double get defaultTableWidth {
+    return widget.stateManager.refColumns.where((e) => !e.hide).map((element) => element.width + 1).reduce((value, element) => value + element);
+  }
+
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, RawKeyEvent event) {
-    if (stateManager.keyManager!.eventResult.isSkip == false) {
-      stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
+    if (widget.stateManager.keyManager!.eventResult.isSkip == false) {
+      widget.stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
         focusNode: focusNode,
         event: event,
       ));
     }
 
-    return stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
+    return widget.stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
   }
 
   @override
   Widget build(BuildContext context) {
-    final style = stateManager.style;
+    final style = widget.stateManager.style;
 
     final borderRadius = style.gridBorderRadius.resolve(TextDirection.ltr);
 
-    Widget widget = DecoratedBox(
+    Widget tableWidget = DecoratedBox(
       decoration: BoxDecoration(
         color: style.gridBackgroundColor,
         borderRadius: style.gridBorderRadius,
@@ -1235,31 +1355,37 @@ class _GridContainer extends StatelessWidget {
       ),
       child: Padding(
         padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
-        child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
+        child: borderRadius == BorderRadius.zero ? widget.child : ClipRRect(borderRadius: borderRadius, child: widget.child),
       ),
     );
 
-    if (customFooter != null) {
-      widget = Column(
+    if (widget.customFooter != null) {
+      tableWidget = Column(
         children: [
-          Expanded(child: widget),
-          customFooter!,
+          Expanded(child: tableWidget),
+          widget.customFooter!,
         ],
       );
     }
 
-    return Focus(
-      focusNode: stateManager.gridFocusNode,
-      onFocusChange: stateManager.setKeepFocus,
+    Widget childView = Focus(
+      focusNode: widget.stateManager.gridFocusNode,
+      onFocusChange: widget.stateManager.setKeepFocus,
       onKey: _handleGridFocusOnKey,
       child: ScrollConfiguration(
         behavior: PlutoScrollBehavior(
           isMobile: PlatformHelper.isMobile,
-          userDragDevices: stateManager.configuration.scrollbar.dragDevices,
+          userDragDevices: widget.stateManager.configuration.scrollbar.dragDevices,
         ),
-        child: widget,
+        child: tableWidget,
       ),
     );
+
+    if (widget.autoSize) {
+      childView = SizedBox(height: autoSizeHeight, width: autoSizeWidth, child: childView);
+    }
+
+    return childView;
   }
 }
 
@@ -1735,5 +1861,21 @@ enum _StackName {
   footer,
   footerDivider,
   loading,
-  noRows,
+  noRows;
+
+  bool get isTableHeightVariable {
+    switch (this) {
+      case header:
+      case headerDivider:
+      case bodyColumns:
+      case bodyColumnFooters:
+      case columnRowDivider:
+      case columnFooterDivider:
+      case footer:
+      case noRows:
+        return true;
+      default:
+        return false;
+    }
+  }
 }
