@@ -31,7 +31,7 @@ class PlutoColumnTitleState extends PlutoStateWithChange<PlutoColumnTitle> {
   PlutoColumnSort _sort = PlutoColumnSort.none;
 
   bool get showContextIcon {
-    return widget.column.enableContextMenu || widget.column.enableDropToResize || !_sort.isNone;
+    return widget.column.showContextIcon ?? (widget.column.enableContextMenu || widget.column.enableDropToResize || !_sort.isNone);
   }
 
   bool get enableGesture {

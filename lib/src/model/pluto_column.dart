@@ -171,6 +171,9 @@ class PlutoColumn {
   /// In this case, dragging the context menu icon adjusts the column width.
   bool enableDropToResize;
 
+  /// show context menu icon
+  bool? showContextIcon;
+
   /// Displays filter-related menus in the column context menu.
   /// Valid only when [enableContextMenu] is activated.
   bool enableFilterMenuItem;
@@ -228,6 +231,7 @@ class PlutoColumn {
     this.enableSorting = true,
     this.enableContextMenu = true,
     this.enableDropToResize = true,
+    this.showContextIcon,
     this.enableFilterMenuItem = true,
     this.enableHideColumnMenuItem = true,
     this.enableSetColumnsMenuItem = true,
@@ -260,7 +264,7 @@ class PlutoColumn {
 
   PlutoFilterType get defaultFilter => _defaultFilter ?? const PlutoFilterTypeContains();
 
-  bool get isShowRightIcon => enableContextMenu || enableDropToResize || !sort.isNone;
+  bool get isShowRightIcon => showContextIcon ?? (enableContextMenu || enableDropToResize || !sort.isNone);
 
   PlutoColumnGroup? group;
 

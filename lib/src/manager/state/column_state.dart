@@ -107,9 +107,11 @@ abstract class IColumnState {
   ///
   /// In case of [column.frozen.isFrozen],
   /// it is not changed if the width constraint of the frozen column is narrow.
-  void resizeColumn(PlutoColumn column, double offset);
+  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false});
 
-  void autoFitColumn(BuildContext context, PlutoColumn column);
+  void autoFitColumn(BuildContext context, PlutoColumn column, {bool notify = true, bool force = false});
+
+  void autoFitAllColumn(BuildContext context, {bool force = false});
 
   /// Hide or show the [column] with [hide] value.
   ///
@@ -542,8 +544,8 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  void resizeColumn(PlutoColumn column, double offset) {
-    if (columnsResizeMode.isNone || !column.enableDropToResize) {
+  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false}) {
+    if (!force && (columnsResizeMode.isNone || !column.enableDropToResize)) {
       return;
     }
 
@@ -569,7 +571,9 @@ mixin ColumnState implements IPlutoGridState {
 
     deactivateColumnsAutoSize();
 
-    notifyResizingListeners();
+    if (notify) {
+      notifyResizingListeners();
+    }
 
     scrollByDirection(
       PlutoMoveDirection.right,
@@ -582,7 +586,15 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  void autoFitColumn(BuildContext context, PlutoColumn column) {
+  void autoFitAllColumn(BuildContext context, {bool force = false}) {
+    List<PlutoColumn> columns = refColumns.where((element) => !element.hide).toList();
+    for (int i = 0; i < columns.length; i++) {
+      autoFitColumn(context, columns[i], notify: i == (columns.length - 1) ? true : false, force: force);
+    }
+  }
+
+  @override
+  void autoFitColumn(BuildContext context, PlutoColumn column, {bool notify = true, bool force = false}) {
     final String maxValue = refRows.fold('', (previousValue, element) {
       final value = column.formattedValueForDisplay(
         element.cells.entries.firstWhere((element) => element.key == column.field).value.value,
@@ -616,6 +628,8 @@ mixin ColumnState implements IPlutoGridState {
     resizeColumn(
       column,
       textPainter.width - column.width + (cellPadding.left + cellPadding.right) + 2,
+      notify: notify,
+      force: force,
     );
   }
 

@@ -113,6 +113,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       field: 'name',
       type: PlutoColumnType.text(),
       frozen: PlutoColumnFrozen.start,
+      enableDropToResize: false,
+      showContextIcon: false,
     ),
     PlutoColumn(
       title: 'Age',
@@ -251,6 +253,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 event.stateManager.setShowLoading(true);
                 await Future.delayed(const Duration(seconds: 2));
                 event.stateManager.insertRows(0, List.generate(3, (index) => rows[0]));
+                event.stateManager.autoFitAllColumn(context, force: true);
                 event.stateManager.setShowLoading(false);
                 setState(() {
                   stateManager = event.stateManager;
