@@ -268,7 +268,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 columnGroups: getColumnGroups,
                 autoSizeHeightOffset: (stateManager?.refRows.isEmpty ?? true) ? 180 : 0,
                 noRowsWidget: Container(height: 50, color: Colors.lightBlueAccent, child: const Text('No data.')),
-                useCustomFooter: false,
+                useCustomFooter: true,
                 showTableLoadingText: false,
                 customTableLoading: Align(
                   alignment: Alignment.center,
