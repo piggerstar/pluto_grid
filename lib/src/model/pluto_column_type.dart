@@ -47,6 +47,10 @@ abstract class PlutoColumnType {
     bool allowFirstDot = false,
     String? locale,
     List<TextInputFormatter>? inputFormatters,
+    InputDecoration? inputDecoration,
+    bool expands = false,
+    EdgeInsets? padding,
+    int maxLines = 1,
   }) {
     return PlutoColumnTypeNumber(
       defaultValue: defaultValue,
@@ -56,6 +60,10 @@ abstract class PlutoColumnType {
       allowFirstDot: allowFirstDot,
       locale: locale,
       inputFormatters: inputFormatters ?? [],
+      inputDecoration: inputDecoration,
+      expands: expands,
+      padding: padding,
+      maxLines: maxLines,
     );
   }
 
@@ -85,6 +93,10 @@ abstract class PlutoColumnType {
     String? symbol,
     int? decimalDigits,
     List<TextInputFormatter>? inputFormatters,
+    InputDecoration? inputDecoration,
+    bool expands = false,
+    EdgeInsets? padding,
+    int maxLines = 1,
   }) {
     return PlutoColumnTypeCurrency(
       defaultValue: defaultValue,
@@ -97,6 +109,10 @@ abstract class PlutoColumnType {
       symbol: symbol,
       decimalDigits: decimalDigits,
       inputFormatters: inputFormatters ?? [],
+      inputDecoration: inputDecoration,
+      expands: expands,
+      padding: padding,
+      maxLines: maxLines,
     );
   }
 
@@ -237,6 +253,54 @@ extension PlutoColumnTypeExtension on PlutoColumnType {
     return this as PlutoColumnTypeTime;
   }
 
+  EdgeInsets? get textInputPadding {
+    if (isText) {
+      return text.padding;
+    } else if (isNumber) {
+      return number.padding;
+    } else if (isCurrency) {
+      return currency.padding;
+    }
+
+    return null;
+  }
+
+  bool get textInputExpands {
+    if (isText) {
+      return text.expands;
+    } else if (isNumber) {
+      return number.expands;
+    } else if (isCurrency) {
+      return currency.expands;
+    }
+
+    return false;
+  }
+
+  InputDecoration? get textInputDecoration {
+    if (isText) {
+      return text.inputDecoration;
+    } else if (isNumber) {
+      return number.inputDecoration;
+    } else if (isCurrency) {
+      return currency.inputDecoration;
+    }
+
+    return null;
+  }
+
+  int get textInputMaxLines {
+    if (isText) {
+      return text.maxLines;
+    } else if (isNumber) {
+      return number.maxLines;
+    } else if (isCurrency) {
+      return currency.maxLines;
+    }
+
+    return 1;
+  }
+
   bool get hasFormat => this is PlutoColumnTypeHasFormat;
 
   bool get applyFormatOnInit => hasFormat ? (this as PlutoColumnTypeHasFormat).applyFormatOnInit : false;
@@ -305,6 +369,14 @@ class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements Plut
   @override
   final List<TextInputFormatter> inputFormatters;
 
+  final InputDecoration? inputDecoration;
+
+  final bool expands;
+
+  final EdgeInsets? padding;
+
+  final int maxLines;
+
   PlutoColumnTypeNumber({
     this.defaultValue,
     required this.negative,
@@ -313,6 +385,10 @@ class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements Plut
     required this.allowFirstDot,
     required this.locale,
     this.inputFormatters = const [],
+    this.inputDecoration,
+    this.expands = false,
+    this.padding,
+    this.maxLines = 1,
   })  : numberFormat = intl.NumberFormat(format, locale),
         decimalPoint = _getDecimalPoint(format);
 
@@ -352,6 +428,14 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
 
   final String? symbol;
 
+  final InputDecoration? inputDecoration;
+
+  final bool expands;
+
+  final EdgeInsets? padding;
+
+  final int maxLines;
+
   @override
   final List<TextInputFormatter> inputFormatters;
 
@@ -366,6 +450,10 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
     this.symbol,
     int? decimalDigits,
     this.inputFormatters = const [],
+    this.inputDecoration,
+    this.expands = false,
+    this.padding,
+    this.maxLines = 1,
   }) : numberFormat = intl.NumberFormat.currency(
           locale: locale,
           name: name,

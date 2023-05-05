@@ -246,7 +246,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     }
 
     return Container(
-      padding: column.type.text.padding,
+      padding: column.type.textInputPadding,
       child: TextField(
         focusNode: cellFocus,
         enabled: widget.cell.enabled,
@@ -256,9 +256,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
         onEditingComplete: _handleOnComplete,
         onSubmitted: (_) => _handleOnComplete(),
         onTap: _handleOnTap,
-        expands: column.type.text.expands,
+        expands: column.type.textInputExpands,
         style: widget.stateManager.configuration.style.cellTextStyle,
-        decoration: column.type.text.inputDecoration ??
+        decoration: column.type.textInputDecoration ??
             (widget.stateManager.configuration.style.cellTextInputDecoration ??
                 const InputDecoration(
                   border: OutlineInputBorder(
@@ -266,7 +266,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
                   ),
                   contentPadding: EdgeInsets.zero,
                 )),
-        maxLines: column.type.text.expands ? null : column.type.text.maxLines,
+        maxLines: column.type.textInputExpands ? null : column.type.textInputMaxLines,
         buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
         keyboardType: keyboardType,
         inputFormatters: inputFormatters,

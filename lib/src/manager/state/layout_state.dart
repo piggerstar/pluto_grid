@@ -175,7 +175,7 @@ mixin LayoutState implements IPlutoGridState {
   final ChangeNotifier _resizingChangeNotifier = ChangeNotifier();
 
   double get defaultTableHeight {
-    return headerHeight + columnGroupHeight + columnHeight + rowBodyHeight + footerDividerHeight + footerHeight;
+    return headerHeight + columnGroupHeight + columnHeight + rowBodyHeight + footerDividerHeight;
   }
 
   @override

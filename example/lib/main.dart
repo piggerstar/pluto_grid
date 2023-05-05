@@ -31,6 +31,7 @@ class PlutoGridExamplePage extends StatefulWidget {
 }
 
 class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
+  final GlobalKey _footerKey = GlobalKey();
   final List<PlutoColumn> columns = <PlutoColumn>[
     PlutoColumn(
       title: 'Id',
@@ -44,6 +45,12 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       title: 'Name',
       field: 'name',
       type: PlutoColumnType.text(),
+      frozen: PlutoColumnFrozen.start,
+    ),
+    PlutoColumn(
+      title: 'Amount',
+      field: 'amount',
+      type: PlutoColumnType.currency(format: '#,###.##', negative: false),
       frozen: PlutoColumnFrozen.start,
     ),
     PlutoColumn(
@@ -121,8 +128,6 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         );
       },
       type: PlutoColumnType.text(
-        maxLines: 2,
-        expands: true,
         padding: const EdgeInsets.symmetric(vertical: 6),
         inputDecoration: InputDecoration(
           isDense: true,
@@ -132,6 +137,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Color(0xFFCCDFFF))),
         ),
       ),
+    ),
+    PlutoColumn(
+      title: 'Amount',
+      field: 'amount',
+      type: PlutoColumnType.currency(format: '#,###.##', negative: false),
     ),
     PlutoColumn(
       title: 'Age',
@@ -194,6 +204,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
       cells: {
         'id': PlutoCell(value: 'user1'),
         'name': PlutoCell(value: 'Mike', enabled: false),
+        'amount': PlutoCell(value: 10),
         'age': PlutoCell(value: 20, enabled: false),
         'role': PlutoCell(value: 'Programmer'),
         'joined': PlutoCell(value: '2021-01-01'),
@@ -242,7 +253,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               onPressed: () {
                 stateManager!.toggleCheckboxViewColumn(stateManager!.columns.first, !stateManager!.columns.first.enableRowChecked);
               },
-              child: const Text('Hide/Unhide Column Checkbox'),
+              child: const Text('Hide/Un-Hide Column Checkbox'),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -255,9 +266,9 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 columns: getColumns,
                 rows: getRows,
                 columnGroups: getColumnGroups,
-                autoSizeHeightOffset: (stateManager?.refRows.isEmpty ?? true) ? 60 : 0,
+                autoSizeHeightOffset: (stateManager?.refRows.isEmpty ?? true) ? 180 : 0,
                 noRowsWidget: Container(height: 50, color: Colors.lightBlueAccent, child: const Text('No data.')),
-                useCustomFooter: true,
+                useCustomFooter: false,
                 showTableLoadingText: false,
                 customTableLoading: Align(
                   alignment: Alignment.center,
@@ -270,29 +281,10 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                   ),
                 ),
                 onLoaded: (PlutoGridOnLoadedEvent event) async {
-                  event.stateManager.setShowLoading(true);
-                  await Future.delayed(const Duration(seconds: 2));
-                  event.stateManager.insertRows(
-                      0,
-                      List.generate(15, (index) {
-                        PlutoRow row = PlutoRow(
-                          cells: {
-                            'id': PlutoCell(value: 'user${index + 1}'),
-                            'name': PlutoCell(value: 'Mike'),
-                            'age': PlutoCell(value: 20, enabled: false),
-                            'role': PlutoCell(value: 'Programmer'),
-                            'joined': PlutoCell(value: '2021-01-01'),
-                            'working_time': PlutoCell(value: '09:00'),
-                            'salary': PlutoCell(value: 300),
-                          },
-                        );
-                        return row;
-                      }));
-                  event.stateManager.autoFitAllColumn(context, force: true);
-                  event.stateManager.setShowLoading(false);
-                  setState(() {
-                    stateManager = event.stateManager;
-                  });
+                  stateManager = event.stateManager;
+                  await _insertRow();
+                  stateManager!.autoFitAllColumn(context, force: true);
+                  setState(() {});
                 },
                 onChanged: (PlutoGridOnChangedEvent event) {
                   print('onChanged $event');
@@ -311,16 +303,30 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                   ),
                 ),
                 createFooter: (v) {
-                  return Container(
-                    color: Colors.white,
-                    height: 80,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [CircularProgressIndicator()],
-                      ),
-                    ),
+                  return StatefulBuilder(
+                    key: _footerKey,
+                    builder: (context, setState) {
+                      return SizedBox(
+                        height: 80,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (stateManager?.showLoading ?? false) const CircularProgressIndicator(),
+                              if (!(stateManager?.showLoading ?? false))
+                                TextButton(
+                                  child: Text('${stateManager?.showLoading ?? false}'),
+                                  onPressed: () async {
+                                    await _insertRow();
+                                    setState(() {});
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -330,5 +336,31 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _insertRow({int rowIdx = 0}) async {
+    if (stateManager == null) return;
+    stateManager!.setShowLoading(true);
+    _footerKey.currentState?.setState(() {});
+    await Future.delayed(const Duration(seconds: 2));
+    stateManager!.insertRows(
+        rowIdx,
+        List.generate(5, (index) {
+          PlutoRow row = PlutoRow(
+            cells: {
+              'id': PlutoCell(value: 'user${stateManager!.refRows.length + 1}'),
+              'name': PlutoCell(value: 'Mike'),
+              'amount': PlutoCell(value: 10),
+              'age': PlutoCell(value: 20, enabled: false),
+              'role': PlutoCell(value: 'Programmer'),
+              'joined': PlutoCell(value: '2021-01-01'),
+              'working_time': PlutoCell(value: '09:00'),
+              'salary': PlutoCell(value: 300),
+            },
+          );
+          return row;
+        }));
+    stateManager!.setShowLoading(false);
+    _footerKey.currentState?.setState(() {});
   }
 }

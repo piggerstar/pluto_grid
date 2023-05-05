@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show Intl;
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:pluto_grid/src/ui/cells/text_cell.dart';
+import 'package:pluto_grid/src/widgets/pluto_widget_size_detector.dart';
 
 import 'helper/platform_helper.dart';
 import 'ui/ui.dart';
@@ -660,6 +661,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
             delegate: PlutoGridLayoutDelegate(
               _stateManager,
               Directionality.of(context),
+              widget.useCustomFooter,
             ),
             children: [
               /// Body columns and rows.
@@ -822,7 +824,13 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
 
   final TextDirection _textDirection;
 
-  PlutoGridLayoutDelegate(this._stateManager, this._textDirection) : super(relayout: _stateManager.resizingChangeNotifier) {
+  final bool useCustomFooter;
+
+  PlutoGridLayoutDelegate(
+    this._stateManager,
+    this._textDirection,
+    this.useCustomFooter,
+  ) : super(relayout: _stateManager.resizingChangeNotifier) {
     // set textDirection before the first frame is laid-out
     _stateManager.setTextDirection(_textDirection);
   }
@@ -875,7 +883,7 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
     }
 
     // custom footer renderer using createFooter Function
-    if (hasChild(_StackName.footer)) {
+    if (hasChild(_StackName.footer) && !useCustomFooter) {
       // maximum 40% of the height
       var s = layoutChild(
         _StackName.footer,
@@ -1289,7 +1297,7 @@ class PlutoGridLayoutDelegate extends MultiChildLayoutDelegate {
   double _safe(double value) => max(0, value);
 }
 
-class _GridContainer extends StatelessWidget {
+class _GridContainer extends StatefulWidget {
   final PlutoGridStateManager stateManager;
 
   final Widget child;
@@ -1308,35 +1316,39 @@ class _GridContainer extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  double get defaultTableHeight {
-    double rowBorderHeight = 0;
+  @override
+  State<_GridContainer> createState() => _GridContainerState();
+}
 
-    if (customFooter != null) {
-      rowBorderHeight = stateManager.footerHeight - 7;
-    } else {
-      rowBorderHeight = stateManager.footerHeight - stateManager.rowTotalHeight - 1;
+class _GridContainerState extends State<_GridContainer> {
+  double footerHeightOffset = 0;
+
+  double get defaultTableHeight {
+    if (widget.customFooter != null) {
+      return widget.stateManager.defaultTableHeight + widget.autoSizeHeightOffset + footerHeightOffset + 5;
     }
-    return stateManager.defaultTableHeight + rowBorderHeight;
+    return widget.stateManager.defaultTableHeight + widget.autoSizeHeightOffset + widget.stateManager.footerHeight + 5;
   }
 
   double get defaultTableWidth {
-    return stateManager.refColumns.where((e) => !e.hide).map((element) => element.width + 1).reduce((value, element) => value + element);
+    double columnWidth = widget.stateManager.refColumns.where((e) => !e.hide).map((element) => element.width + 1).reduce((value, element) => value + element);
+    return columnWidth + widget.autoSizeWidthOffset;
   }
 
   KeyEventResult _handleGridFocusOnKey(FocusNode focusNode, RawKeyEvent event) {
-    if (stateManager.keyManager!.eventResult.isSkip == false) {
-      stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
+    if (widget.stateManager.keyManager!.eventResult.isSkip == false) {
+      widget.stateManager.keyManager!.subject.add(PlutoKeyManagerEvent(
         focusNode: focusNode,
         event: event,
       ));
     }
 
-    return stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
+    return widget.stateManager.keyManager!.eventResult.consume(KeyEventResult.handled);
   }
 
   @override
   Widget build(BuildContext context) {
-    final style = stateManager.style;
+    final style = widget.stateManager.style;
 
     final borderRadius = style.gridBorderRadius.resolve(TextDirection.ltr);
 
@@ -1351,36 +1363,43 @@ class _GridContainer extends StatelessWidget {
       ),
       child: Padding(
         padding: style.gridPadding ?? const EdgeInsets.all(PlutoGridSettings.gridPadding),
-        child: borderRadius == BorderRadius.zero ? child : ClipRRect(borderRadius: borderRadius, child: child),
+        child: borderRadius == BorderRadius.zero ? widget.child : ClipRRect(borderRadius: borderRadius, child: widget.child),
       ),
     );
 
-    if (customFooter != null) {
+    if (widget.customFooter != null) {
       tableWidget = Column(
         children: [
           Expanded(child: tableWidget),
-          customFooter!,
+          PlutoWidgetSizeDetector(
+            onSizeChange: (s) {
+              setState(() {
+                footerHeightOffset = s.height;
+              });
+            },
+            child: widget.customFooter!,
+          ),
         ],
       );
     }
 
     Widget childView = Focus(
-      focusNode: stateManager.gridFocusNode,
-      onFocusChange: stateManager.setKeepFocus,
+      focusNode: widget.stateManager.gridFocusNode,
+      onFocusChange: widget.stateManager.setKeepFocus,
       onKey: _handleGridFocusOnKey,
       child: ScrollConfiguration(
         behavior: PlutoScrollBehavior(
           isMobile: PlatformHelper.isMobile,
-          userDragDevices: stateManager.configuration.scrollbar.dragDevices,
+          userDragDevices: widget.stateManager.configuration.scrollbar.dragDevices,
         ),
         child: tableWidget,
       ),
     );
 
-    if (autoSize) {
+    if (widget.autoSize) {
       childView = SizedBox(
-        height: defaultTableHeight + autoSizeHeightOffset,
-        width: defaultTableWidth + autoSizeWidthOffset,
+        height: defaultTableHeight,
+        width: defaultTableWidth,
         child: childView,
       );
     }
