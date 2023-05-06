@@ -94,6 +94,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
           columnHeight: 46,
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
+          enableActiveColorOnDisabledCell: false,
         ),
       ),
       createFooter: (v) {

@@ -69,7 +69,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 '2. All column has been set to auto fit during onLoaded.\n'
                 '3. The create footer is rendered with [useCustomFooter] property set to true that will make the footer render independent from the table.\n'
                 '4. The name cell has been customized to add border to the text input field.\n'
-                '5. The age cell has been disabled at row level instead of column level by using [enabled] property on PlutoRow(). This allow more control to disable on specific row cell.\n'
+                '5. The [enableActiveColorOnDisabledCell] style has been set to false that will make the selected cell color to use disabled style when the cell is readonly. \n'
+                '6. The age cell has been disabled at row level instead of column level by using [enabled] property on PlutoRow(). This allow more control to disable on specific row cell.\n'
                 '    This also achievable by using [checkReadOnly] property on PlutoColumn().\n',
                 textAlign: TextAlign.start,
               ),

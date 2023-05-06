@@ -194,6 +194,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
         isGroupedRowCell: stateManager.enabledRowGroups && stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
         enableCellHorizontalBorder: style.enableCellBorderHorizontal,
         enableCellVerticalBorder: style.enableCellBorderVertical,
+        enableActiveColorOnDisabledCell: style.enableActiveColorOnDisabledCell,
         borderColor: style.borderColor,
         activatedBorderColor: style.activatedBorderColor,
         activatedColor: style.activatedColor,
@@ -237,6 +238,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required bool isGroupedRowCell,
     required bool enableCellVerticalBorder,
     required bool enableCellHorizontalBorder,
+    required bool enableActiveColorOnDisabledCell,
     required Color borderColor,
     required Color activatedBorderColor,
     required Color activatedColor,
@@ -257,6 +259,14 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       // if (enableCellVerticalBorder || enableCellHorizontalBorder) {
       //   rightWidth = 2;
       // }
+      Color borderColor = (hasFocus) ? activatedBorderColor : inactivatedBorderColor;
+
+      if (!enableActiveColorOnDisabledCell) {
+        if (widget.cell.enabled == false) {
+          borderColor = inactivatedBorderColor;
+        }
+      }
+
       return BoxDecoration(
         color: widget.cell.enabled
             ? _currentCellColor(
@@ -272,7 +282,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
             : cellColorInReadOnlyState,
         // border: BorderDirectional(top: borderSide, bottom: borderSide, start: borderSide.copyWith(width: leftWidth), end: borderSide.copyWith(width: rightWidth)),
         border: Border.all(
-          color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
+          color: borderColor,
           width: 1,
         ),
       );

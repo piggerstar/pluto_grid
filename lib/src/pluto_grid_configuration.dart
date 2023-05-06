@@ -244,6 +244,7 @@ class PlutoGridStyleConfig {
     this.hideLastRowBorder = false,
     this.gridPadding,
     this.lastRowHeightPadding,
+    this.enableActiveColorOnDisabledCell = true,
   });
 
   const PlutoGridStyleConfig.dark({
@@ -304,6 +305,7 @@ class PlutoGridStyleConfig {
     this.hideLastRowBorder = false,
     this.gridPadding,
     this.lastRowHeightPadding,
+    this.enableActiveColorOnDisabledCell = true,
   });
 
   /// Enable borderShadow in [PlutoGrid].
@@ -461,6 +463,8 @@ class PlutoGridStyleConfig {
 
   final double? lastRowHeightPadding;
 
+  final bool enableActiveColorOnDisabledCell;
+
   PlutoGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
@@ -507,6 +511,7 @@ class PlutoGridStyleConfig {
     bool? hideLastRowBorder,
     EdgeInsetsGeometry? gridPadding,
     double? lastRowHeightPadding,
+    bool enableActiveColorOnDisabledCell = true,
   }) {
     return PlutoGridStyleConfig(
       enableGridBorderShadow: enableGridBorderShadow ?? this.enableGridBorderShadow,
@@ -554,6 +559,7 @@ class PlutoGridStyleConfig {
       hideLastRowBorder: hideLastRowBorder ?? this.hideLastRowBorder,
       gridPadding: gridPadding ?? this.gridPadding,
       lastRowHeightPadding: lastRowHeightPadding ?? this.lastRowHeightPadding,
+      enableActiveColorOnDisabledCell: enableActiveColorOnDisabledCell,
     );
   }
 
@@ -606,7 +612,8 @@ class PlutoGridStyleConfig {
             gridPopupBorderRadius == other.gridPopupBorderRadius &&
             hideLastRowBorder == other.hideLastRowBorder &&
             gridPadding == other.gridPadding &&
-            lastRowHeightPadding == other.lastRowHeightPadding;
+            lastRowHeightPadding == other.lastRowHeightPadding &&
+            enableActiveColorOnDisabledCell == other.enableActiveColorOnDisabledCell;
   }
 
   @override
@@ -656,6 +663,7 @@ class PlutoGridStyleConfig {
         hideLastRowBorder,
         gridPadding,
         lastRowHeightPadding,
+        enableActiveColorOnDisabledCell,
       ]);
 }
 
