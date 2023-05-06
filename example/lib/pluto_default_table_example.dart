@@ -34,7 +34,7 @@ class _PlutoDefaultTableState extends State<PlutoDefaultTable> {
         List.generate(5, (index) {
           PlutoRow row = PlutoRow(
             cells: {
-              'id': PlutoCell(value: 'user${stateManager!.refRows.length + 1}'),
+              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}'),
               'name': PlutoCell(value: 'Mike'),
               'amount': PlutoCell(value: 10),
               'age': PlutoCell(value: 20, enabled: false),
@@ -122,7 +122,7 @@ class _PlutoDefaultTableState extends State<PlutoDefaultTable> {
                       TextButton(
                         child: const Text('Load more'),
                         onPressed: () async {
-                          await _insertRow();
+                          await _insertRow(rowIdx: stateManager!.refRows.length);
                           setState(() {});
                         },
                       ),

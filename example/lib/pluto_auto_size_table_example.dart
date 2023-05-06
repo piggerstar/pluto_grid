@@ -34,10 +34,10 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
         List.generate(5, (index) {
           PlutoRow row = PlutoRow(
             cells: {
-              'id': PlutoCell(value: 'user${stateManager!.refRows.length + 1}'),
+              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}'),
               'name': PlutoCell(value: 'Mike'),
               'amount': PlutoCell(value: 10),
-              'age': PlutoCell(value: 20, enabled: false),
+              'age': PlutoCell(value: 20, enabled: (stateManager!.refRows.length + index).isEven ? false : true),
               'role': PlutoCell(value: 'Programmer'),
               'joined': PlutoCell(value: '2021-01-01'),
               'working_time': PlutoCell(value: '09:00'),
@@ -112,7 +112,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
                       TextButton(
                         child: const Text('Load more'),
                         onPressed: () async {
-                          await _insertRow();
+                          await _insertRow(rowIdx: stateManager!.refRows.length);
                           setState(() {});
                         },
                       ),
