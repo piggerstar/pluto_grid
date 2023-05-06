@@ -18,7 +18,9 @@ enum PlutoResizeMode {
   pushAndPull;
 
   bool get isNone => this == PlutoResizeMode.none;
+
   bool get isNormal => this == PlutoResizeMode.normal;
+
   bool get isPushAndPull => this == PlutoResizeMode.pushAndPull;
 }
 
@@ -35,7 +37,9 @@ enum PlutoAutoSizeMode {
   scale;
 
   bool get isNone => this == PlutoAutoSizeMode.none;
+
   bool get isEqual => this == PlutoAutoSizeMode.equal;
+
   bool get isScale => this == PlutoAutoSizeMode.scale;
 }
 
@@ -136,8 +140,7 @@ class PlutoAutoSizeEqual<T> extends PlutoAutoSize<T> {
         return p + (isSuppressedItem(e) ? getItemSize(e) : getItemMinSize(e));
       });
 
-      eachSize =
-          (maxSize - totalSuppressedSize) / (length - suppressedItems.length);
+      eachSize = (maxSize - totalSuppressedSize) / (length - suppressedItems.length);
     }
 
     for (final item in items) {
@@ -272,9 +275,7 @@ abstract class PlutoResize<T> {
 
     _mainItem = items[index];
 
-    _positiveSiblings = positiveIndex == length
-        ? const Iterable.empty()
-        : items.getRange(positiveIndex, length);
+    _positiveSiblings = positiveIndex == length ? const Iterable.empty() : items.getRange(positiveIndex, length);
 
     _negativeSiblings = items.getRange(0, index);
   }
@@ -373,8 +374,7 @@ class PlutoResizePushAndPull<T> extends PlutoResize<T> {
     final mainSize = getItemSize(_mainItem);
     final mainMinSize = getItemMinSize(_mainItem);
 
-    final setMainSize =
-        mainSize + offset > mainMinSize ? mainSize + offset : mainMinSize;
+    final setMainSize = mainSize + offset > mainMinSize ? mainSize + offset : mainMinSize;
 
     if (offset > 0) {
       double remaining = offset;
@@ -419,8 +419,7 @@ class PlutoResizePushAndPull<T> extends PlutoResize<T> {
         if (setMainSize == mainSize) {
           return false;
         }
-        final firstSiblingItem =
-            isFirstMain ? getFirstItemPositive() : getFirstItemNegative();
+        final firstSiblingItem = isFirstMain ? getFirstItemPositive() : getFirstItemNegative();
         if (firstSiblingItem == null) {
           return false;
         }
@@ -440,8 +439,7 @@ class PlutoResizePushAndPull<T> extends PlutoResize<T> {
           final siblingSize = getItemSize(iterNegative.current);
           final siblingMinSize = getItemMinSize(iterNegative.current);
           final enough = siblingSize - siblingMinSize;
-          final siblingOffsetToSet =
-              enough > remainingNegative ? remainingNegative : enough;
+          final siblingOffsetToSet = enough > remainingNegative ? remainingNegative : enough;
           setItemSize(iterNegative.current, siblingSize - siblingOffsetToSet);
           remainingNegative -= siblingOffsetToSet;
           if (remainingNegative <= 0) {
@@ -450,8 +448,7 @@ class PlutoResizePushAndPull<T> extends PlutoResize<T> {
         }
       }
 
-      if (mainSize == setMainSize &&
-          remainingNegative == offset.abs() - (mainSize - setMainSize)) {
+      if (mainSize == setMainSize && remainingNegative == offset.abs() - (mainSize - setMainSize)) {
         return false;
       }
 

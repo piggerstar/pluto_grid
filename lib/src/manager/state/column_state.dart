@@ -107,7 +107,7 @@ abstract class IColumnState {
   ///
   /// In case of [column.frozen.isFrozen],
   /// it is not changed if the width constraint of the frozen column is narrow.
-  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false});
+  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false, bool reset = false});
 
   void autoFitColumn(BuildContext context, PlutoColumn column, {bool notify = true, bool force = false});
 
@@ -544,7 +544,7 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false}) {
+  void resizeColumn(PlutoColumn column, double offset, {bool notify = true, bool force = false, bool reset = false}) {
     if (!force && (columnsResizeMode.isNone || !column.enableDropToResize)) {
       return;
     }
@@ -556,11 +556,15 @@ mixin ColumnState implements IPlutoGridState {
     bool updated = false;
 
     if (columnsResizeMode.isNormal) {
-      final setWidth = column.width + offset;
-
-      column.width = setWidth > column.minWidth ? setWidth : column.minWidth;
-
-      updated = setWidth == column.width;
+      if (reset) {
+        column.minWidth = offset;
+        column.width = offset;
+        updated = true;
+      } else {
+        final setWidth = column.width + offset;
+        column.width = setWidth > column.minWidth ? setWidth : column.minWidth;
+        updated = setWidth == column.width;
+      }
     } else {
       updated = _updateResizeColumns(column: column, offset: offset);
     }
@@ -575,10 +579,7 @@ mixin ColumnState implements IPlutoGridState {
       notifyResizingListeners();
     }
 
-    scrollByDirection(
-      PlutoMoveDirection.right,
-      correctHorizontalOffset,
-    );
+    scrollByDirection(PlutoMoveDirection.right, correctHorizontalOffset);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       activateColumnsAutoSize();
@@ -813,10 +814,7 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  bool limitMoveColumn({
-    required PlutoColumn column,
-    required PlutoColumn targetColumn,
-  }) {
+  bool limitMoveColumn({required PlutoColumn column, required PlutoColumn targetColumn}) {
     if (column.frozen.isFrozen) {
       return false;
     }
@@ -834,19 +832,12 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
-  bool limitHideColumn(
-    PlutoColumn column,
-    bool hide, {
-    double accumulateWidth = 0,
-  }) {
+  bool limitHideColumn(PlutoColumn column, bool hide, {double accumulateWidth = 0}) {
     if (hide == true) {
       return false;
     }
 
-    return _limitFrozenColumn(
-      column.frozen,
-      column.width + accumulateWidth,
-    );
+    return _limitFrozenColumn(column.frozen, column.width + accumulateWidth);
   }
 
   /// Check the width limit before changing the PlutoColumnFrozen value.
@@ -864,10 +855,7 @@ mixin ColumnState implements IPlutoGridState {
   /// by subtracting the offsetWidth value from the total width of the grid.
   /// Assume that a column has been added by subtracting the [offsetWidth] value
   /// from the total width while no column has been added yet.
-  bool _limitFrozenColumn(
-    PlutoColumnFrozen frozen,
-    double offsetWidth,
-  ) {
+  bool _limitFrozenColumn(PlutoColumnFrozen frozen, double offsetWidth) {
     if (frozen.isNone) {
       return false;
     }
@@ -1009,10 +997,7 @@ mixin ColumnState implements IPlutoGridState {
     }
   }
 
-  void _updateAfterHideColumn({
-    required List<PlutoColumn> columns,
-    required bool notify,
-  }) {
+  void _updateAfterHideColumn({required List<PlutoColumn> columns, required bool notify}) {
     refColumns.update();
 
     resetCurrentState(notify: false);
@@ -1030,10 +1015,7 @@ mixin ColumnState implements IPlutoGridState {
     notifyListeners(notify, hideColumn.hashCode);
   }
 
-  bool _updateResizeColumns({
-    required PlutoColumn column,
-    required double offset,
-  }) {
+  bool _updateResizeColumns({required PlutoColumn column, required double offset}) {
     if (offset == 0 || columnsResizeMode.isNone || columnsResizeMode.isNormal) {
       return false;
     }

@@ -192,6 +192,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
           widget.rowIdx,
         ),
         isGroupedRowCell: stateManager.enabledRowGroups && stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
+        enableCellHorizontalBorder: style.enableCellBorderHorizontal,
         enableCellVerticalBorder: style.enableCellBorderVertical,
         borderColor: style.borderColor,
         activatedBorderColor: style.activatedBorderColor,
@@ -235,6 +236,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required bool isSelectedCell,
     required bool isGroupedRowCell,
     required bool enableCellVerticalBorder,
+    required bool enableCellHorizontalBorder,
     required Color borderColor,
     required Color activatedBorderColor,
     required Color activatedColor,
@@ -246,6 +248,15 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required PlutoGridSelectingMode selectingMode,
   }) {
     if (isCurrentCell) {
+      // BorderSide borderSide = BorderSide(color: hasFocus ? activatedBorderColor : inactivatedBorderColor, width: 1);
+      // double leftWidth = 1;
+      // double rightWidth = 1;
+      // if (!enableCellVerticalBorder && enableCellHorizontalBorder) {
+      //   leftWidth = 2;
+      // }
+      // if (enableCellVerticalBorder || enableCellHorizontalBorder) {
+      //   rightWidth = 2;
+      // }
       return BoxDecoration(
         color: widget.cell.enabled
             ? _currentCellColor(
@@ -259,6 +270,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
                 selectingMode: selectingMode,
               )
             : cellColorInReadOnlyState,
+        // border: BorderDirectional(top: borderSide, bottom: borderSide, start: borderSide.copyWith(width: leftWidth), end: borderSide.copyWith(width: rightWidth)),
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
           width: 1,

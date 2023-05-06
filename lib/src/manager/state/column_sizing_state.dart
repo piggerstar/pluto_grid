@@ -70,8 +70,7 @@ mixin ColumnSizingState implements IPlutoGridState {
   bool get enableColumnsAutoSize => !columnsAutoSizeMode.isNone;
 
   @override
-  bool get activatedColumnsAutoSize =>
-      enableColumnsAutoSize && _state._activatedColumnsAutoSize != false;
+  bool get activatedColumnsAutoSize => enableColumnsAutoSize && _state._activatedColumnsAutoSize != false;
 
   @override
   void activateColumnsAutoSize() {

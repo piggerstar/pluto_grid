@@ -39,6 +39,13 @@ class PlutoColumn {
 
   double minWidth;
 
+  /// future used
+  /// currently there is no implementation of this
+  ///
+  /// this can be used to set the width of the column as a percentage
+  /// using this we can calculate column width more dynamic way
+  double? percentage;
+
   /// Customisable title padding.
   /// It takes precedence over defaultColumnTitlePadding in PlutoGridConfiguration.
   EdgeInsets? titlePadding;
@@ -211,6 +218,7 @@ class PlutoColumn {
     PlutoColumnCheckReadOnly? checkReadOnly,
     this.width = PlutoGridSettings.columnWidth,
     this.minWidth = PlutoGridSettings.minColumnWidth,
+    this.percentage,
     this.titlePadding,
     this.filterPadding,
     this.titleSpan,
