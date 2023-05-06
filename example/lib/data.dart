@@ -101,6 +101,7 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
     field: 'name',
     width: 120,
     minWidth: 120,
+    readOnly: true,
     renderer: (context) {
       return Container(
         padding: const EdgeInsets.all(8),

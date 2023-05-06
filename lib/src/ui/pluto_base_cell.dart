@@ -270,7 +270,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
       }
 
       if (!enableActiveColorOnReadOnlyCell) {
-        if (widget.column.readOnly == false) {
+        if (widget.column.readOnly == true) {
           borderColor = inactivatedBorderColor;
         }
       }

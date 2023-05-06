@@ -95,6 +95,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
           enableActiveColorOnDisabledCell: false,
+          enableActiveColorOnReadOnlyCell: false,
         ),
       ),
       createFooter: (v) {
