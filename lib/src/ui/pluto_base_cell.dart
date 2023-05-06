@@ -195,6 +195,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
         enableCellHorizontalBorder: style.enableCellBorderHorizontal,
         enableCellVerticalBorder: style.enableCellBorderVertical,
         enableActiveColorOnDisabledCell: style.enableActiveColorOnDisabledCell,
+        enableActiveColorOnReadOnlyCell: style.enableActiveColorOnReadOnlyCell,
         borderColor: style.borderColor,
         activatedBorderColor: style.activatedBorderColor,
         activatedColor: style.activatedColor,
@@ -239,6 +240,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required bool enableCellVerticalBorder,
     required bool enableCellHorizontalBorder,
     required bool enableActiveColorOnDisabledCell,
+    required bool enableActiveColorOnReadOnlyCell,
     required Color borderColor,
     required Color activatedBorderColor,
     required Color activatedColor,
@@ -263,6 +265,12 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
 
       if (!enableActiveColorOnDisabledCell) {
         if (widget.cell.enabled == false) {
+          borderColor = inactivatedBorderColor;
+        }
+      }
+
+      if (!enableActiveColorOnReadOnlyCell) {
+        if (widget.column.readOnly == false) {
           borderColor = inactivatedBorderColor;
         }
       }

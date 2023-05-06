@@ -245,6 +245,7 @@ class PlutoGridStyleConfig {
     this.gridPadding,
     this.lastRowHeightPadding,
     this.enableActiveColorOnDisabledCell = true,
+    this.enableActiveColorOnReadOnlyCell = true,
   });
 
   const PlutoGridStyleConfig.dark({
@@ -306,6 +307,7 @@ class PlutoGridStyleConfig {
     this.gridPadding,
     this.lastRowHeightPadding,
     this.enableActiveColorOnDisabledCell = true,
+    this.enableActiveColorOnReadOnlyCell = true,
   });
 
   /// Enable borderShadow in [PlutoGrid].
@@ -465,6 +467,8 @@ class PlutoGridStyleConfig {
 
   final bool enableActiveColorOnDisabledCell;
 
+  final bool enableActiveColorOnReadOnlyCell;
+
   PlutoGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
@@ -512,6 +516,7 @@ class PlutoGridStyleConfig {
     EdgeInsetsGeometry? gridPadding,
     double? lastRowHeightPadding,
     bool enableActiveColorOnDisabledCell = true,
+    bool enableActiveColorOnReadOnlyCell = true,
   }) {
     return PlutoGridStyleConfig(
       enableGridBorderShadow: enableGridBorderShadow ?? this.enableGridBorderShadow,
@@ -560,6 +565,7 @@ class PlutoGridStyleConfig {
       gridPadding: gridPadding ?? this.gridPadding,
       lastRowHeightPadding: lastRowHeightPadding ?? this.lastRowHeightPadding,
       enableActiveColorOnDisabledCell: enableActiveColorOnDisabledCell,
+      enableActiveColorOnReadOnlyCell: enableActiveColorOnReadOnlyCell,
     );
   }
 
@@ -613,7 +619,8 @@ class PlutoGridStyleConfig {
             hideLastRowBorder == other.hideLastRowBorder &&
             gridPadding == other.gridPadding &&
             lastRowHeightPadding == other.lastRowHeightPadding &&
-            enableActiveColorOnDisabledCell == other.enableActiveColorOnDisabledCell;
+            enableActiveColorOnDisabledCell == other.enableActiveColorOnDisabledCell &&
+            enableActiveColorOnReadOnlyCell == other.enableActiveColorOnReadOnlyCell;
   }
 
   @override
@@ -664,6 +671,7 @@ class PlutoGridStyleConfig {
         gridPadding,
         lastRowHeightPadding,
         enableActiveColorOnDisabledCell,
+        enableActiveColorOnReadOnlyCell,
       ]);
 }
 
