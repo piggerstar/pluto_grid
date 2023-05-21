@@ -221,6 +221,8 @@ class PlutoColumn {
 
   Color? checkboxUnselectedColor;
 
+  Color? checkboxDisabledColor;
+
   Color? checkboxActiveColor;
 
   Color? checkboxCheckColor;
@@ -244,6 +246,8 @@ class PlutoColumn {
   MaterialTapTargetSize? checkboxMaterialTapTargetSize;
 
   ThemeData? checkboxThemeData;
+
+  Color? checkboxDisabledBackgroundColor;
 
   PlutoColumn({
     required this.title,
@@ -289,6 +293,7 @@ class PlutoColumn {
     this.checkboxBoxDecoration,
     this.checkboxScale,
     this.checkboxUnselectedColor,
+    this.checkboxDisabledColor,
     this.checkboxActiveColor,
     this.checkboxCheckColor,
     this.checkboxHoverColor,
@@ -301,6 +306,7 @@ class PlutoColumn {
     this.checkboxSide,
     this.checkboxMaterialTapTargetSize,
     this.checkboxThemeData,
+    this.checkboxDisabledBackgroundColor,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly;
 

@@ -11,6 +11,8 @@ class PlutoScaledCheckbox extends StatelessWidget {
 
   final Color unselectedColor;
 
+  final Color disabledColor;
+
   final Color? activeColor;
 
   final Color checkColor;
@@ -43,12 +45,15 @@ class PlutoScaledCheckbox extends StatelessWidget {
 
   final ThemeData? themeData;
 
+  final Color? disabledBackgroundColor;
+
   const PlutoScaledCheckbox({
     Key? key,
     required this.value,
     required this.handleOnChanged,
     this.tristate = false,
     this.scale = 1.0,
+    this.disabledColor = const Color(0xFF9E9E9E),
     this.unselectedColor = Colors.black26,
     this.activeColor = Colors.lightBlue,
     this.checkColor = const Color(0xFFDCF5FF),
@@ -66,31 +71,38 @@ class PlutoScaledCheckbox extends StatelessWidget {
     this.side,
     this.materialTapTargetSize,
     this.themeData,
+    this.disabledBackgroundColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Widget child = Transform.scale(
       scale: scale,
-      child: Theme(
-        data: ThemeData(
-          unselectedWidgetColor: unselectedColor,
-        ),
-        child: Checkbox(
-          value: enabled ? value : false,
-          tristate: tristate,
-          onChanged: enabled ? handleOnChanged : null,
-          activeColor: value == null ? unselectedColor : activeColor,
-          checkColor: checkColor,
-          materialTapTargetSize: materialTapTargetSize,
-          fillColor: fillColor,
-          focusColor: focusColor,
-          hoverColor: hoverColor,
-          mouseCursor: mouseCursor,
-          overlayColor: overlayColor,
-          splashRadius: splashRadius,
-          shape: shape,
-          side: side,
+      child: Container(
+        height: 18.0,
+        width: 18.0,
+        color: enabled ? null : disabledBackgroundColor,
+        child: Theme(
+          data: ThemeData(
+            unselectedWidgetColor: enabled ? unselectedColor : disabledColor,
+            disabledColor: disabledColor,
+          ),
+          child: Checkbox(
+            value: enabled ? value : false,
+            tristate: tristate,
+            onChanged: enabled ? handleOnChanged : null,
+            activeColor: value == null ? unselectedColor : activeColor,
+            checkColor: checkColor,
+            materialTapTargetSize: materialTapTargetSize,
+            fillColor: fillColor,
+            focusColor: focusColor,
+            hoverColor: hoverColor,
+            mouseCursor: mouseCursor,
+            overlayColor: overlayColor,
+            splashRadius: splashRadius,
+            shape: shape,
+            side: side,
+          ),
         ),
       ),
     );

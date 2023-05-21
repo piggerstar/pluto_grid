@@ -389,6 +389,8 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       handleOnChanged: _handleOnChanged,
       tristate: _tristate,
       scale: widget.column.checkboxScale ?? 0.86,
+      disabledBackgroundColor: widget.column.checkboxDisabledBackgroundColor ?? stateManager.configuration.style.disabledIconColor,
+      disabledColor: widget.column.checkboxDisabledColor ?? stateManager.configuration.style.disabledIconColor,
       unselectedColor: widget.column.checkboxUnselectedColor ?? stateManager.configuration.style.iconColor,
       activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
       checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
