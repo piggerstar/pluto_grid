@@ -169,6 +169,7 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
         ),
       if (widget.column.enableRowChecked)
         CheckboxSelectionWidget(
+          cell: widget.cell,
           column: widget.column,
           row: widget.row,
           rowIdx: widget.rowIdx,
@@ -302,6 +303,8 @@ class _RowDragIconWidget extends StatelessWidget {
 class CheckboxSelectionWidget extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
 
+  final PlutoCell cell;
+
   final PlutoColumn column;
 
   final PlutoRow row;
@@ -310,6 +313,7 @@ class CheckboxSelectionWidget extends PlutoStatefulWidget {
 
   const CheckboxSelectionWidget({
     required this.stateManager,
+    required this.cell,
     required this.column,
     required this.row,
     required this.rowIdx,
@@ -384,10 +388,24 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       value: _checked,
       handleOnChanged: _handleOnChanged,
       tristate: _tristate,
-      scale: 0.86,
-      unselectedColor: stateManager.configuration.style.iconColor,
-      activeColor: stateManager.configuration.style.activatedBorderColor,
-      checkColor: stateManager.configuration.style.activatedColor,
+      scale: widget.column.checkboxScale ?? 0.86,
+      unselectedColor: widget.column.checkboxUnselectedColor ?? stateManager.configuration.style.iconColor,
+      activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
+      checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
+      hoverColor: widget.column.checkboxHoverColor,
+      enabled: widget.cell.enabled,
+      shape: widget.column.checkboxShape,
+      fillColor: widget.column.checkboxFillColor,
+      focusColor: widget.column.checkboxFocusColor,
+      materialTapTargetSize: widget.column.checkboxMaterialTapTargetSize,
+      mouseCursor: widget.column.checkboxMouseCursor,
+      side: widget.column.checkboxSide,
+      splashRadius: widget.column.checkboxSplashRadius,
+      tooltipBoxDecoration: widget.column.checkboxBoxDecoration,
+      tooltipMessage: widget.cell.showCheckboxTooltip ? widget.column.checkboxTooltipMessage : null,
+      tooltipTextStyle: widget.column.checkboxTextStyle,
+      overlayColor: widget.column.checkboxOverlayColor,
+      themeData: widget.column.checkboxThemeData,
     );
   }
 }

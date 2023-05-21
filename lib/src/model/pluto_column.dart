@@ -210,6 +210,41 @@ class PlutoColumn {
   /// The behavior when the cell is un-focus
   bool keepFocusOnChange;
 
+  /// tooltip message for checkbox
+  String? checkboxTooltipMessage;
+
+  TextStyle? checkboxTextStyle;
+
+  BoxDecoration? checkboxBoxDecoration;
+
+  double? checkboxScale;
+
+  Color? checkboxUnselectedColor;
+
+  Color? checkboxActiveColor;
+
+  Color? checkboxCheckColor;
+
+  Color? checkboxHoverColor;
+
+  Color? checkboxFocusColor;
+
+  MouseCursor? checkboxMouseCursor;
+
+  MaterialStateProperty<Color?>? checkboxFillColor;
+
+  MaterialStateProperty<Color?>? checkboxOverlayColor;
+
+  double? checkboxSplashRadius;
+
+  OutlinedBorder? checkboxShape;
+
+  BorderSide? checkboxSide;
+
+  MaterialTapTargetSize? checkboxMaterialTapTargetSize;
+
+  ThemeData? checkboxThemeData;
+
   PlutoColumn({
     required this.title,
     required this.field,
@@ -249,6 +284,23 @@ class PlutoColumn {
     this.maxLength,
     this.maxLengthEnforcement,
     this.keepFocusOnChange = false,
+    this.checkboxTooltipMessage,
+    this.checkboxTextStyle,
+    this.checkboxBoxDecoration,
+    this.checkboxScale,
+    this.checkboxUnselectedColor,
+    this.checkboxActiveColor,
+    this.checkboxCheckColor,
+    this.checkboxHoverColor,
+    this.checkboxFocusColor,
+    this.checkboxMouseCursor,
+    this.checkboxFillColor,
+    this.checkboxOverlayColor,
+    this.checkboxSplashRadius,
+    this.checkboxShape,
+    this.checkboxSide,
+    this.checkboxMaterialTapTargetSize,
+    this.checkboxThemeData,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly;
 

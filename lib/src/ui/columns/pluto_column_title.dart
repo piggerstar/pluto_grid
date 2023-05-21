@@ -379,7 +379,7 @@ class _ColumnWidget extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager),
+                    if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
                     Expanded(
                       child: _ColumnTextWidget(
                         column: column,
@@ -402,7 +402,9 @@ class _ColumnWidget extends StatelessWidget {
 class CheckboxAllSelectionWidget extends PlutoStatefulWidget {
   final PlutoGridStateManager stateManager;
 
-  const CheckboxAllSelectionWidget({required this.stateManager, Key? key}) : super(key: key);
+  final PlutoColumn column;
+
+  const CheckboxAllSelectionWidget({required this.stateManager, Key? key, required this.column}) : super(key: key);
 
   @override
   CheckboxAllSelectionWidgetState createState() => CheckboxAllSelectionWidgetState();
@@ -425,8 +427,25 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
   void updateState(PlutoNotifierEvent event) {
     _checked = update<bool?>(
       _checked,
-      stateManager.tristateCheckedRow,
+      tristateCheckedRow,
     );
+  }
+
+  bool? get tristateCheckedRow {
+    List<PlutoRow> rows = stateManager.refRows.where((element) => element.cells[widget.column.field]?.enabled == true).toList();
+    final length = rows.length;
+
+    if (length == 0) return false;
+
+    int countTrue = 0;
+
+    int countFalse = 0;
+
+    for (var i = 0; i < length; i += 1) {
+      rows[i].checked == true ? ++countTrue : ++countFalse;
+      if (countTrue > 0 && countFalse > 0) return null;
+    }
+    return countTrue == length;
   }
 
   void _handleOnChanged(bool? changed) {
@@ -438,7 +457,7 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
 
     if (_checked == null) changed = true;
 
-    stateManager.toggleAllRowChecked(changed);
+    stateManager.toggleAllRowChecked(changed, column: widget.column);
 
     if (stateManager.onRowChecked != null) {
       stateManager.onRowChecked!(

@@ -95,6 +95,11 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
     keepFocusOnChange: true,
     frozen: PlutoColumnFrozen.start,
     suppressedAutoSize: true,
+    checkboxTooltipMessage: 'This is a checkbox tooltip.',
+    checkboxThemeData: ThemeData(
+      disabledColor: const Color(0xFFF4F4F4),
+    ),
+    checkboxUnselectedColor: Colors.green,
   ),
   PlutoColumn(
     title: 'Name',

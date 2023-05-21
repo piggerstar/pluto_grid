@@ -413,9 +413,17 @@ mixin RowState implements IPlutoGridState {
   void toggleAllRowChecked(
     bool? flag, {
     bool notify = true,
+    PlutoColumn? column,
   }) {
     for (final row in iterateRowAndGroup) {
-      row.setChecked(flag == true);
+      bool enabled = true;
+      if (column != null) {
+        enabled = row.cells[column.field]?.enabled ?? true;
+      }
+
+      if (enabled) {
+        row.setChecked(flag == true);
+      }
     }
 
     notifyListeners(notify, toggleAllRowChecked.hashCode);

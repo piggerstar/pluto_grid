@@ -32,12 +32,13 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
     stateManager!.insertRows(
         rowIdx,
         List.generate(5, (index) {
+          bool enabled = (stateManager!.refRows.length + index).isEven ? false : true;
           PlutoRow row = PlutoRow(
             cells: {
-              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}'),
+              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}', enabled: enabled, showCheckboxTooltip: !enabled),
               'name': PlutoCell(value: 'Mike'),
               'amount': PlutoCell(value: 10),
-              'age': PlutoCell(value: 20, enabled: (stateManager!.refRows.length + index).isEven ? false : true),
+              'age': PlutoCell(value: 20, enabled: enabled),
               'role': PlutoCell(value: 'Programmer'),
               'joined': PlutoCell(value: '2021-01-01'),
               'working_time': PlutoCell(value: '09:00'),
@@ -94,8 +95,9 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
           columnHeight: 46,
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
-          enableActiveColorOnDisabledCell: false,
-          enableActiveColorOnReadOnlyCell: false,
+          enableActiveColorOnDisabledCell: true,
+          enableActiveColorOnReadOnlyCell: true,
+          cellColorInReadOnlyState: Colors.white,
         ),
       ),
       createFooter: (v) {

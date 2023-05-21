@@ -6,6 +6,7 @@ class PlutoCell {
     dynamic value,
     Key? key,
     this.enabled = true,
+    this.showCheckboxTooltip = true,
   })  : _key = key ?? UniqueKey(),
         _value = value;
 
@@ -16,6 +17,8 @@ class PlutoCell {
   dynamic _valueForSorting;
 
   bool enabled;
+
+  bool showCheckboxTooltip;
 
   /// Set initial value according to [PlutoColumn] setting.
   ///
