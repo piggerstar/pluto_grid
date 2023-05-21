@@ -431,9 +431,10 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
     );
   }
 
+  List<PlutoRow> get enabledRows => stateManager.refRows.where((element) => element.cells[widget.column.field]?.enabled == true).toList();
+
   bool? get tristateCheckedRow {
-    List<PlutoRow> rows = stateManager.refRows.where((element) => element.cells[widget.column.field]?.enabled == true).toList();
-    final length = rows.length;
+    final length = enabledRows.length;
 
     if (length == 0) return false;
 
@@ -442,7 +443,7 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
     int countFalse = 0;
 
     for (var i = 0; i < length; i += 1) {
-      rows[i].checked == true ? ++countTrue : ++countFalse;
+      enabledRows[i].checked == true ? ++countTrue : ++countFalse;
       if (countTrue > 0 && countFalse > 0) return null;
     }
     return countTrue == length;
@@ -477,6 +478,7 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
       handleOnChanged: _handleOnChanged,
       tristate: true,
       scale: 0.86,
+      enabled: enabledRows.isNotEmpty,
       disabledBackgroundColor: widget.column.checkboxDisabledBackgroundColor ?? stateManager.configuration.style.disabledIconColor,
       disabledColor: stateManager.configuration.style.disabledIconColor,
       unselectedColor: stateManager.configuration.style.iconColor,
