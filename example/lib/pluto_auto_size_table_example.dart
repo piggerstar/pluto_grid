@@ -38,7 +38,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
               'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}', enabled: enabled, showCheckboxTooltip: !enabled),
               'name': PlutoCell(value: 'Mike'),
               'amount': PlutoCell(value: 10),
-              'age': PlutoCell(value: 20, enabled: enabled),
+              'age': PlutoCell(value: '', enabled: enabled),
               'role': PlutoCell(value: 'Programmer'),
               'joined': PlutoCell(value: '2021-01-01'),
               'working_time': PlutoCell(value: '09:00'),

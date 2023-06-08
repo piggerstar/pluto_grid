@@ -133,7 +133,10 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
   PlutoColumn(
     title: 'Age',
     field: 'age',
-    type: PlutoColumnType.number(),
+    type: PlutoColumnType.number(
+      defaultValue: null,
+      allowEmpty: true,
+    ),
     maxLength: 3,
     enableDropToResize: false,
     showContextIcon: false,

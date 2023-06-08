@@ -51,6 +51,7 @@ abstract class PlutoColumnType {
     bool expands = false,
     EdgeInsets? padding,
     int maxLines = 1,
+    bool allowEmpty = false,
   }) {
     return PlutoColumnTypeNumber(
       defaultValue: defaultValue,
@@ -64,6 +65,7 @@ abstract class PlutoColumnType {
       expands: expands,
       padding: padding,
       maxLines: maxLines,
+      allowEmpty: allowEmpty,
     );
   }
 
@@ -97,6 +99,7 @@ abstract class PlutoColumnType {
     bool expands = false,
     EdgeInsets? padding,
     int maxLines = 1,
+    bool allowEmpty = false,
   }) {
     return PlutoColumnTypeCurrency(
       defaultValue: defaultValue,
@@ -113,6 +116,7 @@ abstract class PlutoColumnType {
       expands: expands,
       padding: padding,
       maxLines: maxLines,
+      allowEmpty: allowEmpty,
     );
   }
 
@@ -355,6 +359,9 @@ class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements Plut
   final bool negative;
 
   @override
+  final bool allowEmpty;
+
+  @override
   final String format;
 
   @override
@@ -389,6 +396,7 @@ class PlutoColumnTypeNumber with PlutoColumnTypeWithNumberFormat implements Plut
     this.expands = false,
     this.padding,
     this.maxLines = 1,
+    this.allowEmpty = false,
   })  : numberFormat = intl.NumberFormat(format, locale),
         decimalPoint = _getDecimalPoint(format);
 
@@ -411,6 +419,9 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
 
   @override
   final bool negative;
+
+  @override
+  final bool allowEmpty;
 
   @override
   final bool applyFormatOnInit;
@@ -454,6 +465,7 @@ class PlutoColumnTypeCurrency with PlutoColumnTypeWithNumberFormat implements Pl
     this.expands = false,
     this.padding,
     this.maxLines = 1,
+    this.allowEmpty = false,
   }) : numberFormat = intl.NumberFormat.currency(
           locale: locale,
           name: name,
@@ -657,6 +669,8 @@ mixin PlutoColumnTypeWithNumberFormat {
 
   bool get negative;
 
+  bool get allowEmpty;
+
   int get decimalPoint;
 
   bool get allowFirstDot;
@@ -690,6 +704,10 @@ mixin PlutoColumnTypeWithNumberFormat {
   }
 
   String applyFormat(dynamic value) {
+    if ((value == null || value == '') && allowEmpty) {
+      return '';
+    }
+
     num number = num.tryParse(
           value.toString().replaceAll(numberFormat.symbols.DECIMAL_SEP, '.'),
         ) ??
@@ -704,6 +722,10 @@ mixin PlutoColumnTypeWithNumberFormat {
 
   /// Convert [String] converted to [applyFormat] to [number].
   dynamic toNumber(String formatted) {
+    if (allowEmpty && formatted.isEmpty) {
+      return formatted;
+    }
+
     String match = '0-9\\-${numberFormat.symbols.DECIMAL_SEP}';
 
     if (negative) {
