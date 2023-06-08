@@ -92,15 +92,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void _onFocusChange() {
-    if (_cellEditingStatus.isChanged) {
-      _changeValue(notify: false);
-    }
     if (!cellFocus.hasFocus) {
       widget.stateManager.setEditing(false, notify: !column.keepFocusOnChange);
 
       if (column.keepFocusOnChange) {
         widget.stateManager.setKeepFocus(true);
       }
+    } else if (_cellEditingStatus.isChanged) {
+      _changeValue(notify: false);
     }
   }
 
