@@ -93,6 +93,9 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
 
   void _onFocusChange() {
     if (!cellFocus.hasFocus) {
+      if (_cellEditingStatus.isChanged) {
+        _changeValue(notify: false);
+      }
       widget.stateManager.setEditing(false, notify: !column.keepFocusOnChange);
 
       if (column.keepFocusOnChange) {
@@ -144,16 +147,16 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     return false;
   }
 
-  void _triggerCellChanged() {
-    widget.stateManager.notifyOnCellChange(widget.cell, textController.text, status: _cellEditingStatus);
+  void _triggerCellChanged({bool notify = true}) {
+    widget.stateManager.notifyOnCellChange(widget.cell, textController.text, status: _cellEditingStatus, notify: notify);
   }
 
-  void _changeValue() {
+  void _changeValue({bool notify = true}) {
     if (formattedValue == textController.text || !widget.cell.enabled) {
       return;
     }
 
-    widget.stateManager.changeCellValue(widget.cell, textController.text, status: _cellEditingStatus);
+    widget.stateManager.changeCellValue(widget.cell, textController.text, status: _cellEditingStatus, notify: notify);
 
     textController.text = formattedValue;
 
