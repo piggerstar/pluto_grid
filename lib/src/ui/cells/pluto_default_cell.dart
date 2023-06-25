@@ -395,7 +395,7 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
       checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
       hoverColor: widget.column.checkboxHoverColor,
-      enabled: widget.cell.enabled,
+      enabled: widget.cell.enableCheckbox ?? widget.cell.enabled,
       shape: widget.column.checkboxShape,
       fillColor: widget.column.checkboxFillColor,
       focusColor: widget.column.checkboxFocusColor,

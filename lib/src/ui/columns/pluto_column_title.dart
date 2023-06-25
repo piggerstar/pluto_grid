@@ -431,7 +431,10 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
     );
   }
 
-  List<PlutoRow> get enabledRows => stateManager.refRows.where((element) => element.cells[widget.column.field]?.enabled == true).toList();
+  List<PlutoRow> get enabledRows => stateManager.refRows
+      .where((element) =>
+          element.cells[widget.column.field]?.enableCheckbox != null ? (element.cells[widget.column.field]?.enableCheckbox == true) : (element.cells[widget.column.field]?.enabled == true))
+      .toList();
 
   bool? get tristateCheckedRow {
     final length = enabledRows.length;

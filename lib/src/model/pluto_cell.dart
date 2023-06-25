@@ -6,6 +6,7 @@ class PlutoCell {
     dynamic value,
     Key? key,
     this.enabled = true,
+    this.enableCheckbox,
     this.showCheckboxTooltip = true,
   })  : _key = key ?? UniqueKey(),
         _value = value;
@@ -17,6 +18,9 @@ class PlutoCell {
   dynamic _valueForSorting;
 
   bool enabled;
+
+  /// If [enableCheckbox] value is not null, this will override enabled value for checkbox
+  bool? enableCheckbox;
 
   bool showCheckboxTooltip;
 
