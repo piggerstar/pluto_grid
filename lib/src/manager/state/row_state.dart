@@ -468,7 +468,7 @@ mixin RowState implements IPlutoGridState {
       refRows.insertAll(safetyIndex, rows);
 
       PlutoGridStateManager.initializeRows(
-        refColumns,
+        refColumns.originalList,
         rows,
         forceApplySortIdx: false,
       );
