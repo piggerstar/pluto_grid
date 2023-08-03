@@ -57,6 +57,9 @@ mixin VisibilityLayoutState implements IPlutoGridState {
 
     for (final column in refColumns) {
       if (showFrozenColumn) {
+        if (column.frozen != column.originalFrozenValue) {
+          column.frozen = column.originalFrozenValue;
+        }
         switch (column.frozen) {
           case PlutoColumnFrozen.none:
             column.startPosition = bodyX;

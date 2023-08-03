@@ -33,6 +33,8 @@ typedef PlutoOnRowsMovedEventCallback = void Function(PlutoGridOnRowsMovedEvent 
 
 typedef PlutoOnColumnsMovedEventCallback = void Function(PlutoGridOnColumnsMovedEvent event);
 
+typedef PlutoOnColumnsHideEventCallback = void Function(PlutoGridOnColumnsHideEvent event);
+
 typedef CreateHeaderCallBack = Widget Function(PlutoGridStateManager stateManager);
 
 typedef CreateFooterCallBack = Widget Function(PlutoGridStateManager stateManager);
@@ -63,6 +65,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.onRowSecondaryTap,
     this.onRowsMoved,
     this.onColumnsMoved,
+    this.onColumnsHide,
     this.createHeader,
     this.createFooter,
     this.noRowsWidget,
@@ -78,6 +81,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.scrollController,
     this.useCustomFooter = false,
     this.autoSize = false,
+    this.resetFrozenColumnOnToggle = false,
     this.autoSizeHeightOffset,
     this.autoSizeWidthOffset,
   }) : super(key: key);
@@ -213,6 +217,12 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// or frozen it to the left or right.
   /// {@endtemplate}
   final PlutoOnColumnsMovedEventCallback? onColumnsMoved;
+
+  /// {@template pluto_grid_property_onColumnsHide}
+  /// Callback for receiving events
+  /// when the column is being hide/show.
+  /// {@endtemplate}
+  final PlutoOnColumnsHideEventCallback? onColumnsHide;
 
   /// {@template pluto_grid_property_createHeader}
   /// [createHeader] is a user-definable area located above the upper column area of [PlutoGrid].
@@ -360,6 +370,10 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// if enabled - render table with auto adjust height & width based on content
   final bool autoSize;
 
+  /// default to false
+  /// if enabled - hiding/showing column will reset frozen column
+  final bool resetFrozenColumnOnToggle;
+
   /// used with [autoSize] to manually add extra height to the table
   final double? autoSizeHeightOffset;
 
@@ -442,6 +456,8 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
   @override
   void initState() {
     _initStateManager();
+
+    _initStateManagerProperties();
 
     _initKeyManager();
 
@@ -555,6 +571,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowSecondaryTap: widget.onRowSecondaryTap,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
+      onColumnsHide: widget.onColumnsHide,
       rowColorCallback: widget.rowColorCallback,
       createHeader: widget.createHeader,
       createFooter: widget.createFooter,
@@ -563,11 +580,15 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       configuration: widget.configuration,
       mode: widget.mode,
     );
-
     // Dispose
     _disposeList.add(() {
       _stateManager.dispose();
     });
+  }
+
+  void _initStateManagerProperties() {
+    _stateManager.setAutoSize(widget.autoSize);
+    _stateManager.setResetFrozenColumnOnToggle(widget.resetFrozenColumnOnToggle);
   }
 
   void _initKeyManager() {
@@ -1616,6 +1637,27 @@ class PlutoGridOnColumnsMovedEvent {
   @override
   String toString() {
     String text = '[PlutoGridOnColumnsMovedEvent] idx: $idx, visualIdx: $visualIdx\n';
+
+    text += columns.map((e) => e.title).join(',');
+
+    return text;
+  }
+}
+
+/// Argument of [PlutoGrid.onColumnsHide] callback
+/// to hide/show columns event.
+///
+/// [idx] means the actual index of
+/// [PlutoGridStateManager.columns] or [PlutoGridStateManager.refColumns].
+///
+class PlutoGridOnColumnsHideEvent {
+  final List<PlutoColumn> columns;
+
+  const PlutoGridOnColumnsHideEvent({required this.columns});
+
+  @override
+  String toString() {
+    String text = '[PlutoGridOnColumnsHideEvent] \n';
 
     text += columns.map((e) => e.title).join(',');
 

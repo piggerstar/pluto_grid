@@ -22,6 +22,9 @@ abstract class IColumnState {
   /// Left frozen columns.
   List<PlutoColumn> get leftFrozenColumns;
 
+  /// Left frozen columns.
+  List<PlutoColumn> get originalLeftFrozenColumns;
+
   /// Left frozen column Index List.
   List<int> get leftFrozenColumnIndexes;
 
@@ -30,6 +33,9 @@ abstract class IColumnState {
 
   /// Right frozen columns.
   List<PlutoColumn> get rightFrozenColumns;
+
+  /// Right frozen columns.
+  List<PlutoColumn> get originalRightFrozenColumns;
 
   /// Right frozen column Index List.
   List<int> get rightFrozenColumnIndexes;
@@ -217,6 +223,11 @@ mixin ColumnState implements IPlutoGridState {
   }
 
   @override
+  List<PlutoColumn> get originalLeftFrozenColumns {
+    return refColumns.where((e) => e.originalFrozenValue.isStart).toList(growable: false);
+  }
+
+  @override
   List<int> get leftFrozenColumnIndexes {
     final indexes = <int>[];
     final length = refColumns.length;
@@ -246,6 +257,11 @@ mixin ColumnState implements IPlutoGridState {
   @override
   List<PlutoColumn> get rightFrozenColumns {
     return refColumns.where((e) => e.frozen.isEnd).toList();
+  }
+
+  @override
+  List<PlutoColumn> get originalRightFrozenColumns {
+    return refColumns.where((e) => e.originalFrozenValue.isEnd).toList();
   }
 
   @override
@@ -1011,6 +1027,10 @@ mixin ColumnState implements IPlutoGridState {
     updateRowGroupByHideColumn(columns);
 
     updateVisibilityLayout();
+
+    if (onColumnsHide != null) {
+      onColumnsHide!(PlutoGridOnColumnsHideEvent(columns: columns));
+    }
 
     notifyListeners(notify, hideColumn.hashCode);
   }

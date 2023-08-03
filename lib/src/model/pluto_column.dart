@@ -84,6 +84,8 @@ class PlutoColumn {
   /// it is processed to be unfreeze even if the frozen column is set.
   PlutoColumnFrozen frozen;
 
+  PlutoColumnFrozen originalFrozenValue;
+
   /// Set column sorting.
   PlutoColumnSort sort;
 
@@ -308,7 +310,8 @@ class PlutoColumn {
     this.checkboxThemeData,
     this.checkboxDisabledBackgroundColor,
   })  : _key = UniqueKey(),
-        _checkReadOnly = checkReadOnly;
+        _checkReadOnly = checkReadOnly,
+        originalFrozenValue = frozen;
 
   final Key _key;
 

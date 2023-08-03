@@ -47,6 +47,10 @@ abstract class ILayoutState {
 
   bool get showLoading;
 
+  bool get autoSize;
+
+  bool get resetFrozenColumnOnToggle;
+
   PlutoGridLoadingLevel get loadingLevel;
 
   bool get hasLeftFrozenColumns;
@@ -106,6 +110,10 @@ abstract class ILayoutState {
   /// Update screen size information when LayoutBuilder builds.
   void setLayout(BoxConstraints size);
 
+  void setAutoSize(bool value);
+
+  void setResetFrozenColumnOnToggle(bool value);
+
   void setShowColumnTitle(bool flag, {bool notify = true});
 
   void setShowColumnFooter(bool flag, {bool notify = true});
@@ -160,6 +168,10 @@ class _State {
   bool? _showColumnFilter;
 
   bool? _showLoading;
+
+  bool? _autoSize;
+
+  bool? _resetFrozenColumnOnToggle;
 
   PlutoGridLoadingLevel _loadingLevel = PlutoGridLoadingLevel.grid;
 
@@ -282,6 +294,12 @@ mixin LayoutState implements IPlutoGridState {
 
   @override
   bool get showLoading => _state._showLoading == true;
+
+  @override
+  bool get autoSize => _state._autoSize == true;
+
+  @override
+  bool get resetFrozenColumnOnToggle => _state._resetFrozenColumnOnToggle == true;
 
   @override
   PlutoGridLoadingLevel get loadingLevel => _state._loadingLevel;
@@ -409,6 +427,16 @@ mixin LayoutState implements IPlutoGridState {
   }
 
   @override
+  void setAutoSize(bool value) {
+    _state._autoSize = value;
+  }
+
+  @override
+  void setResetFrozenColumnOnToggle(bool value) {
+    _state._resetFrozenColumnOnToggle = value;
+  }
+
+  @override
   void setShowColumnTitle(bool flag, {bool notify = true}) {
     if (showColumnTitle == flag) {
       return;
@@ -465,9 +493,9 @@ mixin LayoutState implements IPlutoGridState {
 
   @override
   bool shouldShowFrozenColumns(double width) {
-    final bool hasFrozenColumn = leftFrozenColumns.isNotEmpty || rightFrozenColumns.isNotEmpty;
+    final bool hasFrozenColumn = originalLeftFrozenColumns.isNotEmpty || originalRightFrozenColumns.isNotEmpty;
 
-    return hasFrozenColumn && enoughFrozenColumnsWidth(width);
+    return (autoSize || resetFrozenColumnOnToggle) ? hasLeftFrozenColumns : hasFrozenColumn && enoughFrozenColumnsWidth(width);
   }
 
   @override
