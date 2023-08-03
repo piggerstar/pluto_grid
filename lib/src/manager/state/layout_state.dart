@@ -495,7 +495,7 @@ mixin LayoutState implements IPlutoGridState {
   bool shouldShowFrozenColumns(double width) {
     final bool hasFrozenColumn = originalLeftFrozenColumns.isNotEmpty || originalRightFrozenColumns.isNotEmpty;
 
-    return (autoSize || resetFrozenColumnOnToggle) ? hasLeftFrozenColumns : hasFrozenColumn && enoughFrozenColumnsWidth(width);
+    return (autoSize || resetFrozenColumnOnToggle) ? hasFrozenColumn : hasFrozenColumn && enoughFrozenColumnsWidth(width);
   }
 
   @override
