@@ -1647,9 +1647,6 @@ class PlutoGridOnColumnsMovedEvent {
 /// Argument of [PlutoGrid.onColumnsHide] callback
 /// to hide/show columns event.
 ///
-/// [idx] means the actual index of
-/// [PlutoGridStateManager.columns] or [PlutoGridStateManager.refColumns].
-///
 class PlutoGridOnColumnsHideEvent {
   final List<PlutoColumn> columns;
 

@@ -46,8 +46,7 @@ enum PlutoAggregateColumnIterateRowType {
 
   bool get isFiltered => this == PlutoAggregateColumnIterateRowType.filtered;
 
-  bool get isFilteredAndPaginated =>
-      this == PlutoAggregateColumnIterateRowType.filteredAndPaginated;
+  bool get isFilteredAndPaginated => this == PlutoAggregateColumnIterateRowType.filteredAndPaginated;
 }
 
 /// {@template pluto_aggregate_column_grouped_row_type}
@@ -68,13 +67,11 @@ enum PlutoAggregateColumnGroupedRowType {
 
   bool get isAll => this == PlutoAggregateColumnGroupedRowType.all;
 
-  bool get isExpandedAll =>
-      this == PlutoAggregateColumnGroupedRowType.expandedAll;
+  bool get isExpandedAll => this == PlutoAggregateColumnGroupedRowType.expandedAll;
 
   bool get isRows => this == PlutoAggregateColumnGroupedRowType.rows;
 
-  bool get isExpandedRows =>
-      this == PlutoAggregateColumnGroupedRowType.expandedRows;
+  bool get isExpandedRows => this == PlutoAggregateColumnGroupedRowType.expandedRows;
 
   bool get isExpanded => isExpandedAll || isExpandedRows;
 
@@ -167,12 +164,12 @@ class PlutoAggregateColumnFooter extends PlutoStatefulWidget {
   final EdgeInsets? padding;
 
   final bool formatAsCurrency;
+  final Iterable<PlutoRow>? rows;
 
   const PlutoAggregateColumnFooter({
     required this.rendererContext,
     required this.type,
-    this.iterateRowType =
-        PlutoAggregateColumnIterateRowType.filteredAndPaginated,
+    this.iterateRowType = PlutoAggregateColumnIterateRowType.filteredAndPaginated,
     this.groupedRowType = PlutoAggregateColumnGroupedRowType.all,
     this.filter,
     this.format = '#,###',
@@ -181,16 +178,15 @@ class PlutoAggregateColumnFooter extends PlutoStatefulWidget {
     this.alignment,
     this.padding,
     this.formatAsCurrency = false,
+    this.rows,
     super.key,
   });
 
   @override
-  PlutoAggregateColumnFooterState createState() =>
-      PlutoAggregateColumnFooterState();
+  PlutoAggregateColumnFooterState createState() => PlutoAggregateColumnFooterState();
 }
 
-class PlutoAggregateColumnFooterState
-    extends PlutoStateWithChange<PlutoAggregateColumnFooter> {
+class PlutoAggregateColumnFooterState extends PlutoStateWithChange<PlutoAggregateColumnFooter> {
   num? _aggregatedValue;
 
   late final NumberFormat _numberFormat;
@@ -206,8 +202,7 @@ class PlutoAggregateColumnFooterState
 
   PlutoColumn get column => widget.rendererContext.column;
 
-  Iterable<PlutoRow> get rows =>
-      stateManager.enabledRowGroups ? _groupedRows : _normalRows;
+  Iterable<PlutoRow> get rows => widget.rows ?? (stateManager.enabledRowGroups ? _groupedRows : _normalRows);
 
   Iterable<PlutoRow> get _normalRows {
     switch (widget.iterateRowType) {
@@ -239,8 +234,7 @@ class PlutoAggregateColumnFooterState
       iterableRows,
       filter: widget.groupedRowType.isRowsOnly ? (r) => !r.type.isGroup : null,
       childrenFilter: (r) {
-        if (!r.type.isGroup ||
-            (widget.groupedRowType.isExpanded && !r.type.group.expanded)) {
+        if (!r.type.isGroup || (widget.groupedRowType.isExpanded && !r.type.group.expanded)) {
           return null;
         }
 
@@ -259,9 +253,7 @@ class PlutoAggregateColumnFooterState
   void initState() {
     super.initState();
 
-    _numberFormat = widget.formatAsCurrency
-        ? NumberFormat.simpleCurrency(locale: widget.locale)
-        : NumberFormat(widget.format, widget.locale);
+    _numberFormat = widget.formatAsCurrency ? NumberFormat.simpleCurrency(locale: widget.locale) : NumberFormat(widget.format, widget.locale);
 
     _setAggregator();
 
@@ -304,13 +296,11 @@ class PlutoAggregateColumnFooterState
   Widget build(BuildContext context) {
     final hasTitleSpan = widget.titleSpanBuilder != null;
 
-    final formattedValue =
-        _aggregatedValue == null ? '' : _numberFormat.format(_aggregatedValue);
+    final formattedValue = _aggregatedValue == null ? '' : _numberFormat.format(_aggregatedValue);
 
     final text = hasTitleSpan ? null : formattedValue;
 
-    final children =
-        hasTitleSpan ? widget.titleSpanBuilder!(formattedValue) : null;
+    final children = hasTitleSpan ? widget.titleSpanBuilder!(formattedValue) : null;
 
     return Padding(
       padding: widget.padding ?? PlutoGridSettings.columnTitlePadding,
