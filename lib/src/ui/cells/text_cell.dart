@@ -65,17 +65,17 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   void dispose() {
     /**
+     * Always trigger cell changed when the cell is disposed
+     */
+    _triggerCellChanged();
+
+    /**
      * Saves the changed value when moving a cell while text is being input.
      * if user do not press enter key, onEditingComplete is not called and the value is not saved.
      */
     if (_cellEditingStatus.isChanged) {
       _changeValue();
     }
-
-    /**
-     * Always trigger cell changed when the cell is disposed
-     */
-    _triggerCellChanged();
 
     if (!widget.stateManager.isEditing || widget.stateManager.currentColumn?.enableEditingMode != true) {
       widget.stateManager.setTextEditingController(null);

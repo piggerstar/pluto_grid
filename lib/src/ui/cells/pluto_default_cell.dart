@@ -71,6 +71,13 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
 
   bool get _compactCount => stateManager.rowGroupDelegate!.enableCompactCount;
 
+  bool get isEnabled {
+    if (widget.column.hasCheckReadOnly) {
+      return widget.column.checkReadOnly(widget.row, widget.cell);
+    }
+    return widget.cell.enabled;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -153,40 +160,44 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       );
     }
 
-    return Row(children: [
-      if (_canRowDrag)
-        _RowDragIconWidget(
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
-          feedbackWidget: cellWidget,
-          dragIcon: Icon(
-            Icons.drag_indicator,
-            size: style.iconSize,
-            color: style.iconColor,
+    return Container(
+      color: isEnabled ? null : (widget.column.checkboxDisabledBackgroundColor ?? stateManager.configuration.style.disabledIconColor),
+      margin: const EdgeInsets.all(1),
+      child: Row(children: [
+        if (_canRowDrag)
+          _RowDragIconWidget(
+            column: widget.column,
+            row: widget.row,
+            rowIdx: widget.rowIdx,
+            stateManager: stateManager,
+            feedbackWidget: cellWidget,
+            dragIcon: Icon(
+              Icons.drag_indicator,
+              size: style.iconSize,
+              color: style.iconColor,
+            ),
           ),
-        ),
-      if (widget.column.enableRowChecked)
-        CheckboxSelectionWidget(
-          cell: widget.cell,
-          column: widget.column,
-          row: widget.row,
-          rowIdx: widget.rowIdx,
-          stateManager: stateManager,
-        ),
-      if (spacingWidget != null) spacingWidget,
-      if (expandIcon != null) expandIcon,
-      Expanded(child: cellWidget),
-      if (_showGroupCount)
-        Text(
-          '($_groupCount)',
-          style: stateManager.configuration.style.cellTextStyle.copyWith(
-            decoration: TextDecoration.none,
-            fontWeight: FontWeight.normal,
+        if (widget.column.enableRowChecked)
+          CheckboxSelectionWidget(
+            cell: widget.cell,
+            column: widget.column,
+            row: widget.row,
+            rowIdx: widget.rowIdx,
+            stateManager: stateManager,
           ),
-        ),
-    ]);
+        if (spacingWidget != null) spacingWidget,
+        if (expandIcon != null) expandIcon,
+        Expanded(child: cellWidget),
+        if (_showGroupCount)
+          Text(
+            '($_groupCount)',
+            style: stateManager.configuration.style.cellTextStyle.copyWith(
+              decoration: TextDecoration.none,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+      ]),
+    );
   }
 }
 
@@ -382,6 +393,16 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
     });
   }
 
+  bool get isEnabled {
+    if (widget.cell.enableCheckbox != null) {
+      return widget.cell.enableCheckbox!;
+    }
+    if (widget.column.hasCheckReadOnly) {
+      return widget.column.checkReadOnly(widget.row, widget.cell);
+    }
+    return widget.cell.enabled;
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlutoScaledCheckbox(
@@ -395,7 +416,7 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
       checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
       hoverColor: widget.column.checkboxHoverColor,
-      enabled: widget.cell.enableCheckbox ?? widget.cell.enabled,
+      enabled: isEnabled,
       shape: widget.column.checkboxShape,
       fillColor: widget.column.checkboxFillColor,
       focusColor: widget.column.checkboxFocusColor,

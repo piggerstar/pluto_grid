@@ -18,8 +18,21 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     type: PlutoColumnType.text(),
     enableRowChecked: true,
     keepFocusOnChange: true,
+    enableColumnDrag: false,
+    enableRowDrag: false,
+    enableContextMenu: false,
+    enableDropToResize: false,
+    enableEditingMode: false,
+    enableAutoEditing: false,
+    enableSorting: false,
     frozen: PlutoColumnFrozen.start,
     percentage: 0.2,
+    renderer: (rendererContext) {
+      return Container(
+        alignment: Alignment.centerRight,
+        child: Text(rendererContext.cell.value.toString()),
+      );
+    },
   ),
   PlutoColumn(
     title: 'Name',
@@ -93,6 +106,13 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
     percentage: 0.1,
     enableRowChecked: true,
     keepFocusOnChange: true,
+    enableColumnDrag: false,
+    enableRowDrag: false,
+    enableContextMenu: false,
+    enableDropToResize: true,
+    enableEditingMode: false,
+    enableAutoEditing: false,
+    enableSorting: false,
     frozen: PlutoColumnFrozen.start,
     suppressedAutoSize: true,
     checkboxTooltipMessage: 'This is a checkbox tooltip.',
@@ -104,14 +124,32 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
   PlutoColumn(
     title: 'Name',
     field: 'name',
-    width: 120,
-    minWidth: 120,
+    width: 180,
+    minWidth: 180,
     readOnly: true,
+    cellPadding: EdgeInsets.zero,
     renderer: (context) {
-      return Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(border: Border.all(color: const Color(0xFFCCDFFF)), borderRadius: BorderRadius.circular(5)),
-        child: Text(context.cell.value),
+      return Column(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(child: Container(height: 80, decoration: BoxDecoration(border: Border.all(color: Colors.black45)), child: Center(child: Text(context.cell.value)))),
+                Expanded(child: Container(height: 80, decoration: BoxDecoration(border: Border.all(color: Colors.black45)), child: Center(child: Text(context.cell.value)))),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(child: Container(height: 80, decoration: BoxDecoration(border: Border.all(color: Colors.black45)), child: Center(child: Text(context.cell.value)))),
+                Expanded(child: Container(height: 80, decoration: BoxDecoration(border: Border.all(color: Colors.black45)), child: Center(child: Text(context.cell.value)))),
+              ],
+            ),
+          ),
+        ],
       );
     },
     type: PlutoColumnType.text(
@@ -167,6 +205,7 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
     title: 'Working time',
     field: 'working_time',
     type: PlutoColumnType.time(),
+    frozen: PlutoColumnFrozen.end,
   ),
 ];
 

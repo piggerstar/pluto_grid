@@ -28,7 +28,7 @@ class _PlutoDefaultTableState extends State<PlutoDefaultTable> {
     if (stateManager == null) return;
     stateManager!.setShowLoading(true);
     _footerKey.currentState?.setState(() {});
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     stateManager!.insertRows(
         rowIdx,
         List.generate(5, (index) {

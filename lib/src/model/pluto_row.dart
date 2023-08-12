@@ -138,6 +138,16 @@ class PlutoRow {
     _state = state;
   }
 
+  void updateValue(PlutoRow row) {
+    cells = row.cells;
+    sortIdx = row.sortIdx;
+    _checked = row._checked;
+    isLoading = row.isLoading;
+    _parent = row._parent;
+    _state = row._state;
+    columns = row.columns;
+  }
+
   /// Create PlutoRow in json type.
   /// The key of the json you want to generate must match the key of [PlutoColumn].
   ///

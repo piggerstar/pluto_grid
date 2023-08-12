@@ -27,8 +27,9 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
   Future<void> _insertRow({int rowIdx = 0}) async {
     if (stateManager == null) return;
     stateManager!.setShowLoading(true);
+
     _footerKey.currentState?.setState(() {});
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     stateManager!.insertRows(
         rowIdx,
         List.generate(5, (index) {
@@ -85,13 +86,17 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
       onCellChanged: (PlutoGridOnChangedEvent event) {
         print('onCellChanged $event');
       },
+      onColumnsHide: (PlutoGridOnColumnsHideEvent event) {
+        print('onColumnsHide $event');
+        print(stateManager?.refColumns.firstWhere((element) => element.field == 'id').frozen);
+      },
       configuration: const PlutoGridConfiguration(
         scrollbar: PlutoGridScrollbarConfig(isAlwaysShown: false),
         style: PlutoGridStyleConfig(
           activatedColor: Colors.white,
           gridBorderColor: Colors.green,
           borderColor: Colors.lightBlueAccent,
-          rowHeight: 46,
+          rowHeight: 80,
           columnHeight: 46,
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
