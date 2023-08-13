@@ -8,6 +8,7 @@ class PlutoCell {
     this.enabled = true,
     this.enableCheckbox,
     this.showCheckboxTooltip = true,
+    this.checkboxTooltipMessage,
   })  : _key = key ?? UniqueKey(),
         _value = value;
 
@@ -23,6 +24,8 @@ class PlutoCell {
   bool? enableCheckbox;
 
   bool showCheckboxTooltip;
+
+  String? checkboxTooltipMessage;
 
   /// Set initial value according to [PlutoColumn] setting.
   ///

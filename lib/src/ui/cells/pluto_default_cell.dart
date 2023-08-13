@@ -425,7 +425,7 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       side: widget.column.checkboxSide,
       splashRadius: widget.column.checkboxSplashRadius,
       tooltipBoxDecoration: widget.column.checkboxBoxDecoration,
-      tooltipMessage: widget.cell.showCheckboxTooltip ? widget.column.checkboxTooltipMessage : null,
+      tooltipMessage: widget.cell.showCheckboxTooltip ? (widget.cell.checkboxTooltipMessage ?? widget.column.checkboxTooltipMessage) : null,
       tooltipTextStyle: widget.column.checkboxTextStyle,
       overlayColor: widget.column.checkboxOverlayColor,
       themeData: widget.column.checkboxThemeData,
