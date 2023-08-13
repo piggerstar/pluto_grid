@@ -204,7 +204,7 @@ class PlutoGridStyleConfig {
     this.cellColorGroupedRow,
     this.dragTargetColumnColor = const Color(0xFFDCF5FF),
     this.iconColor = Colors.black26,
-    this.disabledIconColor = const Color(0xFFDBDBDC),
+    this.disabledIconColor = const Color(0xFFEEEEEE),
     this.menuBackgroundColor = Colors.white,
     this.gridBorderColor = const Color(0xFFA1A5AE),
     this.borderColor = const Color(0xFFDDE2EB),

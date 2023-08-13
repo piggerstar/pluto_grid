@@ -136,6 +136,9 @@ mixin KeyboardState implements IPlutoGridState {
         ),
       );
 
+      if ((direction.isDown || direction.isRight) && isEditing) {
+        setEditing(false, notify: notify);
+      }
       return;
     }
 
@@ -178,8 +181,7 @@ mixin KeyboardState implements IPlutoGridState {
 
     final columnIndexes = columnIndexesByShowFrozen;
 
-    final int columnIdx =
-        direction.isLeft ? columnIndexes.first : columnIndexes.last;
+    final int columnIdx = direction.isLeft ? columnIndexes.first : columnIndexes.last;
 
     final column = refColumns[columnIdx];
 
@@ -188,9 +190,7 @@ mixin KeyboardState implements IPlutoGridState {
     setCurrentCell(cellToMove, currentRowIdx, notify: notify);
 
     if (!showFrozenColumn || column.frozen.isFrozen != true) {
-      direction.isLeft
-          ? scroll.horizontal!.jumpTo(0)
-          : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
+      direction.isLeft ? scroll.horizontal!.jumpTo(0) : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
     }
   }
 
@@ -216,9 +216,7 @@ mixin KeyboardState implements IPlutoGridState {
 
     setCurrentCell(cellToMove, rowIdx, notify: notify);
 
-    direction.isUp
-        ? scroll.vertical!.jumpTo(0)
-        : scroll.vertical!.jumpTo(scroll.maxScrollVertical);
+    direction.isUp ? scroll.vertical!.jumpTo(0) : scroll.vertical!.jumpTo(scroll.maxScrollVertical);
   }
 
   @override
@@ -250,8 +248,7 @@ mixin KeyboardState implements IPlutoGridState {
 
   @override
   void moveSelectingCell(PlutoMoveDirection direction) {
-    final PlutoGridCellPosition? cellPosition =
-        currentSelectingPosition ?? currentCellPosition;
+    final PlutoGridCellPosition? cellPosition = currentSelectingPosition ?? currentCellPosition;
 
     if (canNotMoveCell(cellPosition, direction)) {
       return;
@@ -259,10 +256,8 @@ mixin KeyboardState implements IPlutoGridState {
 
     setCurrentSelectingPosition(
       cellPosition: PlutoGridCellPosition(
-        columnIdx: cellPosition!.columnIdx! +
-            (direction.horizontal ? direction.offset : 0),
-        rowIdx:
-            cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
+        columnIdx: cellPosition!.columnIdx! + (direction.horizontal ? direction.offset : 0),
+        rowIdx: cellPosition.rowIdx! + (direction.vertical ? direction.offset : 0),
       ),
     );
 
@@ -293,9 +288,7 @@ mixin KeyboardState implements IPlutoGridState {
 
     final int columnIdx = direction.isLeft ? 0 : refColumns.length - 1;
 
-    final int? rowIdx = hasCurrentSelectingPosition
-        ? currentSelectingPosition!.rowIdx
-        : currentCellPosition!.rowIdx;
+    final int? rowIdx = hasCurrentSelectingPosition ? currentSelectingPosition!.rowIdx : currentCellPosition!.rowIdx;
 
     setCurrentSelectingPosition(
       cellPosition: PlutoGridCellPosition(
@@ -305,9 +298,7 @@ mixin KeyboardState implements IPlutoGridState {
       notify: notify,
     );
 
-    direction.isLeft
-        ? scroll.horizontal!.jumpTo(0)
-        : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
+    direction.isLeft ? scroll.horizontal!.jumpTo(0) : scroll.horizontal!.jumpTo(scroll.maxScrollHorizontal);
   }
 
   @override
@@ -328,9 +319,7 @@ mixin KeyboardState implements IPlutoGridState {
       return;
     }
 
-    final columnIdx = hasCurrentSelectingPosition
-        ? currentSelectingPosition!.columnIdx
-        : currentCellPosition!.columnIdx;
+    final columnIdx = hasCurrentSelectingPosition ? currentSelectingPosition!.columnIdx : currentCellPosition!.columnIdx;
 
     final int rowIdx = direction.isUp ? 0 : refRows.length - 1;
 
@@ -342,9 +331,7 @@ mixin KeyboardState implements IPlutoGridState {
       notify: notify,
     );
 
-    direction.isUp
-        ? scroll.vertical!.jumpTo(0)
-        : scroll.vertical!.jumpTo(scroll.maxScrollVertical);
+    direction.isUp ? scroll.vertical!.jumpTo(0) : scroll.vertical!.jumpTo(scroll.maxScrollVertical);
   }
 
   @override
@@ -365,9 +352,7 @@ mixin KeyboardState implements IPlutoGridState {
       return;
     }
 
-    int? columnIdx = hasCurrentSelectingPosition
-        ? currentSelectingPosition!.columnIdx
-        : currentCellPosition!.columnIdx;
+    int? columnIdx = hasCurrentSelectingPosition ? currentSelectingPosition!.columnIdx : currentCellPosition!.columnIdx;
 
     setCurrentSelectingPosition(
       cellPosition: PlutoGridCellPosition(
