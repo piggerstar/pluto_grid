@@ -57,7 +57,7 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
             Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.6,
+                width: MediaQuery.of(context).size.width * 0.4,
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: const PlutoDefaultTable(),
               ),

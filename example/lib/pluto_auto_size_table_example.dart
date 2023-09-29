@@ -36,7 +36,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
           bool enabled = (stateManager!.refRows.length + index).isEven ? false : true;
           PlutoRow row = PlutoRow(
             cells: {
-              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}', enabled: enabled, showCheckboxTooltip: !enabled),
+              'id': PlutoCell(value: 'user${stateManager!.refRows.length + index}', enabled: enabled, showCheckboxTooltip: !enabled, checkboxTooltipMessage: 'This is a tooltip'),
               'name': PlutoCell(value: 'Mike'),
               'amount': PlutoCell(value: 10),
               'age': PlutoCell(value: '', enabled: enabled),

@@ -94,7 +94,7 @@ class _PlutoDefaultTableState extends State<PlutoDefaultTable> {
         print('onCellChanged $event');
       },
       configuration: const PlutoGridConfiguration(
-        scrollbar: PlutoGridScrollbarConfig(isAlwaysShown: false),
+        scrollbar: PlutoGridScrollbarConfig(isAlwaysShown: true, longPressDuration: Duration.zero),
         columnSize: PlutoGridColumnSizeConfig(),
         style: PlutoGridStyleConfig(
           activatedColor: Colors.white,

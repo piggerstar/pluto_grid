@@ -228,15 +228,19 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
   }
 
   // Wait one frame and cause an empty scroll event.  This allows the thumb to
-// show immediately when isAlwaysShown is true.  A scroll event is required in
-// order to paint the thumb.
+  // show immediately when isAlwaysShown is true.  A scroll event is required in
+  // order to paint the thumb.
   void _triggerScrollbar() {
     WidgetsBinding.instance.addPostFrameCallback((Duration duration) {
       if (widget.isAlwaysShown) {
         _fadeoutTimer?.cancel();
         if (widget.showOnRenderType == Axis.horizontal) {
           if (widget.horizontalController!.hasClients) {
-            widget.horizontalController!.position.didUpdateScrollPositionBy(0);
+            if (widget.horizontalController!.position.maxScrollExtent > 0) {
+              widget.horizontalController!.position.didUpdateScrollPositionBy(0);
+            } else {
+              _startFadeoutTimer(force: true, fadeOutDuration: const Duration(milliseconds: 300));
+            }
           }
         } else if (widget.showOnRenderType == Axis.vertical) {
           if (widget.verticalController!.hasClients) {
@@ -274,10 +278,10 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     }
   }
 
-  void _startFadeoutTimer() {
-    if (!widget.isAlwaysShown) {
+  void _startFadeoutTimer({bool force = false, Duration? fadeOutDuration}) {
+    if (!widget.isAlwaysShown || force) {
       _fadeoutTimer?.cancel();
-      _fadeoutTimer = Timer(_kScrollbarTimeToFade, () {
+      _fadeoutTimer = Timer(fadeOutDuration ?? _kScrollbarTimeToFade, () {
         _fadeoutAnimationController.reverse();
         _fadeoutTimer = null;
       });
