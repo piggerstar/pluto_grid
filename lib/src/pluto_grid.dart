@@ -1425,6 +1425,9 @@ class _GridContainerState extends State<_GridContainer> {
       );
     }
 
+    if (widget.stateManager.maxWidth == null) {
+      widget.stateManager.setLayout(BoxConstraints(maxWidth: defaultTableWidth, minHeight: defaultTableHeight));
+    }
     return childView;
   }
 }
