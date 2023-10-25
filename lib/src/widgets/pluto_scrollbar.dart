@@ -492,8 +492,11 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
             minScrollExtent: widget.verticalController?.position.minScrollExtent,
             maxScrollExtent: widget.verticalController?.position.maxScrollExtent,
             pixels: widget.verticalController?.position.pixels,
-            viewportDimension: widget.verticalController?.position.viewportDimension,
-            axisDirection: widget.verticalController?.position.axisDirection ?? AxisDirection.down,
+            viewportDimension:
+                widget.verticalController?.position.viewportDimension,
+            axisDirection: widget.verticalController?.position.axisDirection ??
+                AxisDirection.down,
+            devicePixelRatio: 1.0,
           );
         }
         break;
@@ -506,8 +509,12 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
             minScrollExtent: widget.horizontalController?.position.minScrollExtent,
             maxScrollExtent: widget.horizontalController?.position.maxScrollExtent,
             pixels: widget.horizontalController?.position.pixels,
-            viewportDimension: widget.horizontalController?.position.viewportDimension,
-            axisDirection: widget.horizontalController?.position.axisDirection ?? AxisDirection.right,
+            viewportDimension:
+                widget.horizontalController?.position.viewportDimension,
+            axisDirection:
+                widget.horizontalController?.position.axisDirection ??
+                    AxisDirection.right,
+            devicePixelRatio: 1.0,
           );
         }
         break;
