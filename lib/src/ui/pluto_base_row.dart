@@ -58,6 +58,7 @@ class PlutoBaseRow extends StatelessWidget {
   }
 
   PlutoVisibilityLayoutId _makeCell(PlutoColumn column) {
+    bool isEnd = column.field == columns.last.field;
     return PlutoVisibilityLayoutId(
       id: column.field,
       child: PlutoBaseCell(
@@ -67,6 +68,7 @@ class PlutoBaseRow extends StatelessWidget {
         rowIdx: rowIdx,
         row: row,
         stateManager: stateManager,
+        isLastColumn: isEnd,
       ),
     );
   }

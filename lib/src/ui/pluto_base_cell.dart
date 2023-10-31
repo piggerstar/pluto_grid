@@ -14,6 +14,8 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
 
   final PlutoGridStateManager stateManager;
 
+  final bool isLastColumn;
+
   const PlutoBaseCell({
     Key? key,
     required this.cell,
@@ -21,6 +23,7 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
     required this.rowIdx,
     required this.row,
     required this.stateManager,
+    this.isLastColumn = false,
   }) : super(key: key);
 
   @override
@@ -117,6 +120,7 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
         rowIdx: rowIdx,
         row: row,
         column: column,
+        isLastColumn: isLastColumn,
         cellPadding: column.cellPadding ?? stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
         child: _Cell(
@@ -146,6 +150,8 @@ class _CellContainer extends PlutoStatefulWidget {
 
   final Widget child;
 
+  final bool isLastColumn;
+
   const _CellContainer({
     required this.cell,
     required this.row,
@@ -154,6 +160,7 @@ class _CellContainer extends PlutoStatefulWidget {
     required this.cellPadding,
     required this.stateManager,
     required this.child,
+    this.isLastColumn = false,
   });
 
   @override
@@ -309,7 +316,7 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
             : widget.cell.enabled
                 ? null
                 : cellColorInReadOnlyState,
-        border: enableCellVerticalBorder ? BorderDirectional(end: BorderSide(color: borderColor, width: 1)) : null,
+        border: (enableCellVerticalBorder && !widget.isLastColumn) ? BorderDirectional(end: BorderSide(color: borderColor, width: 1)) : null,
       );
     }
   }

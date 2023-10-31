@@ -393,6 +393,7 @@ class _NullElement extends Element {
 
   @override
   void performRebuild() {
+    super.performRebuild();
     throw UnimplementedError();
   }
 }
