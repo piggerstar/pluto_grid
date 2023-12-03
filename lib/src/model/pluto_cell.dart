@@ -9,6 +9,8 @@ class PlutoCell {
     this.enableCheckbox,
     this.showCheckboxTooltip = true,
     this.checkboxTooltipMessage,
+    this.defaultMouseCursor,
+    this.hoveredMouseCursor,
   })  : _key = key ?? UniqueKey(),
         _value = value;
 
@@ -26,6 +28,12 @@ class PlutoCell {
   bool showCheckboxTooltip;
 
   String? checkboxTooltipMessage;
+
+  /// if not null, this will override defaultMouseCursor style for specific cell
+  MouseCursor? defaultMouseCursor;
+
+  /// if not null, this will override defaultMouseCursor style for specific cell
+  MouseCursor? hoveredMouseCursor;
 
   /// Set initial value according to [PlutoColumn] setting.
   ///

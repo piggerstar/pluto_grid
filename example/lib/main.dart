@@ -1,5 +1,6 @@
 import 'package:example/pluto_auto_size_table_example.dart';
 import 'package:example/pluto_default_table_example.dart';
+import 'package:example/pluto_hover_table_example.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -46,13 +47,11 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
+            /// Default Table
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.all(20),
-              child: Text(
-                'Normal PlutoGrid Table with default configuration.',
-                textAlign: TextAlign.center,
-              ),
+              child: Text('Normal PlutoGrid Table with default configuration.', textAlign: TextAlign.center),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
@@ -62,6 +61,8 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
                 child: const PlutoDefaultTable(),
               ),
             ),
+
+            /// Auto size Table
             const Padding(
               padding: EdgeInsets.all(20),
               child: Text(
@@ -76,6 +77,14 @@ class _PlutoGridExamplePageState extends State<PlutoGridExamplePage> {
               ),
             ),
             const Center(child: PlutoAutoSizeTable()),
+            const SizedBox(height: 20),
+
+            /// Hover Table
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text('Hover Table Example', textAlign: TextAlign.start),
+            ),
+            const Center(child: PlutoHoverTable()),
             const SizedBox(height: 20),
           ],
         ),

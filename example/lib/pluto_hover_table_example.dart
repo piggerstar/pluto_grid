@@ -3,14 +3,14 @@ import 'package:pluto_grid/pluto_grid.dart';
 
 import 'data.dart';
 
-class PlutoAutoSizeTable extends StatefulWidget {
-  const PlutoAutoSizeTable({super.key});
+class PlutoHoverTable extends StatefulWidget {
+  const PlutoHoverTable({super.key});
 
   @override
-  State<PlutoAutoSizeTable> createState() => _PlutoAutoSizeTableState();
+  State<PlutoHoverTable> createState() => _PlutoHoverTableState();
 }
 
-class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
+class _PlutoHoverTableState extends State<PlutoHoverTable> {
   final GlobalKey _footerKey = GlobalKey();
 
   /// [PlutoGridStateManager] has many methods and properties to dynamically manipulate the grid.
@@ -20,7 +20,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
 
   List<PlutoRow> get getRows => [];
 
-  List<PlutoColumn> get columns => simpleColumns;
+  List<PlutoColumn> get columns => defaultColumns;
 
   List<PlutoColumnGroup>? get getColumnGroups => null;
 
@@ -59,6 +59,7 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
       scrollController: controller,
       columns: columns,
       rows: getRows,
+      enableRowHover: true,
       columnGroups: getColumnGroups,
       autoSizeHeightOffset: (stateManager?.refRows.isEmpty ?? true) ? 180 : 0,
       noRowsWidget: Container(height: 50, color: Colors.lightBlueAccent, child: const Text('No data.')),
@@ -100,9 +101,8 @@ class _PlutoAutoSizeTableState extends State<PlutoAutoSizeTable> {
           columnHeight: 46,
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
-          enableActiveColorOnDisabledCell: true,
-          enableActiveColorOnReadOnlyCell: true,
-          cellColorInReadOnlyState: Colors.white,
+          hoveredMouseCursor: SystemMouseCursors.click,
+          rowHoverColor: Colors.lightBlueAccent,
         ),
       ),
       createFooter: (v) {

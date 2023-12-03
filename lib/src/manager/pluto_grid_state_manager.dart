@@ -77,12 +77,14 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowHover,
     this.onRowsMoved,
     this.onColumnsMoved,
     this.onColumnsHide,
     this.rowColorCallback,
     this.createHeader,
     this.createFooter,
+    this.enableRowHover = false,
     PlutoColumnMenuDelegate? columnMenuDelegate,
     PlutoChangeNotifierFilterResolver? notifierFilterResolver,
     PlutoGridConfiguration configuration = const PlutoGridConfiguration(),
@@ -137,6 +139,9 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
   final PlutoOnRowSecondaryTapEventCallback? onRowSecondaryTap;
 
   @override
+  final PlutoOnRowHoverEventCallback? onRowHover;
+
+  @override
   final PlutoOnRowsMovedEventCallback? onRowsMoved;
 
   @override
@@ -158,6 +163,8 @@ class PlutoGridStateChangeNotifier extends PlutoChangeNotifier
   final PlutoColumnMenuDelegate columnMenuDelegate;
 
   final PlutoChangeNotifierFilterResolver notifierFilterResolver;
+
+  final bool enableRowHover;
 
   @override
   final GlobalKey gridKey;
@@ -227,6 +234,7 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
     super.onRowChecked,
     super.onRowDoubleTap,
     super.onRowSecondaryTap,
+    super.onRowHover,
     super.onRowsMoved,
     super.onColumnsMoved,
     super.onColumnsHide,
@@ -237,6 +245,7 @@ class PlutoGridStateManager extends PlutoGridStateChangeNotifier {
     super.notifierFilterResolver,
     super.configuration,
     super.mode,
+    super.enableRowHover,
   });
 
   PlutoChangeNotifierFilter<T> resolveNotifierFilter<T>() {

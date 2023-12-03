@@ -151,6 +151,24 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
 
   _HoverAxis _currentHoverAxis = _HoverAxis.none;
 
+  bool get showScrollbar {
+    if (_currentAxis == Axis.horizontal && (widget.horizontalController?.hasClients ?? false)) {
+      if (widget.horizontalController!.position.hasContentDimensions) {
+        if (widget.horizontalController!.position.maxScrollExtent < 1) {
+          return false;
+        }
+      }
+    } else if (_currentAxis == Axis.vertical && (widget.verticalController?.hasClients ?? false)) {
+      if (widget.verticalController!.position.hasContentDimensions) {
+        if (widget.verticalController!.position.maxScrollExtent < 1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -393,7 +411,10 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     }
 
     _currentAxis = axisDirectionToAxis(metrics.axisDirection);
-
+    if (!showScrollbar) {
+      _callFadeoutTimer(force: true);
+      return false;
+    }
     if (notification is ScrollUpdateNotification || notification is OverscrollNotification || notification is UserScrollNotification) {
       // Any movements always makes the scrollbar start showing up.
       if (_fadeoutAnimationController.status != AnimationStatus.forward) {
@@ -418,9 +439,9 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     return false;
   }
 
-  void _callFadeoutTimer() {
+  void _callFadeoutTimer({bool force = false}) {
     if (_dragScrollbarAxisPosition == null) {
-      _startFadeoutTimer();
+      _startFadeoutTimer(force: force);
     }
   }
 
@@ -480,6 +501,11 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
     if (hoverAxis == _currentHoverAxis) return;
     _currentHoverAxis = hoverAxis;
 
+    if (!showScrollbar) {
+      _callFadeoutTimer(force: true);
+      return;
+    }
+
     ScrollMetrics? metrics;
     bool needUpdate = false;
     switch (hoverAxis) {
@@ -492,10 +518,8 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
             minScrollExtent: widget.verticalController?.position.minScrollExtent,
             maxScrollExtent: widget.verticalController?.position.maxScrollExtent,
             pixels: widget.verticalController?.position.pixels,
-            viewportDimension:
-                widget.verticalController?.position.viewportDimension,
-            axisDirection: widget.verticalController?.position.axisDirection ??
-                AxisDirection.down,
+            viewportDimension: widget.verticalController?.position.viewportDimension,
+            axisDirection: widget.verticalController?.position.axisDirection ?? AxisDirection.down,
             devicePixelRatio: 1.0,
           );
         }
@@ -509,17 +533,14 @@ class PlutoGridCupertinoScrollbarState extends State<PlutoScrollbar> with Ticker
             minScrollExtent: widget.horizontalController?.position.minScrollExtent,
             maxScrollExtent: widget.horizontalController?.position.maxScrollExtent,
             pixels: widget.horizontalController?.position.pixels,
-            viewportDimension:
-                widget.horizontalController?.position.viewportDimension,
-            axisDirection:
-                widget.horizontalController?.position.axisDirection ??
-                    AxisDirection.right,
+            viewportDimension: widget.horizontalController?.position.viewportDimension,
+            axisDirection: widget.horizontalController?.position.axisDirection ?? AxisDirection.right,
             devicePixelRatio: 1.0,
           );
         }
         break;
       case _HoverAxis.none:
-        _callFadeoutTimer();
+        _callFadeoutTimer(force: true);
         return;
     }
 

@@ -29,6 +29,8 @@ typedef PlutoOnRowDoubleTapEventCallback = void Function(PlutoGridOnRowDoubleTap
 
 typedef PlutoOnRowSecondaryTapEventCallback = void Function(PlutoGridOnRowSecondaryTapEvent event);
 
+typedef PlutoOnRowHoverEventCallback = void Function(PlutoGridOnRowHoverEvent event);
+
 typedef PlutoOnRowsMovedEventCallback = void Function(PlutoGridOnRowsMovedEvent event);
 
 typedef PlutoOnColumnsMovedEventCallback = void Function(PlutoGridOnColumnsMovedEvent event);
@@ -63,6 +65,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.onRowChecked,
     this.onRowDoubleTap,
     this.onRowSecondaryTap,
+    this.onRowHover,
     this.onRowsMoved,
     this.onColumnsMoved,
     this.onColumnsHide,
@@ -84,6 +87,7 @@ class PlutoGrid extends PlutoStatefulWidget {
     this.resetFrozenColumnOnToggle = false,
     this.autoSizeHeightOffset,
     this.autoSizeWidthOffset,
+    this.enableRowHover = false,
   }) : super(key: key);
 
   /// {@template pluto_grid_property_columns}
@@ -204,6 +208,11 @@ class PlutoGrid extends PlutoStatefulWidget {
   /// [onRowSecondaryTap] is called when a mouse right-click event occurs.
   /// {@endtemplate}
   final PlutoOnRowSecondaryTapEventCallback? onRowSecondaryTap;
+
+  /// {@template pluto_grid_property_onRowHover}
+  /// [onRowHover] is called when a mouse hover event occurs.
+  /// {@endtemplate}
+  final PlutoOnRowHoverEventCallback? onRowHover;
 
   /// {@template pluto_grid_property_onRowsMoved}
   /// [onRowsMoved] is called after the row is dragged and moved
@@ -379,6 +388,10 @@ class PlutoGrid extends PlutoStatefulWidget {
 
   /// used with [autoSize] to manually add extra width to the table
   final double? autoSizeWidthOffset;
+
+  /// default to false
+  /// enable row hover
+  final bool enableRowHover;
 
   /// [setDefaultLocale] sets locale when [Intl] package is used in [PlutoGrid].
   ///
@@ -557,6 +570,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       columns: widget.columns,
       rows: widget.rows,
       gridFocusNode: _gridFocusNode,
+      enableRowHover: widget.enableRowHover,
       scroll: PlutoGridScrollController(
         vertical: _verticalScroll,
         horizontal: _horizontalScroll,
@@ -569,6 +583,7 @@ class PlutoGridState extends PlutoStateWithChange<PlutoGrid> {
       onRowChecked: widget.onRowChecked,
       onRowDoubleTap: widget.onRowDoubleTap,
       onRowSecondaryTap: widget.onRowSecondaryTap,
+      onRowHover: widget.onRowHover,
       onRowsMoved: widget.onRowsMoved,
       onColumnsMoved: widget.onColumnsMoved,
       onColumnsHide: widget.onColumnsHide,
@@ -1601,6 +1616,24 @@ class PlutoGridOnRowSecondaryTapEvent {
     required this.rowIdx,
     required this.cell,
     required this.offset,
+  });
+}
+
+/// Argument of the [PlutoGrid.onRowHover] callback
+/// to receive the event of row hover with mouse
+class PlutoGridOnRowHoverEvent {
+  final PlutoRow row;
+  final int rowIdx;
+  final PlutoCell cell;
+  final PointerEvent event;
+  final bool exit;
+
+  const PlutoGridOnRowHoverEvent({
+    required this.row,
+    required this.rowIdx,
+    required this.cell,
+    required this.event,
+    required this.exit,
   });
 }
 

@@ -63,9 +63,13 @@ abstract class PlutoChangeNotifierFilterResolver {
 
       /// cell_state
       stateManager.setCurrentCellPosition.hashCode: 'setCurrentCellPosition',
+      stateManager.setHoverCellPosition.hashCode: 'setHoverCellPosition',
       stateManager.updateCurrentCellPosition.hashCode: 'updateCurrentCellPosition',
+      stateManager.updateHoverCellPosition.hashCode: 'updateHoverCellPosition',
       stateManager.clearCurrentCell.hashCode: 'clearCurrentCell',
+      stateManager.clearHoverCell.hashCode: 'clearHoverCell',
       stateManager.setCurrentCell.hashCode: 'setCurrentCell',
+      stateManager.setHoverCell.hashCode: 'setHoverCell',
 
       /// column_group_state
       stateManager.setShowColumnGroups.hashCode: 'setShowColumnGroups',

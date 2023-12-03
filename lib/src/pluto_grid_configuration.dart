@@ -192,9 +192,11 @@ class PlutoGridStyleConfig {
     this.enableColumnBorderHorizontal = true,
     this.enableCellBorderVertical = true,
     this.enableCellBorderHorizontal = true,
+    this.enableCellSelectingStyle = true,
     this.enableRowColorAnimation = false,
     this.gridBackgroundColor = Colors.white,
     this.rowColor = Colors.white,
+    this.rowHoverColor = Colors.white,
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFFDCF5FF),
@@ -213,6 +215,7 @@ class PlutoGridStyleConfig {
     this.iconSize = 18,
     this.rowHeight = PlutoGridSettings.rowHeight,
     this.columnHeight = PlutoGridSettings.rowHeight,
+    this.selectedCellBorderWidth = 1.3,
     this.columnFilterHeight = PlutoGridSettings.rowHeight,
     this.defaultColumnTitlePadding = PlutoGridSettings.columnTitlePadding,
     this.defaultColumnFilterPadding = PlutoGridSettings.columnFilterPadding,
@@ -246,6 +249,8 @@ class PlutoGridStyleConfig {
     this.lastRowHeightPadding,
     this.enableActiveColorOnDisabledCell = true,
     this.enableActiveColorOnReadOnlyCell = true,
+    this.defaultMouseCursor = MouseCursor.defer,
+    this.hoveredMouseCursor = MouseCursor.defer,
   });
 
   const PlutoGridStyleConfig.dark({
@@ -254,9 +259,11 @@ class PlutoGridStyleConfig {
     this.enableColumnBorderHorizontal = true,
     this.enableCellBorderVertical = true,
     this.enableCellBorderHorizontal = true,
+    this.enableCellSelectingStyle = true,
     this.enableRowColorAnimation = false,
     this.gridBackgroundColor = const Color(0xFF111111),
     this.rowColor = const Color(0xFF111111),
+    this.rowHoverColor = const Color(0xFF111111),
     this.oddRowColor,
     this.evenRowColor,
     this.activatedColor = const Color(0xFF313131),
@@ -275,6 +282,7 @@ class PlutoGridStyleConfig {
     this.iconSize = 18,
     this.rowHeight = PlutoGridSettings.rowHeight,
     this.columnHeight = PlutoGridSettings.rowHeight,
+    this.selectedCellBorderWidth = 1.3,
     this.columnFilterHeight = PlutoGridSettings.rowHeight,
     this.defaultColumnTitlePadding = PlutoGridSettings.columnTitlePadding,
     this.defaultColumnFilterPadding = PlutoGridSettings.columnFilterPadding,
@@ -308,6 +316,8 @@ class PlutoGridStyleConfig {
     this.lastRowHeightPadding,
     this.enableActiveColorOnDisabledCell = true,
     this.enableActiveColorOnReadOnlyCell = true,
+    this.defaultMouseCursor = MouseCursor.defer,
+    this.hoveredMouseCursor = MouseCursor.defer,
   });
 
   /// Enable borderShadow in [PlutoGrid].
@@ -325,6 +335,9 @@ class PlutoGridStyleConfig {
   /// Enable the horizontal border of [PlutoCell].
   final bool enableCellBorderHorizontal;
 
+  /// Enable cell selecting style
+  final bool enableCellSelectingStyle;
+
   /// Animation of background color transition of rows,
   /// such as when the current row or rows are dragged.
   final bool enableRowColorAnimation;
@@ -335,6 +348,9 @@ class PlutoGridStyleConfig {
   ///
   /// If [PlutoGrid.rowColorCallback] is set, rowColorCallback takes precedence.
   final Color rowColor;
+
+  /// Default row hover color
+  final Color rowHoverColor;
 
   /// Background color for odd rows
   ///
@@ -400,6 +416,9 @@ class PlutoGridStyleConfig {
 
   /// Height of column.
   final double columnHeight;
+
+  /// Cell border width
+  final double selectedCellBorderWidth;
 
   /// Height of column filter.
   final double columnFilterHeight;
@@ -469,15 +488,21 @@ class PlutoGridStyleConfig {
 
   final bool enableActiveColorOnReadOnlyCell;
 
+  final MouseCursor defaultMouseCursor;
+
+  final MouseCursor hoveredMouseCursor;
+
   PlutoGridStyleConfig copyWith({
     bool? enableGridBorderShadow,
     bool? enableColumnBorderVertical,
     bool? enableColumnBorderHorizontal,
     bool? enableCellBorderVertical,
     bool? enableCellBorderHorizontal,
+    bool? enableCellSelectingStyle,
     bool? enableRowColorAnimation,
     Color? gridBackgroundColor,
     Color? rowColor,
+    Color? rowHoverColor,
     PlutoOptional<Color?>? oddRowColor,
     PlutoOptional<Color?>? evenRowColor,
     Color? activatedColor,
@@ -496,6 +521,7 @@ class PlutoGridStyleConfig {
     double? iconSize,
     double? rowHeight,
     double? columnHeight,
+    double? selectedCellBorderWidth,
     double? columnFilterHeight,
     EdgeInsets? defaultColumnTitlePadding,
     EdgeInsets? defaultColumnFilterPadding,
@@ -517,6 +543,8 @@ class PlutoGridStyleConfig {
     double? lastRowHeightPadding,
     bool enableActiveColorOnDisabledCell = true,
     bool enableActiveColorOnReadOnlyCell = true,
+    MouseCursor defaultMouseCursor = MouseCursor.defer,
+    MouseCursor hoveredMouseCursor = MouseCursor.defer,
   }) {
     return PlutoGridStyleConfig(
       enableGridBorderShadow: enableGridBorderShadow ?? this.enableGridBorderShadow,
@@ -524,9 +552,11 @@ class PlutoGridStyleConfig {
       enableColumnBorderHorizontal: enableColumnBorderHorizontal ?? this.enableColumnBorderHorizontal,
       enableCellBorderVertical: enableCellBorderVertical ?? this.enableCellBorderVertical,
       enableCellBorderHorizontal: enableCellBorderHorizontal ?? this.enableCellBorderHorizontal,
+      enableCellSelectingStyle: enableCellSelectingStyle ?? this.enableCellSelectingStyle,
       enableRowColorAnimation: enableRowColorAnimation ?? this.enableRowColorAnimation,
       gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
       rowColor: rowColor ?? this.rowColor,
+      rowHoverColor: rowHoverColor ?? this.rowHoverColor,
       oddRowColor: oddRowColor == null ? this.oddRowColor : oddRowColor.value,
       evenRowColor: evenRowColor == null ? this.evenRowColor : evenRowColor.value,
       activatedColor: activatedColor ?? this.activatedColor,
@@ -545,6 +575,7 @@ class PlutoGridStyleConfig {
       iconSize: iconSize ?? this.iconSize,
       rowHeight: rowHeight ?? this.rowHeight,
       columnHeight: columnHeight ?? this.columnHeight,
+      selectedCellBorderWidth: selectedCellBorderWidth ?? this.selectedCellBorderWidth,
       columnFilterHeight: columnFilterHeight ?? this.columnFilterHeight,
       defaultColumnTitlePadding: defaultColumnTitlePadding ?? this.defaultColumnTitlePadding,
       defaultColumnFilterPadding: defaultColumnFilterPadding ?? this.defaultColumnFilterPadding,
@@ -566,6 +597,8 @@ class PlutoGridStyleConfig {
       lastRowHeightPadding: lastRowHeightPadding ?? this.lastRowHeightPadding,
       enableActiveColorOnDisabledCell: enableActiveColorOnDisabledCell,
       enableActiveColorOnReadOnlyCell: enableActiveColorOnReadOnlyCell,
+      defaultMouseCursor: defaultMouseCursor,
+      hoveredMouseCursor: hoveredMouseCursor,
     );
   }
 
@@ -579,9 +612,11 @@ class PlutoGridStyleConfig {
             enableColumnBorderHorizontal == other.enableColumnBorderHorizontal &&
             enableCellBorderVertical == other.enableCellBorderVertical &&
             enableCellBorderHorizontal == other.enableCellBorderHorizontal &&
+            enableCellSelectingStyle == other.enableCellSelectingStyle &&
             enableRowColorAnimation == other.enableRowColorAnimation &&
             gridBackgroundColor == other.gridBackgroundColor &&
             rowColor == other.rowColor &&
+            rowHoverColor == other.rowHoverColor &&
             oddRowColor == other.oddRowColor &&
             evenRowColor == other.evenRowColor &&
             activatedColor == other.activatedColor &&
@@ -600,6 +635,7 @@ class PlutoGridStyleConfig {
             iconSize == other.iconSize &&
             rowHeight == other.rowHeight &&
             columnHeight == other.columnHeight &&
+            selectedCellBorderWidth == other.selectedCellBorderWidth &&
             columnFilterHeight == other.columnFilterHeight &&
             defaultColumnTitlePadding == other.defaultColumnTitlePadding &&
             defaultColumnFilterPadding == other.defaultColumnFilterPadding &&
@@ -620,7 +656,9 @@ class PlutoGridStyleConfig {
             gridPadding == other.gridPadding &&
             lastRowHeightPadding == other.lastRowHeightPadding &&
             enableActiveColorOnDisabledCell == other.enableActiveColorOnDisabledCell &&
-            enableActiveColorOnReadOnlyCell == other.enableActiveColorOnReadOnlyCell;
+            enableActiveColorOnReadOnlyCell == other.enableActiveColorOnReadOnlyCell &&
+            defaultMouseCursor == other.defaultMouseCursor &&
+            hoveredMouseCursor == other.hoveredMouseCursor;
   }
 
   @override
@@ -630,9 +668,11 @@ class PlutoGridStyleConfig {
         enableColumnBorderHorizontal,
         enableCellBorderVertical,
         enableCellBorderHorizontal,
+        enableCellSelectingStyle,
         enableRowColorAnimation,
         gridBackgroundColor,
         rowColor,
+        rowHoverColor,
         oddRowColor,
         evenRowColor,
         activatedColor,
@@ -651,6 +691,7 @@ class PlutoGridStyleConfig {
         iconSize,
         rowHeight,
         columnHeight,
+        selectedCellBorderWidth,
         columnFilterHeight,
         defaultColumnTitlePadding,
         defaultColumnFilterPadding,
@@ -672,6 +713,8 @@ class PlutoGridStyleConfig {
         lastRowHeightPadding,
         enableActiveColorOnDisabledCell,
         enableActiveColorOnReadOnlyCell,
+        defaultMouseCursor,
+        hoveredMouseCursor,
       ]);
 }
 

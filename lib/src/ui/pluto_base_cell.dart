@@ -95,6 +95,32 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
     );
   }
 
+  void _handleOnRowHover(PointerEvent event) {
+    stateManager.eventManager!.addEvent(
+      PlutoGridCellGestureEvent(
+        gestureType: PlutoGridGestureType.onRowHover,
+        offset: Offset.zero,
+        cell: cell,
+        column: column,
+        rowIdx: rowIdx,
+        event: event,
+      ),
+    );
+  }
+
+  void _handleOnRowHoverExit(PointerEvent event) {
+    stateManager.eventManager!.addEvent(
+      PlutoGridCellGestureEvent(
+        gestureType: PlutoGridGestureType.onRowHoverExit,
+        offset: Offset.zero,
+        cell: cell,
+        column: column,
+        rowIdx: rowIdx,
+        event: event,
+      ),
+    );
+  }
+
   void Function()? _onDoubleTapOrNull() {
     return stateManager.onRowDoubleTap == null ? null : _handleOnDoubleTap;
   }
@@ -123,6 +149,8 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
         isLastColumn: isLastColumn,
         cellPadding: column.cellPadding ?? stateManager.configuration.style.defaultCellPadding,
         stateManager: stateManager,
+        handleOnRowHover: _handleOnRowHover,
+        handleOnRowHoverExit: _handleOnRowHoverExit,
         child: _Cell(
           stateManager: stateManager,
           rowIdx: rowIdx,
@@ -152,6 +180,10 @@ class _CellContainer extends PlutoStatefulWidget {
 
   final bool isLastColumn;
 
+  final Function(PointerEvent event) handleOnRowHover;
+
+  final Function(PointerEvent event) handleOnRowHoverExit;
+
   const _CellContainer({
     required this.cell,
     required this.row,
@@ -160,6 +192,8 @@ class _CellContainer extends PlutoStatefulWidget {
     required this.cellPadding,
     required this.stateManager,
     required this.child,
+    required this.handleOnRowHover,
+    required this.handleOnRowHoverExit,
     this.isLastColumn = false,
   });
 
@@ -182,8 +216,6 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
 
   @override
   void updateState(PlutoNotifierEvent event) {
-    final style = stateManager.style;
-
     final isCurrentCell = stateManager.isCurrentCell(widget.cell);
 
     _decoration = update(
@@ -199,18 +231,6 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
           widget.rowIdx,
         ),
         isGroupedRowCell: stateManager.enabledRowGroups && stateManager.rowGroupDelegate!.isExpandableCell(widget.cell),
-        enableCellHorizontalBorder: style.enableCellBorderHorizontal,
-        enableCellVerticalBorder: style.enableCellBorderVertical,
-        enableActiveColorOnDisabledCell: style.enableActiveColorOnDisabledCell,
-        enableActiveColorOnReadOnlyCell: style.enableActiveColorOnReadOnlyCell,
-        borderColor: style.borderColor,
-        activatedBorderColor: style.activatedBorderColor,
-        activatedColor: style.activatedColor,
-        inactivatedBorderColor: style.inactivatedBorderColor,
-        gridBackgroundColor: style.gridBackgroundColor,
-        cellColorInEditState: style.cellColorInEditState,
-        cellColorInReadOnlyState: style.cellColorInReadOnlyState,
-        cellColorGroupedRow: style.cellColorGroupedRow,
         selectingMode: stateManager.selectingMode,
       ),
     );
@@ -244,30 +264,25 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
     required bool isCurrentCell,
     required bool isSelectedCell,
     required bool isGroupedRowCell,
-    required bool enableCellVerticalBorder,
-    required bool enableCellHorizontalBorder,
-    required bool enableActiveColorOnDisabledCell,
-    required bool enableActiveColorOnReadOnlyCell,
-    required Color borderColor,
-    required Color activatedBorderColor,
-    required Color activatedColor,
-    required Color inactivatedBorderColor,
-    required Color gridBackgroundColor,
-    required Color cellColorInEditState,
-    required Color cellColorInReadOnlyState,
-    required Color? cellColorGroupedRow,
     required PlutoGridSelectingMode selectingMode,
   }) {
-    if (isCurrentCell) {
-      // BorderSide borderSide = BorderSide(color: hasFocus ? activatedBorderColor : inactivatedBorderColor, width: 1);
-      // double leftWidth = 1;
-      // double rightWidth = 1;
-      // if (!enableCellVerticalBorder && enableCellHorizontalBorder) {
-      //   leftWidth = 2;
-      // }
-      // if (enableCellVerticalBorder || enableCellHorizontalBorder) {
-      //   rightWidth = 2;
-      // }
+    final enableCellVerticalBorder = widget.stateManager.style.enableCellBorderVertical;
+    final enableActiveColorOnDisabledCell = widget.stateManager.style.enableActiveColorOnDisabledCell;
+    final enableActiveColorOnReadOnlyCell = widget.stateManager.style.enableActiveColorOnReadOnlyCell;
+    final enableCellSelectingStyle = widget.stateManager.style.enableCellSelectingStyle;
+    final selectedCellBorderWidth = widget.stateManager.style.selectedCellBorderWidth;
+    final borderColor = widget.stateManager.style.borderColor;
+    final activatedBorderColor = widget.stateManager.style.activatedBorderColor;
+    final activatedColor = widget.stateManager.style.activatedColor;
+    final inactivatedBorderColor = widget.stateManager.style.inactivatedBorderColor;
+    final gridBackgroundColor = widget.stateManager.style.gridBackgroundColor;
+    final cellColorInEditState = widget.stateManager.style.cellColorInEditState;
+    final cellColorInReadOnlyState = widget.stateManager.style.cellColorInReadOnlyState;
+    final cellColorGroupedRow = widget.stateManager.style.cellColorGroupedRow;
+    final rowHoverColor = widget.stateManager.style.rowHoverColor;
+    final isHover = widget.stateManager.enableRowHover && stateManager.hoverCellPosition?.rowIdx == widget.rowIdx;
+
+    if (isCurrentCell && enableCellSelectingStyle) {
       Color borderColor = (hasFocus) ? activatedBorderColor : inactivatedBorderColor;
 
       if (!enableActiveColorOnDisabledCell) {
@@ -296,26 +311,28 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
               )
             : cellColorInReadOnlyState,
         // border: BorderDirectional(top: borderSide, bottom: borderSide, start: borderSide.copyWith(width: leftWidth), end: borderSide.copyWith(width: rightWidth)),
-        border: Border.all(
-          color: borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: borderColor, width: selectedCellBorderWidth),
       );
-    } else if (isSelectedCell) {
+    } else if (isSelectedCell && enableCellSelectingStyle) {
       return BoxDecoration(
         color: widget.cell.enabled ? activatedColor : cellColorInReadOnlyState,
         border: Border.all(
           color: hasFocus ? activatedBorderColor : inactivatedBorderColor,
-          width: 1,
+          width: selectedCellBorderWidth,
         ),
       );
     } else {
+      Color? boxDecorationColor;
+      if (isGroupedRowCell) {
+        boxDecorationColor = cellColorGroupedRow;
+      } else if (isHover) {
+        boxDecorationColor = rowHoverColor;
+      } else if (!widget.cell.enabled) {
+        boxDecorationColor = cellColorInReadOnlyState;
+      }
+
       return BoxDecoration(
-        color: isGroupedRowCell
-            ? cellColorGroupedRow
-            : widget.cell.enabled
-                ? null
-                : cellColorInReadOnlyState,
+        color: boxDecorationColor,
         border: (enableCellVerticalBorder && !widget.isLastColumn) ? BorderDirectional(end: BorderSide(color: borderColor, width: 1)) : null,
       );
     }
@@ -323,11 +340,20 @@ class _CellContainerState extends PlutoStateWithChange<_CellContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: _decoration,
-      child: Padding(
-        padding: widget.cellPadding,
-        child: widget.child,
+    return MouseRegion(
+      cursor: stateManager.hoverMouseCursor,
+      onHover: (event) {
+        widget.handleOnRowHover.call(event);
+      },
+      onExit: (event) {
+        widget.handleOnRowHoverExit.call(event);
+      },
+      child: DecoratedBox(
+        decoration: _decoration,
+        child: Padding(
+          padding: widget.cellPadding,
+          child: widget.child,
+        ),
       ),
     );
   }

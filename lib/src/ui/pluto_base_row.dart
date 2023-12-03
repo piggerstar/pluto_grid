@@ -253,10 +253,12 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
     required bool isSelecting,
     required bool hasCurrentSelectingPosition,
     required bool isCheckedRow,
+    required bool enabledHoverColor,
   }) {
     Color color = _getDefaultRowColor();
-
-    if (isDragTarget) {
+    if (enabledHoverColor && stateManager.hoverCellPosition?.rowIdx == widget.rowIdx) {
+      color = stateManager.configuration.style.rowHoverColor;
+    } else if (isDragTarget) {
       color = stateManager.configuration.style.cellColorInReadOnlyState;
     } else {
       final bool checkCurrentRow = !stateManager.selectingMode.isRow && isFocusedCurrentRow && (!isSelecting && !hasCurrentSelectingPosition);
@@ -298,6 +300,7 @@ class _RowContainerWidgetState extends PlutoStateWithChange<_RowContainerWidget>
       isSelecting: isSelecting,
       hasCurrentSelectingPosition: hasCurrentSelectingPosition,
       isCheckedRow: isCheckedRow,
+      enabledHoverColor: stateManager.enableRowHover,
     );
 
     bool isLast = widget.stateManager.refRows.indexWhere((element) => element == widget.row) == widget.stateManager.refRows.length - 1;

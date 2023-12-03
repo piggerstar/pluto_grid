@@ -60,13 +60,13 @@ class _PlutoDefaultTableState extends State<PlutoDefaultTable> {
       // columnGroups: getColumnGroups,
       noRowsWidget: Container(height: 50, color: Colors.lightBlueAccent, child: const Text('No data.')),
       showTableLoadingText: false,
-      customTableLoading: Align(
+      customTableLoading: const Align(
         alignment: Alignment.center,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [CircularProgressIndicator()],
+            children: [CircularProgressIndicator()],
           ),
         ),
       ),

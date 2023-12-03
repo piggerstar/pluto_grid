@@ -5,8 +5,14 @@ abstract class ICellState {
   /// currently selected cell.
   PlutoCell? get currentCell;
 
+  /// currently hovered cell.
+  PlutoCell? get hoverCell;
+
   /// The position index value of the currently selected cell.
   PlutoGridCellPosition? get currentCellPosition;
+
+  /// The position index value of the currently hovered cell.
+  PlutoGridCellPosition? get hoverCellPosition;
 
   PlutoCell? get firstCell;
 
@@ -15,7 +21,14 @@ abstract class ICellState {
     bool notify = true,
   });
 
+  void setHoverCellPosition(
+    PlutoGridCellPosition cellPosition, {
+    bool notify = true,
+  });
+
   void updateCurrentCellPosition({bool notify = true});
+
+  void updateHoverCellPosition({bool notify = true});
 
   /// Index position of cell in a column
   PlutoGridCellPosition? cellPositionByCellKey(Key cellKey);
@@ -25,8 +38,18 @@ abstract class ICellState {
   /// set currentCell to null
   void clearCurrentCell({bool notify = true});
 
+  /// set hoverCell to null
+  void clearHoverCell({bool notify = true});
+
   /// Change the selected cell.
   void setCurrentCell(
+    PlutoCell? cell,
+    int? rowIdx, {
+    bool notify = true,
+  });
+
+  /// Change the selected cell.
+  void setHoverCell(
     PlutoCell? cell,
     int? rowIdx, {
     bool notify = true,
@@ -63,8 +86,11 @@ abstract class ICellState {
     dynamic oldValue,
   });
 
-  /// Whether the cell is the currently selected cell.
+  /// Whether the cell is the currently hovered cell.
   bool isCurrentCell(PlutoCell cell);
+
+  /// Whether the cell is the currently hovered cell.
+  bool isCurrentHoverCell(PlutoCell cell);
 
   bool isInvalidCellPosition(PlutoGridCellPosition? cellPosition);
 }
@@ -72,7 +98,11 @@ abstract class ICellState {
 class _State {
   PlutoCell? _currentCell;
 
+  PlutoCell? _hoverCell;
+
   PlutoGridCellPosition? _currentCellPosition;
+
+  PlutoGridCellPosition? _hoverCellPosition;
 }
 
 mixin CellState implements IPlutoGridState {
@@ -82,7 +112,13 @@ mixin CellState implements IPlutoGridState {
   PlutoCell? get currentCell => _state._currentCell;
 
   @override
+  PlutoCell? get hoverCell => _state._hoverCell;
+
+  @override
   PlutoGridCellPosition? get currentCellPosition => _state._currentCellPosition;
+
+  @override
+  PlutoGridCellPosition? get hoverCellPosition => _state._hoverCellPosition;
 
   @override
   PlutoCell? get firstCell {
@@ -118,6 +154,26 @@ mixin CellState implements IPlutoGridState {
   }
 
   @override
+  void setHoverCellPosition(
+    PlutoGridCellPosition? cellPosition, {
+    bool notify = true,
+  }) {
+    if (hoverCellPosition == cellPosition) {
+      return;
+    }
+
+    if (cellPosition == null) {
+      clearHoverCell(notify: false);
+    } else if (isInvalidCellPosition(cellPosition)) {
+      return;
+    }
+
+    _state._hoverCellPosition = cellPosition;
+
+    notifyListeners(notify, setHoverCellPosition.hashCode);
+  }
+
+  @override
   void updateCurrentCellPosition({bool notify = true}) {
     if (currentCell == null) {
       return;
@@ -129,6 +185,20 @@ mixin CellState implements IPlutoGridState {
     );
 
     notifyListeners(notify, updateCurrentCellPosition.hashCode);
+  }
+
+  @override
+  void updateHoverCellPosition({bool notify = true}) {
+    if (hoverCell == null) {
+      return;
+    }
+
+    setHoverCellPosition(
+      cellPositionByCellKey(hoverCell!.key),
+      notify: false,
+    );
+
+    notifyListeners(notify, updateHoverCellPosition.hashCode);
   }
 
   @override
@@ -184,6 +254,19 @@ mixin CellState implements IPlutoGridState {
   }
 
   @override
+  void clearHoverCell({bool notify = true}) {
+    if (hoverCell == null) {
+      return;
+    }
+
+    _state._hoverCell = null;
+
+    _state._hoverCellPosition = null;
+
+    notifyListeners(notify, clearHoverCell.hashCode);
+  }
+
+  @override
   void setCurrentCell(
     PlutoCell? cell,
     int? rowIdx, {
@@ -209,6 +292,30 @@ mixin CellState implements IPlutoGridState {
     setEditing(autoEditing, notify: false);
 
     notifyListeners(notify, setCurrentCell.hashCode);
+  }
+
+  @override
+  void setHoverCell(
+    PlutoCell? cell,
+    int? rowIdx, {
+    bool notify = true,
+  }) {
+    if (cell == null || rowIdx == null || refRows.isEmpty || rowIdx < 0 || rowIdx > refRows.length - 1) {
+      return;
+    }
+
+    if (hoverCell != null && hoverCell!.key == cell.key) {
+      return;
+    }
+
+    _state._hoverCell = cell;
+
+    _state._hoverCellPosition = PlutoGridCellPosition(
+      rowIdx: rowIdx,
+      columnIdx: columnIdxByCellKeyAndRowIdx(cell.key, rowIdx),
+    );
+
+    notifyListeners(notify, setHoverCell.hashCode);
   }
 
   @override
@@ -317,6 +424,11 @@ mixin CellState implements IPlutoGridState {
   @override
   bool isCurrentCell(PlutoCell? cell) {
     return currentCell != null && currentCell!.key == cell!.key;
+  }
+
+  @override
+  bool isCurrentHoverCell(PlutoCell? cell) {
+    return hoverCell != null && hoverCell!.key == cell!.key;
   }
 
   @override

@@ -27,6 +27,18 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     enableSorting: false,
     frozen: PlutoColumnFrozen.start,
     percentage: 0.2,
+    checkboxFillColor: MaterialStateColor.resolveWith((states) {
+      if (states.contains(MaterialState.selected)) {
+        return Colors.red;
+      }
+      if (states.contains(MaterialState.hovered)) {
+        return Colors.blue;
+      }
+      if (states.contains(MaterialState.disabled)) {
+        return Colors.white10;
+      }
+      return Colors.green;
+    }),
     renderer: (rendererContext) {
       return Container(
         alignment: Alignment.centerRight,

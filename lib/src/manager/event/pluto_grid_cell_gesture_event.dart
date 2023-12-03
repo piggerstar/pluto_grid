@@ -8,6 +8,7 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
   final PlutoCell cell;
   final PlutoColumn column;
   final int rowIdx;
+  final PointerEvent? event;
 
   PlutoGridCellGestureEvent({
     required this.gestureType,
@@ -15,6 +16,7 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
     required this.cell,
     required this.column,
     required this.rowIdx,
+    this.event,
   });
 
   @override
@@ -37,6 +39,19 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
         break;
       case PlutoGridGestureType.onSecondaryTap:
         _onSecondaryTap(stateManager);
+        break;
+      case PlutoGridGestureType.onRowHover:
+        if (event == null) {
+          return;
+        }
+        _onRowHover(stateManager, event!);
+        break;
+
+      case PlutoGridGestureType.onRowHoverExit:
+        if (event == null) {
+          return;
+        }
+        _onRowHover(stateManager, event!, exit: true);
         break;
       default:
     }
@@ -96,7 +111,7 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
   }
 
   void _onDoubleTap(PlutoGridStateManager stateManager) {
-    stateManager.onRowDoubleTap!(
+    stateManager.onRowDoubleTap?.call(
       PlutoGridOnRowDoubleTapEvent(
         row: stateManager.getRowByIdx(rowIdx)!,
         rowIdx: rowIdx,
@@ -106,12 +121,32 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
   }
 
   void _onSecondaryTap(PlutoGridStateManager stateManager) {
-    stateManager.onRowSecondaryTap!(
+    stateManager.onRowSecondaryTap?.call(
       PlutoGridOnRowSecondaryTapEvent(
         row: stateManager.getRowByIdx(rowIdx)!,
         rowIdx: rowIdx,
         cell: cell,
         offset: offset,
+      ),
+    );
+  }
+
+  void _onRowHover(PlutoGridStateManager stateManager, PointerEvent event, {bool exit = false}) {
+    if (exit) {
+      stateManager.setHoverMouseCursor(cell.defaultMouseCursor ?? stateManager.style.defaultMouseCursor);
+      stateManager.clearHoverCell();
+    } else if (stateManager.enableRowHover) {
+      stateManager.setHoverMouseCursor(cell.hoveredMouseCursor ?? stateManager.style.hoveredMouseCursor);
+      stateManager.setHoverCell(cell, rowIdx);
+    }
+
+    stateManager.onRowHover?.call(
+      PlutoGridOnRowHoverEvent(
+        row: stateManager.getRowByIdx(rowIdx)!,
+        rowIdx: rowIdx,
+        cell: cell,
+        event: event,
+        exit: exit,
       ),
     );
   }
@@ -190,7 +225,9 @@ enum PlutoGridGestureType {
   onLongPressMoveUpdate,
   onLongPressEnd,
   onDoubleTap,
-  onSecondaryTap;
+  onSecondaryTap,
+  onRowHover,
+  onRowHoverExit;
 
   bool get isOnTapUp => this == PlutoGridGestureType.onTapUp;
 
@@ -203,4 +240,8 @@ enum PlutoGridGestureType {
   bool get isOnDoubleTap => this == PlutoGridGestureType.onDoubleTap;
 
   bool get isOnSecondaryTap => this == PlutoGridGestureType.onSecondaryTap;
+
+  bool get isOnRowHover => this == PlutoGridGestureType.onRowHover;
+
+  bool get isOnRowHoverExit => this == PlutoGridGestureType.onRowHoverExit;
 }

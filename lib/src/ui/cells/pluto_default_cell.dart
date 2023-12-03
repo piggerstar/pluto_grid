@@ -160,10 +160,8 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       );
     }
 
-    return Container(
-      color: isEnabled ? null : (widget.column.checkboxDisabledBackgroundColor ?? stateManager.configuration.style.disabledIconColor),
-      margin: const EdgeInsets.all(1),
-      child: Row(children: [
+    return Row(
+      children: [
         if (_canRowDrag)
           _RowDragIconWidget(
             column: widget.column,
@@ -196,7 +194,7 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
               fontWeight: FontWeight.normal,
             ),
           ),
-      ]),
+      ],
     );
   }
 }

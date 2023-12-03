@@ -26,6 +26,8 @@ abstract class IGridState {
 
   PlutoOnRowSecondaryTapEventCallback? get onRowSecondaryTap;
 
+  PlutoOnRowHoverEventCallback? get onRowHover;
+
   PlutoOnRowsMovedEventCallback? get onRowsMoved;
 
   PlutoOnColumnsMovedEventCallback? get onColumnsMoved;
@@ -41,6 +43,8 @@ abstract class IGridState {
   PlutoGridLocaleText get localeText;
 
   PlutoGridStyleConfig get style;
+
+  MouseCursor get hoverMouseCursor;
 
   /// To delegate sort handling in the [PlutoInfinityScrollRows] or [PlutoLazyPagination] widget
   /// Whether to override the default sort processing.
@@ -59,6 +63,8 @@ abstract class IGridState {
   void setKeyManager(PlutoGridKeyManager keyManager);
 
   void setEventManager(PlutoGridEventManager eventManager);
+
+  void setHoverMouseCursor(MouseCursor mouseCursor);
 
   void setConfiguration(
     PlutoGridConfiguration configuration, {
@@ -91,6 +97,8 @@ class _State {
 
   PlutoGridMode _mode = PlutoGridMode.normal;
 
+  MouseCursor _hoverMouseCursor = MouseCursor.defer;
+
   bool _sortOnlyEvent = false;
 
   bool _filterOnlyEvent = false;
@@ -118,6 +126,9 @@ mixin GridState implements IPlutoGridState {
   PlutoGridStyleConfig get style => configuration.style;
 
   @override
+  MouseCursor get hoverMouseCursor => _state._hoverMouseCursor;
+
+  @override
   bool get sortOnlyEvent => _state._sortOnlyEvent;
 
   @override
@@ -131,6 +142,11 @@ mixin GridState implements IPlutoGridState {
   @override
   void setEventManager(PlutoGridEventManager? eventManager) {
     _state._eventManager = eventManager;
+  }
+
+  @override
+  void setHoverMouseCursor(MouseCursor mouseCursor) {
+    _state._hoverMouseCursor = mouseCursor;
   }
 
   @override
