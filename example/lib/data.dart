@@ -27,6 +27,12 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     enableSorting: false,
     frozen: PlutoColumnFrozen.start,
     percentage: 0.2,
+    checkboxMode: PlutoColumnCheckboxMode.column,
+    checkboxMainAxisAlign: MainAxisAlignment.center,
+    checkboxCrossAxisAlign: CrossAxisAlignment.center,
+    checkboxTitleMainAxisAlign: MainAxisAlignment.center,
+    checkboxTitleCrossAxisAlign: CrossAxisAlignment.center,
+    showCheckboxOnly: true,
     checkboxFillColor: MaterialStateColor.resolveWith((states) {
       if (states.contains(MaterialState.selected)) {
         return Colors.red;
@@ -40,10 +46,7 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
       return Colors.green;
     }),
     renderer: (rendererContext) {
-      return Container(
-        alignment: Alignment.centerRight,
-        child: Text(rendererContext.cell.value.toString()),
-      );
+      return const SizedBox.shrink();
     },
   ),
   PlutoColumn(

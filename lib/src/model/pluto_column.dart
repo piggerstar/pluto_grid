@@ -251,6 +251,24 @@ class PlutoColumn {
 
   Color? checkboxDisabledBackgroundColor;
 
+  PlutoColumnCheckboxMode checkboxMode;
+
+  /// Checkbox main axis alignment in Cell. (Left, Right, Center)
+  MainAxisAlignment checkboxMainAxisAlign;
+
+  /// Checkbox main axis alignment in Title. (Left, Right, Center)
+  MainAxisAlignment checkboxTitleMainAxisAlign;
+
+  /// Checkbox cross axis alignment in Cell. (Left, Right, Center)
+  CrossAxisAlignment checkboxCrossAxisAlign;
+
+  /// Checkbox cross axis alignment in Title. (Left, Right, Center)
+  CrossAxisAlignment checkboxTitleCrossAxisAlign;
+
+  EdgeInsets? checkboxMargin;
+
+  bool showCheckboxOnly;
+
   PlutoColumn({
     required this.title,
     required this.field,
@@ -309,6 +327,13 @@ class PlutoColumn {
     this.checkboxMaterialTapTargetSize,
     this.checkboxThemeData,
     this.checkboxDisabledBackgroundColor,
+    this.checkboxMode = PlutoColumnCheckboxMode.row,
+    this.checkboxMainAxisAlign = MainAxisAlignment.start,
+    this.checkboxTitleMainAxisAlign = MainAxisAlignment.start,
+    this.checkboxCrossAxisAlign = CrossAxisAlignment.center,
+    this.checkboxTitleCrossAxisAlign = CrossAxisAlignment.center,
+    this.checkboxMargin,
+    this.showCheckboxOnly = false,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly,
         originalFrozenValue = frozen;
@@ -450,7 +475,10 @@ enum PlutoColumnTextAlign {
   left,
   center,
   right,
-  end;
+  end,
+  spaceBetween,
+  spaceAround,
+  spaceEvenly;
 
   TextAlign get value {
     switch (this) {
@@ -464,6 +492,8 @@ enum PlutoColumnTextAlign {
         return TextAlign.right;
       case PlutoColumnTextAlign.end:
         return TextAlign.end;
+      default:
+        return TextAlign.start;
     }
   }
 
@@ -479,6 +509,44 @@ enum PlutoColumnTextAlign {
         return Alignment.centerRight;
       case PlutoColumnTextAlign.end:
         return AlignmentDirectional.centerEnd;
+      default:
+        return AlignmentDirectional.centerStart;
+    }
+  }
+
+  MainAxisAlignment get mainAxisAlignment {
+    switch (this) {
+      case PlutoColumnTextAlign.start:
+      case PlutoColumnTextAlign.left:
+        return MainAxisAlignment.start;
+      case PlutoColumnTextAlign.center:
+        return MainAxisAlignment.center;
+      case PlutoColumnTextAlign.right:
+      case PlutoColumnTextAlign.end:
+        return MainAxisAlignment.end;
+      case PlutoColumnTextAlign.spaceBetween:
+        return MainAxisAlignment.spaceBetween;
+      case PlutoColumnTextAlign.spaceAround:
+        return MainAxisAlignment.spaceAround;
+      case PlutoColumnTextAlign.spaceEvenly:
+        return MainAxisAlignment.spaceEvenly;
+      default:
+        return MainAxisAlignment.start;
+    }
+  }
+
+  CrossAxisAlignment get crossAxisAlignment {
+    switch (this) {
+      case PlutoColumnTextAlign.start:
+      case PlutoColumnTextAlign.left:
+        return CrossAxisAlignment.start;
+      case PlutoColumnTextAlign.center:
+        return CrossAxisAlignment.center;
+      case PlutoColumnTextAlign.right:
+      case PlutoColumnTextAlign.end:
+        return CrossAxisAlignment.end;
+      default:
+        return CrossAxisAlignment.start;
     }
   }
 
@@ -531,4 +599,9 @@ enum PlutoColumnSort {
   bool get isDescending {
     return this == PlutoColumnSort.descending;
   }
+}
+
+enum PlutoColumnCheckboxMode {
+  column,
+  row;
 }

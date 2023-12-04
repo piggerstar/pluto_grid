@@ -116,13 +116,17 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
 
   @override
   Widget build(BuildContext context) {
-    final cellWidget = _DefaultCellWidget(
-      stateManager: stateManager,
-      rowIdx: widget.rowIdx,
-      row: widget.row,
-      column: widget.column,
-      cell: widget.cell,
-    );
+    Widget? cellWidget;
+
+    if ((widget.column.enableRowChecked && !widget.column.showCheckboxOnly) || !widget.column.enableRowChecked) {
+      cellWidget = _DefaultCellWidget(
+        stateManager: stateManager,
+        rowIdx: widget.rowIdx,
+        row: widget.row,
+        column: widget.column,
+        cell: widget.cell,
+      );
+    }
 
     final style = stateManager.configuration.style;
 
@@ -160,42 +164,48 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       );
     }
 
-    return Row(
-      children: [
-        if (_canRowDrag)
-          _RowDragIconWidget(
-            column: widget.column,
-            row: widget.row,
-            rowIdx: widget.rowIdx,
-            stateManager: stateManager,
-            feedbackWidget: cellWidget,
-            dragIcon: Icon(
-              Icons.drag_indicator,
-              size: style.iconSize,
-              color: style.iconColor,
-            ),
+    List<Widget> children = [
+      if (_canRowDrag)
+        _RowDragIconWidget(
+          column: widget.column,
+          row: widget.row,
+          rowIdx: widget.rowIdx,
+          stateManager: stateManager,
+          feedbackWidget: cellWidget ?? const SizedBox.shrink(),
+          dragIcon: Icon(
+            Icons.drag_indicator,
+            size: style.iconSize,
+            color: style.iconColor,
           ),
-        if (widget.column.enableRowChecked)
-          CheckboxSelectionWidget(
-            cell: widget.cell,
-            column: widget.column,
-            row: widget.row,
-            rowIdx: widget.rowIdx,
-            stateManager: stateManager,
+        ),
+      if (widget.column.enableRowChecked)
+        CheckboxSelectionWidget(
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+          rowIdx: widget.rowIdx,
+          stateManager: stateManager,
+        ),
+      if (spacingWidget != null) spacingWidget,
+      if (expandIcon != null) expandIcon,
+      if (cellWidget != null) Expanded(child: cellWidget),
+      if (_showGroupCount)
+        Text(
+          '($_groupCount)',
+          style: stateManager.configuration.style.cellTextStyle.copyWith(
+            decoration: TextDecoration.none,
+            fontWeight: FontWeight.normal,
           ),
-        if (spacingWidget != null) spacingWidget,
-        if (expandIcon != null) expandIcon,
-        Expanded(child: cellWidget),
-        if (_showGroupCount)
-          Text(
-            '($_groupCount)',
-            style: stateManager.configuration.style.cellTextStyle.copyWith(
-              decoration: TextDecoration.none,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-      ],
-    );
+        ),
+    ];
+
+    if (widget.column.checkboxMode == PlutoColumnCheckboxMode.column) {
+      return Column(mainAxisAlignment: widget.column.checkboxMainAxisAlign, crossAxisAlignment: widget.column.checkboxCrossAxisAlign, children: children);
+    } else if (widget.column.checkboxMode == PlutoColumnCheckboxMode.row) {
+      return Row(mainAxisAlignment: widget.column.checkboxMainAxisAlign, crossAxisAlignment: widget.column.checkboxCrossAxisAlign, children: children);
+    } else {
+      return Row(mainAxisAlignment: widget.column.checkboxMainAxisAlign, crossAxisAlignment: widget.column.checkboxCrossAxisAlign, children: children);
+    }
   }
 }
 
@@ -414,6 +424,7 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
       activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
       checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
       hoverColor: widget.column.checkboxHoverColor,
+      margin: widget.column.checkboxMargin,
       enabled: isEnabled,
       shape: widget.column.checkboxShape,
       fillColor: widget.column.checkboxFillColor,

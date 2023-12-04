@@ -47,6 +47,8 @@ class PlutoScaledCheckbox extends StatelessWidget {
 
   final Color? disabledBackgroundColor;
 
+  final EdgeInsets? margin;
+
   const PlutoScaledCheckbox({
     Key? key,
     required this.value,
@@ -72,6 +74,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
     this.materialTapTargetSize,
     this.themeData,
     this.disabledBackgroundColor,
+    this.margin,
   }) : super(key: key);
 
   @override
@@ -82,7 +85,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
         height: 18.0,
         width: 18.0,
         color: enabled ? null : disabledBackgroundColor,
-        margin: const EdgeInsets.all(8),
+        margin: margin ?? const EdgeInsets.all(8),
         child: Theme(
           data: ThemeData(
             unselectedWidgetColor: enabled ? unselectedColor : disabledColor,

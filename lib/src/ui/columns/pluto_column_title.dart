@@ -342,6 +342,63 @@ class _ColumnWidget extends StatelessWidget {
 
   bool get showSizedBoxForIcon => column.isShowRightIcon && (column.titleTextAlign.isRight || stateManager.isRTL);
 
+  Alignment get childAlignment {
+    switch (column.checkboxTitleMainAxisAlign) {
+      case MainAxisAlignment.start:
+        return Alignment.centerLeft;
+      case MainAxisAlignment.center:
+        return Alignment.center;
+      case MainAxisAlignment.end:
+        return Alignment.centerRight;
+      case MainAxisAlignment.spaceBetween:
+        return Alignment.center;
+      case MainAxisAlignment.spaceAround:
+        return Alignment.center;
+      case MainAxisAlignment.spaceEvenly:
+        return Alignment.center;
+      default:
+        return Alignment.centerLeft;
+    }
+  }
+
+  Widget get child {
+    final style = stateManager.style;
+
+    if (column.checkboxMode == PlutoColumnCheckboxMode.column) {
+      return Column(
+        mainAxisAlignment: column.checkboxTitleMainAxisAlign,
+        crossAxisAlignment: column.checkboxTitleCrossAxisAlign,
+        children: [
+          if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
+          Expanded(
+            child: _ColumnTextWidget(
+              column: column,
+              stateManager: stateManager,
+              height: height,
+            ),
+          ),
+          if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: column.checkboxTitleMainAxisAlign,
+        crossAxisAlignment: column.checkboxTitleCrossAxisAlign,
+        children: [
+          if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
+          Expanded(
+            child: _ColumnTextWidget(
+              column: column,
+              stateManager: stateManager,
+              height: height,
+            ),
+          ),
+          if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DragTarget<PlutoColumn>(
@@ -376,20 +433,8 @@ class _ColumnWidget extends StatelessWidget {
             child: Padding(
               padding: padding,
               child: Align(
-                alignment: Alignment.centerLeft,
-                child: Row(
-                  children: [
-                    if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
-                    Expanded(
-                      child: _ColumnTextWidget(
-                        column: column,
-                        stateManager: stateManager,
-                        height: height,
-                      ),
-                    ),
-                    if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
-                  ],
-                ),
+                alignment: childAlignment,
+                child: child,
               ),
             ),
           ),
@@ -480,13 +525,26 @@ class CheckboxAllSelectionWidgetState extends PlutoStateWithChange<CheckboxAllSe
       value: _checked,
       handleOnChanged: _handleOnChanged,
       tristate: true,
-      scale: 0.86,
-      enabled: enabledRows.isNotEmpty,
+      scale: widget.column.checkboxScale ?? 0.86,
       disabledBackgroundColor: widget.column.checkboxDisabledBackgroundColor ?? stateManager.configuration.style.disabledIconColor,
-      disabledColor: stateManager.configuration.style.disabledIconColor,
-      unselectedColor: stateManager.configuration.style.iconColor,
-      activeColor: stateManager.configuration.style.activatedBorderColor,
-      checkColor: stateManager.configuration.style.activatedColor,
+      disabledColor: widget.column.checkboxDisabledColor ?? stateManager.configuration.style.disabledIconColor,
+      unselectedColor: widget.column.checkboxUnselectedColor ?? stateManager.configuration.style.iconColor,
+      activeColor: widget.column.checkboxActiveColor ?? stateManager.configuration.style.activatedBorderColor,
+      checkColor: widget.column.checkboxCheckColor ?? stateManager.configuration.style.activatedColor,
+      hoverColor: widget.column.checkboxHoverColor,
+      margin: widget.column.checkboxMargin,
+      enabled: enabledRows.isNotEmpty,
+      shape: widget.column.checkboxShape,
+      fillColor: widget.column.checkboxFillColor,
+      focusColor: widget.column.checkboxFocusColor,
+      materialTapTargetSize: widget.column.checkboxMaterialTapTargetSize,
+      mouseCursor: widget.column.checkboxMouseCursor,
+      side: widget.column.checkboxSide,
+      splashRadius: widget.column.checkboxSplashRadius,
+      tooltipBoxDecoration: widget.column.checkboxBoxDecoration,
+      tooltipTextStyle: widget.column.checkboxTextStyle,
+      overlayColor: widget.column.checkboxOverlayColor,
+      themeData: widget.column.checkboxThemeData,
     );
   }
 }
