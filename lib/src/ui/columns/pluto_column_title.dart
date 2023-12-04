@@ -385,7 +385,7 @@ class _ColumnWidget extends StatelessWidget {
         children: [
           if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
             CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
-          Expanded(
+          Flexible(
             child: _ColumnTextWidget(
               column: column,
               stateManager: stateManager,
@@ -411,7 +411,7 @@ class _ColumnWidget extends StatelessWidget {
               height: height,
             ),
           ),
-          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
+          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.right || checkboxPosition == CheckboxPosition.bottom))
             CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
           if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
         ],

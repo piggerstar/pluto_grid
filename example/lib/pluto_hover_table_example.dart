@@ -98,7 +98,7 @@ class _PlutoHoverTableState extends State<PlutoHoverTable> {
           gridBorderColor: Colors.green,
           borderColor: Colors.lightBlueAccent,
           rowHeight: 80,
-          columnHeight: 46,
+          columnHeight: 65,
           enableCellBorderHorizontal: true,
           enableCellBorderVertical: true,
           hoveredMouseCursor: SystemMouseCursors.click,
