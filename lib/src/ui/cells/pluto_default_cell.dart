@@ -78,6 +78,20 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
     return widget.cell.enabled;
   }
 
+  CheckboxPosition get checkboxPosition {
+    if (widget.column.checkboxPosition != null) {
+      return widget.column.checkboxPosition!;
+    }
+
+    if (widget.column.checkboxMode == PlutoColumnCheckboxMode.column) {
+      return CheckboxPosition.bottom;
+    } else if (widget.column.checkboxMode == PlutoColumnCheckboxMode.row) {
+      return CheckboxPosition.left;
+    } else {
+      return CheckboxPosition.left;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -178,7 +192,7 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
             color: style.iconColor,
           ),
         ),
-      if (widget.column.enableRowChecked)
+      if (widget.column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
         CheckboxSelectionWidget(
           cell: widget.cell,
           column: widget.column,
@@ -189,6 +203,14 @@ class _PlutoDefaultCellState extends PlutoStateWithChange<PlutoDefaultCell> {
       if (spacingWidget != null) spacingWidget,
       if (expandIcon != null) expandIcon,
       if (cellWidget != null) Expanded(child: cellWidget),
+      if (widget.column.enableRowChecked && (checkboxPosition == CheckboxPosition.right || checkboxPosition == CheckboxPosition.bottom))
+        CheckboxSelectionWidget(
+          cell: widget.cell,
+          column: widget.column,
+          row: widget.row,
+          rowIdx: widget.rowIdx,
+          stateManager: stateManager,
+        ),
       if (_showGroupCount)
         Text(
           '($_groupCount)',

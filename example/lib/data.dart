@@ -33,6 +33,7 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     checkboxTitleMainAxisAlign: MainAxisAlignment.center,
     checkboxTitleCrossAxisAlign: CrossAxisAlignment.center,
     showCheckboxOnly: true,
+    checkboxPosition: CheckboxPosition.bottom,
     checkboxFillColor: MaterialStateColor.resolveWith((states) {
       if (states.contains(MaterialState.selected)) {
         return Colors.red;

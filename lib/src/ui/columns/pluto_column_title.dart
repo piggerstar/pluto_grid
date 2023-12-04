@@ -361,6 +361,20 @@ class _ColumnWidget extends StatelessWidget {
     }
   }
 
+  CheckboxPosition get checkboxPosition {
+    if (column.checkboxPosition != null) {
+      return column.checkboxPosition!;
+    }
+
+    if (column.checkboxMode == PlutoColumnCheckboxMode.column) {
+      return CheckboxPosition.bottom;
+    } else if (column.checkboxMode == PlutoColumnCheckboxMode.row) {
+      return CheckboxPosition.left;
+    } else {
+      return CheckboxPosition.left;
+    }
+  }
+
   Widget get child {
     final style = stateManager.style;
 
@@ -369,7 +383,8 @@ class _ColumnWidget extends StatelessWidget {
         mainAxisAlignment: column.checkboxTitleMainAxisAlign,
         crossAxisAlignment: column.checkboxTitleCrossAxisAlign,
         children: [
-          if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
+          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
+            CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
           Expanded(
             child: _ColumnTextWidget(
               column: column,
@@ -377,6 +392,8 @@ class _ColumnWidget extends StatelessWidget {
               height: height,
             ),
           ),
+          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.right || checkboxPosition == CheckboxPosition.bottom))
+            CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
           if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
         ],
       );
@@ -385,7 +402,8 @@ class _ColumnWidget extends StatelessWidget {
         mainAxisAlignment: column.checkboxTitleMainAxisAlign,
         crossAxisAlignment: column.checkboxTitleCrossAxisAlign,
         children: [
-          if (column.enableRowChecked) CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
+          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
+            CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
           Expanded(
             child: _ColumnTextWidget(
               column: column,
@@ -393,6 +411,8 @@ class _ColumnWidget extends StatelessWidget {
               height: height,
             ),
           ),
+          if (column.enableRowChecked && (checkboxPosition == CheckboxPosition.left || checkboxPosition == CheckboxPosition.top))
+            CheckboxAllSelectionWidget(stateManager: stateManager, column: column),
           if (showSizedBoxForIcon) SizedBox(width: style.iconSize),
         ],
       );

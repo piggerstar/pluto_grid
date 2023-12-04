@@ -269,6 +269,8 @@ class PlutoColumn {
 
   bool showCheckboxOnly;
 
+  CheckboxPosition? checkboxPosition;
+
   PlutoColumn({
     required this.title,
     required this.field,
@@ -334,6 +336,7 @@ class PlutoColumn {
     this.checkboxTitleCrossAxisAlign = CrossAxisAlignment.center,
     this.checkboxMargin,
     this.showCheckboxOnly = false,
+    this.checkboxPosition,
   })  : _key = UniqueKey(),
         _checkReadOnly = checkReadOnly,
         originalFrozenValue = frozen;
@@ -468,6 +471,13 @@ class PlutoColumnFooterRendererContext {
     required this.column,
     required this.stateManager,
   });
+}
+
+enum CheckboxPosition {
+  top,
+  left,
+  right,
+  bottom;
 }
 
 enum PlutoColumnTextAlign {
