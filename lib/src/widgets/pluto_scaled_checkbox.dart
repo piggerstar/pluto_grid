@@ -41,6 +41,8 @@ class PlutoScaledCheckbox extends StatelessWidget {
 
   final BorderSide? side;
 
+  final BorderSide? disabledSide;
+
   final MaterialTapTargetSize? materialTapTargetSize;
 
   final ThemeData? themeData;
@@ -71,6 +73,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
     this.splashRadius,
     this.shape,
     this.side,
+    this.disabledSide,
     this.materialTapTargetSize,
     this.themeData,
     this.disabledBackgroundColor,
@@ -105,7 +108,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
             overlayColor: overlayColor,
             splashRadius: splashRadius,
             shape: shape,
-            side: side,
+            side: enabled ? side : disabledSide,
           ),
         ),
       ),

@@ -33,6 +33,8 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     checkboxTitleMainAxisAlign: MainAxisAlignment.center,
     checkboxTitleCrossAxisAlign: CrossAxisAlignment.center,
     showCheckboxOnly: true,
+    checkboxSide: const BorderSide(width: 1, color: Colors.blue),
+    disabledCheckboxSide: const BorderSide(width: 1, color: Colors.white10),
     checkboxPosition: CheckboxPosition.bottom,
     checkboxFillColor: MaterialStateColor.resolveWith((states) {
       if (states.contains(MaterialState.selected)) {
@@ -42,7 +44,7 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
         return Colors.blue;
       }
       if (states.contains(MaterialState.disabled)) {
-        return Colors.white10;
+        return Colors.white60;
       }
       return Colors.green;
     }),

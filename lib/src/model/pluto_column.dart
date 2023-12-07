@@ -245,6 +245,8 @@ class PlutoColumn {
 
   BorderSide? checkboxSide;
 
+  BorderSide? disabledCheckboxSide;
+
   MaterialTapTargetSize? checkboxMaterialTapTargetSize;
 
   ThemeData? checkboxThemeData;
@@ -326,6 +328,7 @@ class PlutoColumn {
     this.checkboxSplashRadius,
     this.checkboxShape,
     this.checkboxSide,
+    this.disabledCheckboxSide,
     this.checkboxMaterialTapTargetSize,
     this.checkboxThemeData,
     this.checkboxDisabledBackgroundColor,
