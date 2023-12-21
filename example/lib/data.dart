@@ -190,8 +190,16 @@ final List<PlutoColumn> simpleColumns = <PlutoColumn>[
     title: 'Age',
     field: 'age',
     type: PlutoColumnType.number(
-      defaultValue: null,
-      allowEmpty: true,
+      format: '####.##',
+      negative: false,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      inputDecoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+        border: InputBorder.none,
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Color(0xFFCCDFFF))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Color(0xFFCCDFFF))),
+      ),
     ),
     maxLength: 3,
     enableDropToResize: false,

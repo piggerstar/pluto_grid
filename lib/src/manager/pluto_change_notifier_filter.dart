@@ -94,6 +94,7 @@ abstract class PlutoChangeNotifierFilterResolver {
 
       /// editing_state
       stateManager.setEditing.hashCode: 'setEditing',
+      stateManager.setActivatedByKeyboard.hashCode: 'setActivatedByKeyboard',
       stateManager.setAutoEditing.hashCode: 'setAutoEditing',
       stateManager.pasteCellValue.hashCode: 'pasteCellValue',
       stateManager.changeCellValue.hashCode: 'changeCellValue',

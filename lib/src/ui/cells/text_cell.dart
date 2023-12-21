@@ -169,6 +169,14 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   }
 
   void handleOnChanged(String value) {
+    if (widget.stateManager.isActivatedByKeyboard && widget.cell.clearSelectionOnKeyFocus) {
+      textController.selection = TextSelection.collapsed(offset: textController.text.length);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        widget.stateManager.setActivatedByKeyboard(false);
+      });
+    } else if (widget.cell.clearSelectionOnTapFocus) {
+      textController.selection = TextSelection.collapsed(offset: textController.text.length);
+    }
     _cellEditingStatus = formattedValue != value.toString()
         ? CellEditingStatus.changed
         : _initialCellValue.toString() == value.toString()

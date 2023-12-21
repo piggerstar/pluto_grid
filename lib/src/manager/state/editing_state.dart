@@ -10,6 +10,9 @@ abstract class IEditingState {
   /// Editing status of the current.
   bool get isEditing;
 
+  /// Editing state is activated by pressing any character on keyboard
+  bool get isActivatedByKeyboard;
+
   /// Automatically set to editing state when cell is selected.
   bool get autoEditing;
 
@@ -21,6 +24,12 @@ abstract class IEditingState {
 
   /// Change the editing status of the current cell.
   void setEditing(
+    bool flag, {
+    bool notify = true,
+  });
+
+  /// Change the editing status of the current cell.
+  void setActivatedByKeyboard(
     bool flag, {
     bool notify = true,
   });
@@ -67,6 +76,8 @@ abstract class IEditingState {
 class _State {
   bool _isEditing = false;
 
+  bool _isActivatedByKeyboard = false;
+
   bool _autoEditing = false;
 
   TextEditingController? _textEditingController;
@@ -79,6 +90,9 @@ mixin EditingState implements IPlutoGridState {
 
   @override
   bool get isEditing => _state._isEditing;
+
+  @override
+  bool get isActivatedByKeyboard => _state._isActivatedByKeyboard;
 
   @override
   bool get autoEditing => _state._autoEditing || currentColumn?.enableAutoEditing == true;
@@ -135,6 +149,39 @@ mixin EditingState implements IPlutoGridState {
     clearCurrentSelecting(notify: false);
 
     notifyListeners(notify, setEditing.hashCode);
+  }
+
+  @override
+  void setActivatedByKeyboard(
+    bool flag, {
+    bool notify = true,
+  }) {
+    if (!mode.isEditableMode || (flag && currentCell == null)) {
+      flag = false;
+    }
+
+    if (isEditing == flag) return;
+
+    if (flag) {
+      assert(
+        currentCell?.column != null && currentCell?.row != null,
+        """
+      PlutoCell is not Initialized. 
+      PlutoColumn and PlutoRow must be initialized in PlutoCell via PlutoGridStateManager.
+      initializeRows method. When adding or deleting columns or rows, 
+      you must use methods on PlutoGridStateManager. Otherwise, 
+      the PlutoCell is not initialized and this error occurs.
+      """,
+      );
+
+      if (!isEditableCell(currentCell!)) {
+        flag = false;
+      }
+    }
+
+    _state._isActivatedByKeyboard = flag;
+
+    notifyListeners(notify, setActivatedByKeyboard.hashCode);
   }
 
   @override

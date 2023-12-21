@@ -11,6 +11,8 @@ class PlutoCell {
     this.checkboxTooltipMessage,
     this.defaultMouseCursor,
     this.hoveredMouseCursor,
+    this.clearSelectionOnKeyFocus = true,
+    this.clearSelectionOnTapFocus = false,
   })  : _key = key ?? UniqueKey(),
         _value = value;
 
@@ -26,6 +28,12 @@ class PlutoCell {
   bool? enableCheckbox;
 
   bool showCheckboxTooltip;
+
+  /// clear text selection when cell is focused by entering keyboard
+  bool clearSelectionOnKeyFocus;
+
+  /// clear text selection when cell is focused by tapping
+  bool clearSelectionOnTapFocus;
 
   String? checkboxTooltipMessage;
 

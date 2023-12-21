@@ -94,6 +94,7 @@ class PlutoGridKeyManager {
 
   void _handleCharacter(PlutoKeyManagerEvent keyEvent) {
     if (stateManager.isEditing != true && stateManager.currentCell != null && stateManager.currentCell?.enabled == true) {
+      stateManager.setActivatedByKeyboard(true, notify: false);
       stateManager.setEditing(true);
 
       if (keyEvent.event.character == null) {
