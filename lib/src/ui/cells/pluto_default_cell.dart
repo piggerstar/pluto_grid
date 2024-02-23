@@ -414,6 +414,7 @@ class CheckboxSelectionWidgetState extends PlutoStateWithChange<CheckboxSelectio
           row: widget.row,
           rowIdx: widget.rowIdx,
           isChecked: changed,
+          cell: widget.cell,
         ),
       );
     }

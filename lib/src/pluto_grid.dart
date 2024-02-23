@@ -1558,11 +1558,13 @@ abstract class PlutoGridOnRowCheckedEvent {
   final PlutoRow? row;
   final int? rowIdx;
   final bool? isChecked;
+  final PlutoCell? cell;
 
   const PlutoGridOnRowCheckedEvent({
     this.row,
     this.rowIdx,
     this.isChecked,
+    this.cell,
   });
 
   @override
@@ -1579,7 +1581,8 @@ class PlutoGridOnRowCheckedOneEvent extends PlutoGridOnRowCheckedEvent {
     required PlutoRow row,
     required int rowIdx,
     required bool? isChecked,
-  }) : super(row: row, rowIdx: rowIdx, isChecked: isChecked);
+    required PlutoCell cell,
+  }) : super(row: row, rowIdx: rowIdx, isChecked: isChecked, cell: cell);
 }
 
 /// Argument of [PlutoGrid.onRowChecked] callback when all checkboxes of the column are tapped.
