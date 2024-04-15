@@ -52,7 +52,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
   final EdgeInsets? margin;
 
   const PlutoScaledCheckbox({
-    Key? key,
+    super.key,
     required this.value,
     required this.handleOnChanged,
     this.tristate = false,
@@ -78,7 +78,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
     this.themeData,
     this.disabledBackgroundColor,
     this.margin,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

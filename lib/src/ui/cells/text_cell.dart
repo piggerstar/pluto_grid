@@ -18,8 +18,8 @@ abstract class TextCell extends StatefulWidget {
     required this.cell,
     required this.column,
     required this.row,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 }
 
 abstract class TextFieldProps {
@@ -53,7 +53,8 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
   @override
   void initState() {
     super.initState();
-    cellFocus = FocusNode(onKey: _handleOnKey);
+
+    cellFocus = FocusNode(onKeyEvent: _handleOnKey);
 
     textController.text = formattedValue;
     _initialCellValue = textController.text;
@@ -197,7 +198,7 @@ mixin TextCellState<T extends TextCell> on State<T> implements TextFieldProps {
     });
   }
 
-  KeyEventResult _handleOnKey(FocusNode node, RawKeyEvent event) {
+  KeyEventResult _handleOnKey(FocusNode node, KeyEvent event) {
     if (!widget.cell.enabled) {
       return KeyEventResult.ignored;
     }

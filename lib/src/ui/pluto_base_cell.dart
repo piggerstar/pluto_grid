@@ -17,14 +17,14 @@ class PlutoBaseCell extends StatelessWidget implements PlutoVisibilityLayoutChil
   final bool isLastColumn;
 
   const PlutoBaseCell({
-    Key? key,
+    super.key,
     required this.cell,
     required this.column,
     required this.rowIdx,
     required this.row,
     required this.stateManager,
     this.isLastColumn = false,
-  }) : super(key: key);
+  });
 
   @override
   double get width => column.width;
@@ -376,8 +376,7 @@ class _Cell extends PlutoStatefulWidget {
     required this.row,
     required this.column,
     required this.cell,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   State<_Cell> createState() => _CellState();

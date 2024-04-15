@@ -26,7 +26,7 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     enableAutoEditing: false,
     enableSorting: false,
     frozen: PlutoColumnFrozen.start,
-    percentage: 0.2,
+    percentage: 0.1,
     checkboxMode: PlutoColumnCheckboxMode.column,
     checkboxMainAxisAlign: MainAxisAlignment.center,
     checkboxCrossAxisAlign: CrossAxisAlignment.center,
@@ -59,6 +59,13 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     percentage: 0.2,
   ),
   PlutoColumn(
+    title: 'Amount',
+    field: 'amount',
+    type: PlutoColumnType.number(),
+    enableAutoEditing: false,
+    percentage: 0.1,
+  ),
+  PlutoColumn(
     title: 'Age',
     field: 'age',
     type: PlutoColumnType.number(),
@@ -86,13 +93,13 @@ final List<PlutoColumn> defaultColumns = <PlutoColumn>[
     title: 'Working time',
     field: 'working_time',
     type: PlutoColumnType.time(),
-    percentage: 0.1,
+    percentage: 0.15,
   ),
   PlutoColumn(
     title: 'salary',
     field: 'salary',
     type: PlutoColumnType.currency(),
-    percentage: 0.2,
+    percentage: 0.15,
     frozen: PlutoColumnFrozen.end,
     footerRenderer: (rendererContext) {
       return PlutoAggregateColumnFooter(
