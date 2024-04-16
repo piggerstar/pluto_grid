@@ -242,7 +242,7 @@ class PlutoGridActionDefaultTab extends PlutoGridShortcutAction {
 
     final saveIsEditing = stateManager.isEditing;
 
-    HardwareKeyboard.instance.isShiftPressed ? _moveCellPrevious(stateManager) : _moveCellNext(stateManager);
+    keyEvent.isShiftPressed ? _moveCellPrevious(stateManager) : _moveCellNext(stateManager);
 
     stateManager.setEditing(stateManager.autoEditing || saveIsEditing);
   }
@@ -357,13 +357,13 @@ class PlutoGridActionDefaultEnterKey extends PlutoGridShortcutAction {
 
         PlutoMoveDirection? direction;
         if (stateManager.configuration.enterKeyAction.isEditingAndMoveDown) {
-          if (HardwareKeyboard.instance.isShiftPressed) {
+          if (keyEvent.isShiftPressed) {
             direction = PlutoMoveDirection.up;
           } else {
             direction = PlutoMoveDirection.down;
           }
         } else if (stateManager.configuration.enterKeyAction.isEditingAndMoveRight) {
-          if (HardwareKeyboard.instance.isShiftPressed) {
+          if (keyEvent.isShiftPressed) {
             direction = PlutoMoveDirection.left;
           } else {
             direction = PlutoMoveDirection.right;
@@ -403,7 +403,7 @@ class PlutoGridActionDefaultEnterKey extends PlutoGridShortcutAction {
     }
 
     if (enterKeyAction.isEditingAndMoveDown) {
-      if (HardwareKeyboard.instance.isShiftPressed) {
+      if (keyEvent.isShiftPressed) {
         stateManager.moveCurrentCell(
           PlutoMoveDirection.up,
           notify: false,
@@ -415,7 +415,7 @@ class PlutoGridActionDefaultEnterKey extends PlutoGridShortcutAction {
         );
       }
     } else if (enterKeyAction.isEditingAndMoveRight) {
-      if (HardwareKeyboard.instance.isShiftPressed) {
+      if (keyEvent.isShiftPressed) {
         stateManager.moveCurrentCell(
           PlutoMoveDirection.left,
           force: true,
