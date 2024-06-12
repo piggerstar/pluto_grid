@@ -12,6 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # local development
+  # pluto_grid:
+  #   path: ../../
   pluto_grid:
     git:
       url: https://github.com/NizamSaidin/pluto_grid.git

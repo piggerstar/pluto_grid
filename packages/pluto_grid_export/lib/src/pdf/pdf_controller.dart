@@ -5,7 +5,7 @@ import 'package:pdf/widgets.dart';
 
 /// Abstract class for PDF conversion.
 abstract class PdfController {
-  Future<Uint8List> generatePdf() async {
+  Future<Uint8List> generatePdf({int maxPage = 20}) async {
     final doc = Document(
       creator: getDocumentCreator(),
       title: getDocumentTitle(),
@@ -21,6 +21,7 @@ abstract class PdfController {
         header: (context) => getHeader(context),
         footer: (context) => getFooter(context),
         build: (Context context) => exportInternal(context),
+        maxPages: maxPage,
       ),
     );
     return doc.save();
